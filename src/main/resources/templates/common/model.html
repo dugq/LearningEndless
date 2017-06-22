@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+ <div th:fragment="header(title)">
+     <span>这是头部说的：</span>
+     <span th:text="${message}">头头什么都没有说</span>
+     <span th:text="${title}">没有标题</span>
+ </div>
+
+ <div th:fragment="footer">
+     <span>这是尾巴说的：</span>
+     <span th:text="${message}">尾巴什么都没有说</span>
+ </div>
+</body>
+</html>
