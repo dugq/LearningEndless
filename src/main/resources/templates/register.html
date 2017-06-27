@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="register">
+    <table th:object="${user}">
+        <tr>
+            <td>姓名</td>
+            <td><input name="name" th:value="*{name}"/></td>
+        </tr>
+        <tr>
+            <td>性别</td>
+            <td><input name="six" th:value="*{six}"/></td>
+        </tr>
+        <tr>
+            <td>年龄</td>
+            <td><input name="age" th:value="*{age}"/></td>
+        </tr>
+    </table>
+    <button>提交</button>
+</form>
+
+</body>
+</html>

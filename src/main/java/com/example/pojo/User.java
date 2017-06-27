@@ -1,20 +1,31 @@
 package com.example.pojo;
 
 import com.example.Six;
+import com.example.pojo.annotation.MyAnnotation.*;
+import org.hibernate.validator.constraints.NotBlank;
+
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 /**
  * Created by dugq on 2017/6/22.
  */
 public class User {
     private int id;
+    @NotNull(groups = NAME.class)
+    @NotBlank(groups = NAME.class,message = "姓名不鞥你为空")
     private String name;
-    private Six six;
+    @NotNull
+    private String six;
+    @Min(value = 0 ,groups = {AGE.class,NAME.class})
+    @Max(value = 100 ,groups = AGE.class)
     private int age;
 
     public User() {
     }
 
-    public User(int id, String name, Six six, int age) {
+    public User(int id, String name, String six, int age) {
         this.id = id;
         this.name = name;
         this.six = six;
@@ -37,14 +48,13 @@ public class User {
         this.name = name;
     }
 
-    public Six getSix() {
+    public String getSix() {
         return six;
     }
 
-    public void setSix(Six six) {
+    public void setSix(String six) {
         this.six = six;
     }
-
     public int getAge() {
         return age;
     }
