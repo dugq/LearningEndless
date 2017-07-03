@@ -8,27 +8,27 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+
 /**
  * Created by dugq on 2017/6/22.
  */
 public class User {
     private int id;
-    @NotNull(groups = NAME.class)
-    @NotBlank(groups = NAME.class,message = "姓名不鞥你为空")
+    @NotBlank(groups = NAME.class,message = "姓名不能为空")
     private String name;
-    @NotNull
-    private String six;
-    @Min(value = 0 ,groups = {AGE.class,NAME.class})
-    @Max(value = 100 ,groups = AGE.class)
+    @NotNull(message = "性别不能为空")
+    private byte six;
+    @Min(value = 0 ,groups = {AGE.class,NAME.class},message = "年龄必须在大于0")
+    @Max(value = 100 ,groups = AGE.class,message = "年龄必须在小于100")
     private int age;
 
     public User() {
     }
 
-    public User(int id, String name, String six, int age) {
+    public User(int id, String name, int six, int age) {
         this.id = id;
         this.name = name;
-        this.six = six;
+        this.six = (byte) six;
         this.age = age;
     }
 
@@ -48,13 +48,14 @@ public class User {
         this.name = name;
     }
 
-    public String getSix() {
+    public byte getSix() {
         return six;
     }
 
-    public void setSix(String six) {
+    public void setSix(byte six) {
         this.six = six;
     }
+
     public int getAge() {
         return age;
     }

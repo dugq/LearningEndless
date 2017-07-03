@@ -6,6 +6,8 @@ import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindException;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -16,6 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Logger;
 
@@ -28,7 +32,7 @@ public class ExceptionAdvice {
      * 400 - Bad Request
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(ConstraintViolationException.class)
+    @ExceptionHandler({ConstraintViolationException.class})
     public Object handleServiceException(HttpServletRequest request, ConstraintViolationException e, HttpServletResponse response) {
         Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
         System.out.print("comming--------------------------------------------------");
@@ -38,17 +42,44 @@ public class ExceptionAdvice {
             ServletOutputStream outputStream = null;
             try {
                 outputStream = response.getOutputStream();
-                outputStream.write(JSON.toJSONString(AjaxResult.failure(e.getMessage())).getBytes());
+                outputStream.write(JSON.toJSONString(AjaxResult.failure(message)).getBytes());
                 outputStream.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
             return null;
         }else{
-            request.setAttribute("error",e.getMessage());
+            request.setAttribute("error",message);
             return "error";
         }
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({BindException.class})
+    public Object handleServiceException(HttpServletRequest request, BindException e, HttpServletResponse response) {
+        Map<String, Object> map = e.getModel();
+        System.out.print("comming--------------------------------------------------");
+        List<ObjectError> allErrors = e.getAllErrors();
+        String message = "";
+        for(ObjectError error : allErrors){
+            message += error.getDefaultMessage();
+        }
+        if(isAjax(request)){
+            ServletOutputStream outputStream = null;
+            try {
+                outputStream = response.getOutputStream();
+                outputStream.write(JSON.toJSONString(AjaxResult.failure(message)).getBytes());
+                outputStream.close();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            return null;
+        }else{
+            request.setAttribute("error",message);
+            return "error";
+        }
+    }
+
     /**
      * 500 - Internal Server Error
      */

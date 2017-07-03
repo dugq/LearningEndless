@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class WelcomePage {
     @RequestMapping("/")
     public String index(ModelMap model){
-        User smallMing = new User(1,"小明", "男",19);
+        User smallMing = new User(1,"小明", 1,19);
         model.addAttribute("message","<b>{1}hello  world!{0}</b>");
         model.addAttribute("person",smallMing);
         if(true){

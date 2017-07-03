@@ -7,18 +7,22 @@
 </head>
 <body>
 <form action="register">
-    <table th:object="${user}">
+    <table>
         <tr>
             <td>姓名</td>
-            <td><input name="name" th:value="*{name}"/></td>
+            <td><input name="name" th:value="${user?.name}"/></td>
         </tr>
         <tr>
             <td>性别</td>
-            <td><input name="six" th:value="*{six}"/></td>
+            <td>
+                <input type="radio" name = 'six' th:checked="${user?.six}" value="1"/>
+                <input type="radio" name = 'six' th:checked="!${user?.six}" value="0"/>
+
+            </td>
         </tr>
         <tr>
             <td>年龄</td>
-            <td><input name="age" th:value="*{age}"/></td>
+            <td><input name="age" th:value="${user?.age}"/></td>
         </tr>
     </table>
     <button>提交</button>
