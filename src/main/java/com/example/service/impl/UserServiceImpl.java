@@ -2,8 +2,6 @@ package com.example.service.impl;
 
 import com.example.dao.UserMapper;
 import com.example.pojo.User;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Select;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
