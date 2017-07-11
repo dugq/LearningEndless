@@ -31,7 +31,7 @@ public class RegisterController{
         return "register";
     }
     @RequestMapping("register")
-    public String register(@Validated({NAME.class,AGE.class}) User user, ModelMap modelMap){
+    public String register(@Validated User user, ModelMap modelMap){
         userService.insert(user);
         modelMap.addAttribute("user",user);
         return "register";

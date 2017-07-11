@@ -14,13 +14,13 @@ import javax.validation.constraints.NotNull;
  */
 public class User {
     private int id;
-    @NotBlank(groups = NAME.class,message = "姓名不能为空")
+    @NotBlank(message = "姓名不能为空")
     private String name;
     @NotNull(message = "性别不能为空")
-    private byte six;
+    private Byte six;
     @Min(value = 0 ,groups = {AGE.class,NAME.class},message = "年龄必须在大于0")
     @Max(value = 100 ,groups = AGE.class,message = "年龄必须在小于100")
-    private int age;
+    private Integer age;
 
     public User() {
     }

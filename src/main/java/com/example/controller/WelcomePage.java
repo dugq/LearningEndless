@@ -1,11 +1,10 @@
 package com.example.controller;
 
-import com.example.Six;
 import com.example.pojo.User;
+import com.example.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -15,14 +14,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping("/")
 public class WelcomePage {
+    @Autowired
+    private UserService userService;
+
     @RequestMapping("/")
     public String index(ModelMap model){
-        User smallMing = new User(1,"小明", 1,19);
-        model.addAttribute("message","<b>{1}hello  world!{0}</b>");
-        model.addAttribute("person",smallMing);
-        if(true){
-         throw new RuntimeException("fdsaf");
-        }
+        User smallMing = new User(1,null, 1,19);
+        userService.insert(smallMing);
         return "index";
     }
 

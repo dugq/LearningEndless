@@ -1,7 +1,6 @@
 package com.example.controller;
 
 import com.alibaba.fastjson.JSON;
-import org.apache.log4j.spi.LoggerFactory;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.ui.ModelMap;
@@ -62,7 +61,7 @@ public class ExceptionAdvice {
         List<ObjectError> allErrors = e.getAllErrors();
         String message = "";
         for(ObjectError error : allErrors){
-            message += error.getDefaultMessage();
+            message += error.getDefaultMessage()+"<br/>";
         }
         if(isAjax(request)){
             ServletOutputStream outputStream = null;
