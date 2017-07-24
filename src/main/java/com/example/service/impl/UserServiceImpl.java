@@ -11,6 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.util.List;
 
 /**
@@ -22,8 +25,9 @@ public class UserServiceImpl implements com.example.service.UserService {
     @Autowired
     private UserMapper UserMapper;
 
+
     @Override
-    public void insert(@Valid User user) {
+    public void insert(User user) {
         UserMapper.insert(user);
     }
 

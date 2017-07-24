@@ -8,4 +8,7 @@ public class MyAnnotation {
 
     public interface AGE{};
 
+    public interface MARRING{};
+
+    public interface INSERT{};
 }

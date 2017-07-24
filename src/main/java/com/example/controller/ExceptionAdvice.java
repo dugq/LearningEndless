@@ -30,18 +30,17 @@ public class ExceptionAdvice {
     /**
      * 400 - Bad Request
      */
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler({ConstraintViolationException.class})
     public Object handleServiceException(HttpServletRequest request, ConstraintViolationException e, HttpServletResponse response) {
         Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
-        System.out.print("comming--------------------------------------------------");
         ConstraintViolation<?> violation = violations.iterator().next();
         String message = violation.getMessage();
         if(isAjax(request)){
             ServletOutputStream outputStream = null;
             try {
                 outputStream = response.getOutputStream();
-                outputStream.write(JSON.toJSONString(AjaxResult.failure(message)).getBytes());
+                outputStream.write(JSON.toJSONString(new AjaxResult(-1,message)).getBytes("UTF-8"));
                 outputStream.close();
             } catch (IOException e1) {
                 e1.printStackTrace();
@@ -56,8 +55,6 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler({BindException.class})
     public Object handleServiceException(HttpServletRequest request, BindException e, HttpServletResponse response) {
-        Map<String, Object> map = e.getModel();
-        System.out.print("comming--------------------------------------------------");
         List<ObjectError> allErrors = e.getAllErrors();
         String message = "";
         for(ObjectError error : allErrors){
@@ -104,7 +101,8 @@ public class ExceptionAdvice {
     }
 
     public boolean isAjax(HttpServletRequest request){
-        return !StringUtils.isEmpty(request.getHeader("X-Requested-With"));
+        boolean b = !StringUtils.isEmpty(request.getHeader("X-Requested-With"));
+        return true;
     }
 
 
@@ -115,7 +113,10 @@ public class ExceptionAdvice {
             this.message = message;
         }
 
-
+        AjaxResult(int code ,String message){
+            this.code = code;
+            this.message = message;
+        }
 
        public static AjaxResult failure(String message){
            AjaxResult ajaxResult = new AjaxResult(message);

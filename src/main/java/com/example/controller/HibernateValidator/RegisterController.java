@@ -2,12 +2,13 @@ package com.example.controller.HibernateValidator;
 
 import com.example.pojo.User;
 import com.example.pojo.annotation.MyAnnotation.*;
+import com.example.pojo.annotation.MyValidator;
 import com.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.CollectionUtils;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.ConstraintViolation;
@@ -31,7 +32,7 @@ public class RegisterController{
         return "register";
     }
     @RequestMapping("register")
-    public String register(@Validated User user, ModelMap modelMap){
+    public String register(@MyValidator @RequestBody User user, ModelMap modelMap){
         userService.insert(user);
         modelMap.addAttribute("user",user);
         return "register";
