@@ -10,6 +10,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 /**
@@ -18,15 +19,28 @@ import javax.servlet.http.HttpServletResponse;
 public class BasicComponent {
    protected static final Logger logger = LoggerFactory.getLogger(BasicComponent.class);
 
-   public void getRequest(){
+   protected HttpServletRequest getRequest(){
       HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 
-      HttpServletResponse response = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getResponse();
 
-      HttpServletResponse response1 = ((ServletWebRequest)RequestContextHolder.getRequestAttributes()).getResponse();
 
-      ServletContext context = ContextLoader.getCurrentWebApplicationContext().getServletContext();
+      return request;
    }
+
+   protected HttpSession getSeesion(){
+      return ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest().getSession();
+   }
+
+   protected  HttpServletResponse getRespose(){
+         HttpServletResponse response = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getResponse();
+         /*HttpServletResponse response1 = ((ServletWebRequest)RequestContextHolder.getRequestAttributes()).getResponse();*/
+         return  response;
+      }
+
+   protected ServletContext getContext(){
+      return  ContextLoader.getCurrentWebApplicationContext().getServletContext();
+   }
+
 
    public static void main(String[] args) {
       double v = Math.random();

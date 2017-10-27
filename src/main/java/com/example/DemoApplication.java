@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 import javax.sql.DataSource;
@@ -40,7 +41,13 @@ public class DemoApplication extends WebMvcConfigurerAdapter {
 		SpringApplication.run(DemoApplication.class, args);
 		logger.error("CONGRATULATIONS!!   demo effective!");
     }
-
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/mystatic/**")
+				.addResourceLocations("classpath:/static/");
+		registry.addResourceHandler("/template/**")
+				.addResourceLocations("classpath:/staticTemplate/");
+	}
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(new ValidatorInterception()).addPathPatterns("/**");

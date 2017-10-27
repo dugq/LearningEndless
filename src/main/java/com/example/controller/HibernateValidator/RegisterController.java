@@ -33,7 +33,7 @@ public class RegisterController{
     }
     @RequestMapping("register")
     public String register(@MyValidator @RequestBody User user, ModelMap modelMap){
-        userService.insert(user);
+//        userService.insert(user);
         modelMap.addAttribute("user",user);
         return "register";
     }
@@ -46,15 +46,15 @@ public class RegisterController{
         if(!CollectionUtils.isEmpty(validators)){
             throw new ConstraintViolationException(validators);
         }
-        userService.insert(user);
+//        userService.insert(user);
         modelMap.addAttribute("user",user);
         return "register";
     }
 
     @RequestMapping("/list")
     public String list(ModelMap modelMap){
-        List<User> users = userService.selectAll();
-        modelMap.addAttribute("list",users);
+//        List<User> users = userService.selectAll();
+//        modelMap.addAttribute("list",users);
         return "lsit";
     }
 }

@@ -1,19 +1,13 @@
 package com.example.service.impl;
 
-import com.example.dao.UserMapper;
-import com.example.pojo.User;
-import com.example.pojo.annotation.MyAnnotation;
+import com.example.pojo.entry.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.validation.annotation.Validated;
+import com.example.dao.mapper.UserMapper;
 
-import javax.validation.Valid;
-import javax.validation.Validation;
-import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 import java.util.List;
 
 /**
@@ -23,22 +17,39 @@ import java.util.List;
 @Transactional(value = "txManage",rollbackFor = Exception.class,isolation = Isolation.READ_COMMITTED,propagation = Propagation.REQUIRED)
 public class UserServiceImpl implements com.example.service.UserService {
     @Autowired
-    private UserMapper UserMapper;
+    private UserMapper userMapper;
 
-
+    public int deleteByPrimaryKey(Integer uid) {
+        return userMapper.deleteByPrimaryKey(uid);
+    }
     @Override
-    public void insert(User user) {
-        UserMapper.insert(user);
+    public int insert(User record) {
+        return userMapper.insert(record);
+    }
+
+    public int insertSelective(User record) {
+        return userMapper.insertSelective(record);
+    }
+
+    public User selectByPrimaryKey(Integer uid) {
+        return userMapper.selectByPrimaryKey(uid);
+    }
+
+    public int updateByPrimaryKeySelective(User record) {
+        return userMapper.updateByPrimaryKeySelective(record);
+    }
+
+    public int updateByPrimaryKey(User record) {
+        return userMapper.updateByPrimaryKey(record);
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class,isolation = Isolation.READ_COMMITTED,propagation = Propagation.REQUIRED)
     public User selectByName(String name) {
-        return UserMapper.selectByName(name);
+        return userMapper.selectByName(name);
     }
 
     @Override
     public List<User> selectAll() {
-        return UserMapper.selectAll();
+        return null;
     }
 }

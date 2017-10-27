@@ -8,7 +8,7 @@ spring:
     cache: false
 
 server: 
-   port: 80
+   port: 8080
 
 management: 
   port: 8081
@@ -19,7 +19,7 @@ management:
     enabled: false
 
 mybatis: 
-  type-aliases-package: com.example.pojo
+  type-aliases-package: com.example.pojo.entry
   mapper-locations: classpath:mapper/*.xml
   generator-driver-location: data/mysql-connector-java-5.1.21.jar
   target-package:
@@ -31,7 +31,7 @@ mybatis:
     sql: src/main/resources
     mapper: src/main/java
   mapper:
-    mappers: com.example.dao
+    mappers: com.example.dao.mapper
     not-empty: false
     identity: MYSQL
 pagehelper:

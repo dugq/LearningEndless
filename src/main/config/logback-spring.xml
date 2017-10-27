@@ -8,9 +8,6 @@
             <FileNamePattern>./logs/logger-%d{yyyy-MM-dd}.log</FileNamePattern>
             <MaxHistory>60</MaxHistory>
         </rollingPolicy>
-        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-            <MaxFileSize>100MB</MaxFileSize>
-        </triggeringPolicy>
         <encoder>
             <pattern>${FILE_LOG_PATTERN}</pattern>
             <charset>UTF-8</charset>
@@ -21,7 +18,8 @@
         </filter>
 
     </appender>
-    <root level="ERROR">
+    <root level="DEBUG">
         <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="FILE"/>
     </root>
 </configuration>

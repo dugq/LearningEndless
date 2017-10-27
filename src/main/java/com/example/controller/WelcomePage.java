@@ -34,7 +34,7 @@ public class WelcomePage {
         if(!CollectionUtils.isEmpty(validate)){
             throw  new ConstraintViolationException(validate);
         }
-        userService.insert(smallMing);
+//        userService.insert(smallMing);
         return "index";
     }
 
