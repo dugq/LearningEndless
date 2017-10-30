@@ -30,8 +30,8 @@ public class AuthRealm extends AuthorizingRealm {
         String username = utoken.getUsername();
         User user = userService.selectByName(username);
         if(Objects.isNull(user))
-            throw new AccountException("帐号或密码不正确！");
-        return new SimpleAuthenticationInfo(user, user.getPassword(),this.getClass().getName());//放入shiro.调用CredentialsMatcher检验密码
+           return null;
+        return new SimpleAuthenticationInfo(user, user.getPassword(),getName());//放入shiro.调用CredentialsMatcher检验密码
     }
     //授权
     @Override

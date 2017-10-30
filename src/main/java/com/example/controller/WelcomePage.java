@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.example.pojo.User;
+import com.example.pojo.statics.StaticVar;
 import com.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,8 @@ import java.util.Set;
 @RequestMapping("/")
 public class WelcomePage {
     @Autowired
+    private StaticVar staticVar;
+    @Autowired
     private UserService userService;
     @Autowired
     private Validator validator;
@@ -42,5 +45,16 @@ public class WelcomePage {
     @ResponseBody
     public Object message(){
         throw new RuntimeException("ajax");
+    }
+
+
+    @RequestMapping("test")
+    @ResponseBody
+    public String test(){
+        System.out.println(StaticVar.test);
+        System.out.println(StaticVar.url);
+        System.out.println(StaticVar.test1);
+        String url = StaticVar.url;
+        return url;
     }
 }

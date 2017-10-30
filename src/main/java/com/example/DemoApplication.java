@@ -44,7 +44,7 @@ public class DemoApplication extends WebMvcConfigurerAdapter {
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/mystatic/**")
-				.addResourceLocations("classpath:/static/");
+				.addResourceLocations("classpath:/statics/");
 		registry.addResourceHandler("/template/**")
 				.addResourceLocations("classpath:/staticTemplate/");
 	}

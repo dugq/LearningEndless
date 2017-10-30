@@ -44,3 +44,5 @@ params:
 endpoints:
   health:
     sensitive: false
+
+test: faskdlfjklasjfklajsfkldfj
