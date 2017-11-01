@@ -4,6 +4,7 @@ import com.example.pojo.entry.User;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,5 +33,13 @@ public class LoginController {
         }
     }
 
+    @RequestMapping("/logout")
+    public String logout(){
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.isAuthenticated()) {
+            subject.logout(); // session 会销毁，在SessionListener监听session销毁，清理权限缓存
+        }
+        return "redirect:/";
+    }
 
 }

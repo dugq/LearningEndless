@@ -11,6 +11,7 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -21,6 +22,12 @@ import javax.sql.DataSource;
 @EnableTransactionManagement
 public class DemoApplication extends WebMvcConfigurerAdapter {
 	protected static final Logger logger = LoggerFactory.getLogger(DemoApplication.class);
+	@Override
+	public void addCorsMappings(CorsRegistry registry) {
+		registry.addMapping("/**").allowedOrigins("*").allowCredentials(true)
+				.allowedMethods("GET", "POST", "DELETE", "PUT","OPTIONS").maxAge(3600);
+	}
+
     /**
      * 自己选择事务实现
      * @param dataSource

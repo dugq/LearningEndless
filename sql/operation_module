@@ -1,0 +1,11 @@
+create table operations
+(
+  name varchar(100) null,
+  url varchar(100) null,
+  type tinyint default '0' null comment '0:菜单  1:操作',
+  pid int default '0' null,
+  id int auto_increment
+    primary key
+)
+;
+

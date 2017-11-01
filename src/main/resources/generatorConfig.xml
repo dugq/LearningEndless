@@ -139,7 +139,8 @@
        注意，table里面很多参数都是对javaModelGenerator，context等元素的默认属性的一个复写；
     -->
         <!--<table tableName="boot_user" enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>-->
-        <table tableName="department" enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>
+        <table tableName="operation_module" enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>
+        <table tableName="operations" enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>
         <!--<table tableName="module" enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>-->
         <!--<table tableName="module_role" enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>-->
         <!--<table tableName="role" enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>-->
