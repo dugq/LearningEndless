@@ -18,7 +18,7 @@
     where id = #{id,jdbcType=INTEGER}
   </select>
     <select id="selectPermsListByUrl" resultType="java.lang.String">
-      select m.mname from operations o JOIN operation_module om ON o.id = om.operation_id JOIN module m ON om.module_id = m.id
+      select m.mname from operations o JOIN operation_module om ON o.id = om.operation_id JOIN module m ON om.module_id = m.mid
     </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from operations

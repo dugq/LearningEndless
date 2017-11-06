@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.apache.shiro.mgt.SecurityManager;
+import org.springframework.core.annotation.Order;
 
 import javax.servlet.Filter;
 import java.util.*;
@@ -25,7 +26,7 @@ public class ShiroConfig {
 
 
     @Bean(name="shiroFilter")
-    public ShiroFilterFactoryBean shiroFilter(@Qualifier("securityManager") SecurityManager manager) {
+    public ShiroFilterFactoryBean shiroFilter(@Qualifier("securityManager") SecurityManager manager,@Qualifier("myPermissionsAuthorizationFilter")MyPermissionsAuthorizationFilter mPms) {
         ShiroFilterFactoryBean bean=new ShiroFilterFactoryBean();
         bean.setSecurityManager(manager);
         //配置登录的url和登录成功的url
@@ -46,7 +47,7 @@ public class ShiroConfig {
         bean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         Map<String, Filter> map = new HashMap();
         MyFormAuthenticationFilter myAnon = new MyFormAuthenticationFilter();
-        MyPermissionsAuthorizationFilter mPms = new MyPermissionsAuthorizationFilter();
+//        MyPermissionsAuthorizationFilter mPms = new MyPermissionsAuthorizationFilter();
         map.put("myAuthc", myAnon);
         map.put("mPms",mPms);
         bean.setFilters(map);
