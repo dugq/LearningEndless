@@ -21,4 +21,6 @@ public interface OperationsService {
     int updateByPrimaryKey(Operations record);
 
     List<String> selectPermsListByUrl(String str);
+
+    List<String> selectPermsListByUser(int str);
 }

@@ -20,4 +20,6 @@ public interface OperationsMapper {
     int updateByPrimaryKey(Operations record);
 
     List<String> selectPermsListByUrl(String str);
+
+    List<String> selectPermsListById(int id);
 }

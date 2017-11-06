@@ -26,7 +26,7 @@ public class ShiroConfig {
 
 
     @Bean(name="shiroFilter")
-    public ShiroFilterFactoryBean shiroFilter(@Qualifier("securityManager") SecurityManager manager,@Qualifier("myPermissionsAuthorizationFilter")MyPermissionsAuthorizationFilter mPms) {
+    public ShiroFilterFactoryBean shiroFilter(@Qualifier("securityManager") SecurityManager manager) {
         ShiroFilterFactoryBean bean=new ShiroFilterFactoryBean();
         bean.setSecurityManager(manager);
         //配置登录的url和登录成功的url
@@ -47,17 +47,17 @@ public class ShiroConfig {
         bean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         Map<String, Filter> map = new HashMap();
         MyFormAuthenticationFilter myAnon = new MyFormAuthenticationFilter();
-//        MyPermissionsAuthorizationFilter mPms = new MyPermissionsAuthorizationFilter();
+        MyPermissionsAuthorizationFilter mPms = new MyPermissionsAuthorizationFilter();
         map.put("myAuthc", myAnon);
         map.put("mPms",mPms);
         bean.setFilters(map);
         return bean;
     }
 
-    @Bean
-    public MyPermissionsAuthorizationFilter  myPermissionsAuthorizationFilter(){
-        return new MyPermissionsAuthorizationFilter();
-    }
+//    @Bean
+//    public MyPermissionsAuthorizationFilter  myPermissionsAuthorizationFilter(){
+//        return new MyPermissionsAuthorizationFilter();
+//    }
 
 
     //配置核心安全事务管理器

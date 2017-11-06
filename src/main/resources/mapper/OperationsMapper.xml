@@ -20,6 +20,10 @@
     <select id="selectPermsListByUrl" resultType="java.lang.String">
       select m.mname from operations o JOIN operation_module om ON o.id = om.operation_id JOIN module m ON om.module_id = m.mid
     </select>
+    <select id="selectPermsListById" resultType="java.lang.String">
+       select m.mname from user_role u JOIN role r ON u.rid = r.rid JOIN module_role mr ON r.rid = mr.rid JOIN module m ON m.mid = mr.mid WHERE
+       u.uid = #{id,jdbcType=INTEGER}
+    </select>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
     delete from operations
     where id = #{id,jdbcType=INTEGER}

@@ -53,5 +53,10 @@ public class OperationsServiceImpl implements com.example.service.OperationsServ
         return operationsMapper.selectPermsListByUrl(str);
     }
 
+    @Override
+    public List<String> selectPermsListByUser(int str) {
+        return operationsMapper.selectPermsListById(str);
+    }
+
 
 }

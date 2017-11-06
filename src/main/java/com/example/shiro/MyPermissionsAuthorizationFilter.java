@@ -1,12 +1,16 @@
 package com.example.shiro;
 
 import com.alibaba.fastjson.JSON;
+import com.example.pojo.entry.User;
 import com.example.pojo.dto.ResultBean;
 import com.example.service.OperationsService;
 import com.example.service.UserService;
+import com.example.util.HttpUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.StringUtils;
 import org.apache.shiro.web.filter.authz.PermissionsAuthorizationFilter;
+import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
@@ -36,56 +40,68 @@ public class MyPermissionsAuthorizationFilter extends PermissionsAuthorizationFi
 
     @Override
     public boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws IOException {
+        if(HttpUtils.isOptionsRequest(request)){
+            return true;
+        }
         Subject subject = SecurityUtils.getSubject();
         HttpServletRequest httpServletRequest = (HttpServletRequest)request;
-        String str = httpServletRequest.getRequestURI();
-        List<String> strings = operationsService.selectPermsListByUrl(str);
-        String[] perms = strings.toArray(new String[]{});
-        boolean isPermitted = true;
-        if (perms != null && perms.length > 0) {
-            if (perms.length == 1) {
-                if (!subject.isPermitted(perms[0])) {
-                    isPermitted = false;
-                }
-            } else {
-                if (!subject.isPermittedAll(perms)) {
-                    isPermitted = false;
-                }
-            }
+        Object principal = subject.getPrincipal();
+        User user = null;
+        if(principal instanceof User){
+             user = (User) principal;
+        }else{
+            return false;
         }
-
-
-        return isPermitted;
+        List<String> strings = operationsService.selectPermsListByUser(user.getUid());
+        String requestURI = httpServletRequest.getRequestURI();
+        return strings.contains(requestURI);
     }
+
+//    @Override
+//    public boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws IOException {
+//        if(HttpUtils.isOptionsRequest(request)){
+//            return true;
+//        }
+//        Subject subject = SecurityUtils.getSubject();
+//        HttpServletRequest httpServletRequest = (HttpServletRequest)request;
+//        String requestURI = httpServletRequest.getRequestURI();
+//        boolean permitted = subject.isPermitted(requestURI);
+//        return permitted;
+//    }
+
 
     /*当拦截返回false的时候执行*/
     @Override
     protected void redirectToLogin(ServletRequest request, ServletResponse response) throws IOException {
-        if(isAjax((HttpServletRequest) request)){
-            writeJson2Response((HttpServletResponse) response,"登陆过期","-5");
+        if(HttpUtils.isAjax((HttpServletRequest) request)){
+            HttpUtils.writeJson2Response((HttpServletResponse) response,"登陆过期,请重新登录","-5");
             return;
         }
         HttpServletResponse httpServletResponse = (HttpServletResponse)response;
         httpServletResponse.sendRedirect("/template/login.html");
     }
 
-    public boolean isAjax(HttpServletRequest request) {
-        String header = request.getHeader("X-Requested-With");
-        return "XMLHttpRequest".equals(header) ? true:false;
+    @Override
+    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws IOException {
+        Subject subject = this.getSubject(request, response);
+        if (subject.getPrincipal() == null) {
+            this.saveRequestAndRedirectToLogin(request, response);
+        } else {
+            String unauthorizedUrl = this.getUnauthorizedUrl();
+            if (StringUtils.hasText(unauthorizedUrl)) {
+                WebUtils.issueRedirect(request, response, unauthorizedUrl);
+            } else {
+               HttpServletResponse httpServletResponse = (HttpServletResponse)response;
+                if(HttpUtils.isAjax((HttpServletRequest) request)){
+                    HttpUtils.writeJson2Response(httpServletResponse,"-10","noPermission");
+                }else{
+                   httpServletResponse.sendRedirect("/template/noPermission.html");
+                }
+            }
+        }
+
+        return false;
     }
 
-    private void writeJson2Response(HttpServletResponse response,
-                                    String message, String code) {
-        ServletOutputStream outputStream = null;
-        try {
-            outputStream = response.getOutputStream();
-            response.setHeader("Content-Type",
-                    "application/json;charset=UTF-8");
-            outputStream.write(JSON.toJSONString(new ResultBean(code, message))
-                    .getBytes("UTF-8"));
-            outputStream.close();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-    }
+
 }
