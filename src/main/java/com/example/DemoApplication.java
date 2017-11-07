@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.stereotype.Component;
@@ -20,13 +21,14 @@ import javax.sql.DataSource;
 
 @SpringBootApplication
 @EnableTransactionManagement
+@ServletComponentScan
 public class DemoApplication extends WebMvcConfigurerAdapter {
 	protected static final Logger logger = LoggerFactory.getLogger(DemoApplication.class);
-	@Override
-	public void addCorsMappings(CorsRegistry registry) {
-		registry.addMapping("/**").allowedOrigins("*").allowCredentials(true)
-				.allowedMethods("GET", "POST", "DELETE", "PUT","OPTIONS").maxAge(3600);
-	}
+//	@Override
+//	public void addCorsMappings(CorsRegistry registry) {
+//		registry.addMapping("/**").allowedOrigins("*").allowCredentials(true).all
+//				.allowedMethods("GET", "POST", "DELETE", "PUT","OPTIONS").maxAge(3600);
+//	}
 
     /**
      * 自己选择事务实现
@@ -55,6 +57,9 @@ public class DemoApplication extends WebMvcConfigurerAdapter {
 		registry.addResourceHandler("/template/**")
 				.addResourceLocations("classpath:/staticTemplate/");
 	}
+
+
+
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(new ValidatorInterception()).addPathPatterns("/**");

@@ -28,6 +28,8 @@ public class MyFormAuthenticationFilter extends FormAuthenticationFilter {
     /*判断是否登陆*/
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
+        HttpServletResponse res = (HttpServletResponse)response;
+        res.setHeader("Access-Control-Allow-Origin", "*");
         if(HttpUtils.isOptionsRequest(request)){
             return true;
         }

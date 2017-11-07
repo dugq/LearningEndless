@@ -40,6 +40,8 @@ public class MyPermissionsAuthorizationFilter extends PermissionsAuthorizationFi
 
     @Override
     public boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws IOException {
+            HttpServletResponse res = (HttpServletResponse)response;
+            res.setHeader("Access-Control-Allow-Origin", "*");
         if(HttpUtils.isOptionsRequest(request)){
             return true;
         }
