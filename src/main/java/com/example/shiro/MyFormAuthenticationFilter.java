@@ -12,6 +12,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * Created by dugq on 2017/10/31.
@@ -32,7 +33,7 @@ public class MyFormAuthenticationFilter extends FormAuthenticationFilter {
         }
         Subject subject = getSubject(request, response);
         boolean authenticated = subject.isAuthenticated();
-       if (!isLoginRequest(request, response) && isPermissive(mappedValue)){
+       if (!isLoginRequest(request, response) && isPermissive(mappedValue) && !Objects.isNull(subject.getPrincipals())){
            return true;
        }
        return authenticated;

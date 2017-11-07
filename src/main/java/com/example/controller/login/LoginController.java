@@ -1,5 +1,6 @@
 package com.example.controller.login;
 
+import com.example.pojo.dto.ResultBean;
 import com.example.pojo.entry.User;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AccountException;
@@ -8,6 +9,7 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -32,7 +34,28 @@ public class LoginController {
             return "redirect:template/login.html";
         }
     }
-
+    @RequestMapping("login4ajax")
+    @ResponseBody
+    public ResultBean login4ajax(@RequestBody User user){
+        ResultBean resultBean = new ResultBean();
+        try {
+            UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), user.getPassword());
+            Subject subject = SecurityUtils.getSubject();
+            subject.login(token);
+            String sessionId = subject.getSession().getId().toString();
+            resultBean.setCode("0");
+            resultBean.addAttribute("token",sessionId);
+        }catch (AccountException e){
+            resultBean.setCode("-1");
+            resultBean.setMessage("账号密码错误");
+        }
+        catch (Exception e) {
+            resultBean.setCode("-1");
+            resultBean.setMessage("账号密码错误");
+        }finally {
+            return resultBean;
+        }
+    }
     @RequestMapping("/logout")
     public String logout(){
         Subject subject = SecurityUtils.getSubject();

@@ -12,5 +12,18 @@
 <a href="test3.html">test3</a>
 <a href="test4.html">test4</a>
 <a href="test5.html">test5</a>
+<button>button1</button>
+<button>button2</button>
+<button>button3</button>
+<button>button4</button>
 </body>
+<script type="text/javascript">
+    $("button").each((item,button) => {
+        $(button).click(e => {
+            $.post("/testShiro/test"+(item+1),{},res => {
+                alert(JSON.stringify(res));
+    });
+    })
+    });
+</script>
 </html>

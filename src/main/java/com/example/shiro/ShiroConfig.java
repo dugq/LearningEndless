@@ -26,7 +26,7 @@ public class ShiroConfig {
 
 
     @Bean(name="shiroFilter")
-    public ShiroFilterFactoryBean shiroFilter(@Qualifier("securityManager") SecurityManager manager) {
+    public ShiroFilterFactoryBean shiroFilter(@Qualifier("securityManager") SecurityManager manager,@Qualifier("myPermissionsAuthorizationFilter")MyPermissionsAuthorizationFilter mPms) {
         ShiroFilterFactoryBean bean=new ShiroFilterFactoryBean();
         bean.setSecurityManager(manager);
         //配置登录的url和登录成功的url
@@ -36,28 +36,29 @@ public class ShiroConfig {
         LinkedHashMap<String, String> filterChainDefinitionMap=new LinkedHashMap<>();
         filterChainDefinitionMap.put("/template/login.html", "anon"); //表示可以匿名访问
         filterChainDefinitionMap.put("/template/test1.html", "myAuthc,mPms"); //表示可以匿名访问
-        filterChainDefinitionMap.put("/template/test2.html", "myAuthc"); //表示可以匿名访问
-        filterChainDefinitionMap.put("/template/test3.html", "myAuthc"); //表示可以匿名访问
-        filterChainDefinitionMap.put("/template/test4.html", "myAuthc"); //表示可以匿名访问
-        filterChainDefinitionMap.put("/template/test5.html", "myAuthc"); //表示可以匿名访问
+        filterChainDefinitionMap.put("/template/test2.html", "myAuthc");
+        filterChainDefinitionMap.put("/template/test3.html", "myAuthc");
+        filterChainDefinitionMap.put("/template/test4.html", "myAuthc");
+        filterChainDefinitionMap.put("/template/test5.html", "myAuthc");
         filterChainDefinitionMap.put("/user/login", "anon"); //表示可以匿名访问
         filterChainDefinitionMap.put("/mystatic/**", "anon");
-        filterChainDefinitionMap.put("/**", "authc");//表示需要认证才可以访问
+        filterChainDefinitionMap.put("/**", "myAuthc");//表示需要认证才可以访问
         filterChainDefinitionMap.put("/user/logout", "logout");
+        filterChainDefinitionMap.put("/testShiro/*", "myAuthc,mPms");
         bean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         Map<String, Filter> map = new HashMap();
         MyFormAuthenticationFilter myAnon = new MyFormAuthenticationFilter();
-        MyPermissionsAuthorizationFilter mPms = new MyPermissionsAuthorizationFilter();
+//        MyPermissionsAuthorizationFilter mPms = new MyPermissionsAuthorizationFilter();
         map.put("myAuthc", myAnon);
         map.put("mPms",mPms);
         bean.setFilters(map);
         return bean;
     }
 
-//    @Bean
-//    public MyPermissionsAuthorizationFilter  myPermissionsAuthorizationFilter(){
-//        return new MyPermissionsAuthorizationFilter();
-//    }
+    @Bean
+    public MyPermissionsAuthorizationFilter  myPermissionsAuthorizationFilter(){
+        return new MyPermissionsAuthorizationFilter();
+    }
 
 
     //配置核心安全事务管理器
@@ -69,6 +70,7 @@ public class ShiroConfig {
         manager.setRealm(authRealm);
         return manager;
     }
+
     //多realm时 ，认证策略
 //    @Bean("authenticationStrategy")
 //    public AbstractAuthenticationStrategy authenticationStrategy(){

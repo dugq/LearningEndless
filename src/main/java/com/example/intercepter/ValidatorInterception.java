@@ -1,6 +1,7 @@
 package com.example.intercepter;
 
 import com.example.pojo.annotation.MyValidator;
+import com.example.util.HttpUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -20,6 +21,9 @@ import java.util.Objects;
 public class ValidatorInterception implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
+        if(HttpUtils.isOptionsRequest(httpServletRequest)){
+            return true;
+        }
         HandlerMethod method = (HandlerMethod)o;
         Method method1 = method.getMethod();
         List<Object> objs = new ArrayList<Object>();
@@ -39,7 +43,6 @@ public class ValidatorInterception implements HandlerInterceptor {
             }
 
         }
-        System.out.print("123");
         return true;
     }
 

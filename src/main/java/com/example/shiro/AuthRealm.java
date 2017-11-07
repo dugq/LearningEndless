@@ -5,11 +5,13 @@ import com.example.pojo.entry.Role;
 import com.example.pojo.entry.User;
 import com.example.service.OperationsService;
 import com.example.service.UserService;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -37,6 +39,8 @@ public class AuthRealm extends AuthorizingRealm {
            return null;
         return new SimpleAuthenticationInfo(user, user.getPassword(),getName());//放入shiro.调用CredentialsMatcher检验密码
     }
+
+
     //授权
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principal) {
