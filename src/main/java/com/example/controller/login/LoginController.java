@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Created by dugq on 2017/10/26.
  */
@@ -20,10 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
     @RequestMapping("login")
-    public String login( User user){
+    public String login(User user, HttpServletRequest request){
         try {
-            UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), user.getPassword());
-            SecurityUtils.getSubject().login(token);
+            request.getSession().setAttribute("user",user);
             return "home";
         }catch (AccountException e){
             System.out.println("账号密码错误");
@@ -39,12 +40,7 @@ public class LoginController {
     public ResultBean login4ajax(@RequestBody User user){
         ResultBean resultBean = new ResultBean();
         try {
-            UsernamePasswordToken token = new UsernamePasswordToken(user.getUsername(), user.getPassword());
-            Subject subject = SecurityUtils.getSubject();
-            subject.login(token);
-            String sessionId = subject.getSession().getId().toString();
-            resultBean.setCode("0");
-            resultBean.addAttribute("token",sessionId);
+            throw new RuntimeException("测试");
         }catch (AccountException e){
             resultBean.setCode("-1");
             resultBean.setMessage("账号密码错误");
@@ -57,11 +53,8 @@ public class LoginController {
         }
     }
     @RequestMapping("/logout")
-    public String logout(){
-        Subject subject = SecurityUtils.getSubject();
-        if (subject.isAuthenticated()) {
-            subject.logout(); // session 会销毁，在SessionListener监听session销毁，清理权限缓存
-        }
+    public String logout( HttpServletRequest request){
+        request.getSession().removeAttribute("user");
         return "redirect:/";
     }
 
