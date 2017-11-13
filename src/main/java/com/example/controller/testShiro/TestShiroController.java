@@ -1,5 +1,6 @@
 package com.example.controller.testShiro;
 
+import com.example.pojo.dto.ResultBean;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,20 +12,20 @@ import org.springframework.web.bind.annotation.RestController;
 public class TestShiroController {
 
     @RequestMapping("test1")
-    public String test1(){
-        return "test1";
+    public ResultBean test1(){
+        return new ResultBean("0","test1");
     }
     @RequestMapping("test2")
-    public String test2(){
-        return "test2";
+    public ResultBean test2(){
+        return new ResultBean("0","test2");
     }
     @RequestMapping("test3")
-    public String test3(){
-        return "test3";
+    public ResultBean test3(){
+        return new ResultBean("0","test3");
     }
     @RequestMapping("test4")
-    public String test4(){
-        return "test4";
+    public ResultBean test4(){
+        return new ResultBean("0","test4");
     }
 
 

@@ -1,9 +1,12 @@
 package com.example.shiro;
 
+import com.example.aop.CrosFilter;
 import org.apache.shiro.authc.credential.CredentialsMatcher;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authc.credential.PasswordMatcher;
 import org.apache.shiro.authc.credential.PasswordService;
+import org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO;
+import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -13,7 +16,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.apache.shiro.mgt.SecurityManager;
-import org.springframework.core.annotation.Order;
 
 import javax.servlet.Filter;
 import java.util.*;
@@ -26,7 +28,7 @@ public class ShiroConfig {
 
 
     @Bean(name="shiroFilter")
-    public ShiroFilterFactoryBean shiroFilter(@Qualifier("securityManager") SecurityManager manager,@Qualifier("myPermissionsAuthorizationFilter")MyPermissionsAuthorizationFilter mPms) {
+    public ShiroFilterFactoryBean shiroFilter(@Qualifier("securityManager") SecurityManager manager) {
         ShiroFilterFactoryBean bean=new ShiroFilterFactoryBean();
         bean.setSecurityManager(manager);
         //配置登录的url和登录成功的url
@@ -35,20 +37,17 @@ public class ShiroConfig {
         //配置访问权限
         LinkedHashMap<String, String> filterChainDefinitionMap=new LinkedHashMap<>();
         filterChainDefinitionMap.put("/template/login.html", "anon"); //表示可以匿名访问
-        filterChainDefinitionMap.put("/template/test1.html", "myAuthc,mPms"); //表示可以匿名访问
-        filterChainDefinitionMap.put("/template/test2.html", "myAuthc");
-        filterChainDefinitionMap.put("/template/test3.html", "myAuthc");
-        filterChainDefinitionMap.put("/template/test4.html", "myAuthc");
-        filterChainDefinitionMap.put("/template/test5.html", "myAuthc");
         filterChainDefinitionMap.put("/user/login", "anon"); //表示可以匿名访问
+        filterChainDefinitionMap.put("/user/login4ajax", "anon"); //表示可以匿名访问
         filterChainDefinitionMap.put("/mystatic/**", "anon");
+        filterChainDefinitionMap.put("/template/*", "myAuthc,mPms"); //表示可以匿名访问
         filterChainDefinitionMap.put("/**", "myAuthc");//表示需要认证才可以访问
         filterChainDefinitionMap.put("/user/logout", "logout");
         filterChainDefinitionMap.put("/testShiro/*", "myAuthc,mPms");
         bean.setFilterChainDefinitionMap(filterChainDefinitionMap);
+        MyPermissionsAuthorizationFilter mPms = myPermissionsAuthorizationFilter();
         Map<String, Filter> map = new HashMap();
         MyFormAuthenticationFilter myAnon = new MyFormAuthenticationFilter();
-//        MyPermissionsAuthorizationFilter mPms = new MyPermissionsAuthorizationFilter();
         map.put("myAuthc", myAnon);
         map.put("mPms",mPms);
         bean.setFilters(map);
@@ -68,14 +67,10 @@ public class ShiroConfig {
         DefaultWebSecurityManager manager=new DefaultWebSecurityManager();
 //        manager.setRealms();
         manager.setRealm(authRealm);
+        manager.setSessionManager(getDefaultWebSessionManager());
         return manager;
     }
 
-    //多realm时 ，认证策略
-//    @Bean("authenticationStrategy")
-//    public AbstractAuthenticationStrategy authenticationStrategy(){
-//        return new FirstSuccessfulStrategy();
-//    }
 
     //配置自定义的权限登录器
     @Bean(name="authRealm")
@@ -110,6 +105,12 @@ public class ShiroConfig {
        };
     }
 
+    @Bean("sessionDAO")
+    public SessionDAO getSessionDAO(){
+        return new EnterpriseCacheSessionDAO();
+    }
+
+
     @Bean("sessionManager")
     public SessionManager getDefaultWebSessionManager() {
         SessionManager sessionManager = new SessionManager();
@@ -121,6 +122,7 @@ public class ShiroConfig {
         // 设置监听器,自定义的监听器也要加在这里
         List list = new ArrayList();
         sessionManager.setSessionListeners(list);
+        sessionManager.setSessionDAO(getSessionDAO());
         return sessionManager;
     }
     @Bean

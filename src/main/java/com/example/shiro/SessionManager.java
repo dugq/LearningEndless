@@ -19,7 +19,7 @@ import java.util.Objects;
  */
 public class SessionManager extends DefaultWebSessionManager {
     private static final Logger log = LoggerFactory.getLogger(DefaultWebSessionManager.class);
-    private String authorization = "Authorization";
+    private String authorization = "sessionId";
 
     /**
      * 重写获取sessionId的方法调用当前Manager的获取方法

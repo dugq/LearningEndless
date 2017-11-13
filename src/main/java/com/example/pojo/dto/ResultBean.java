@@ -21,7 +21,7 @@ public class ResultBean {
     }
 
     public void addAttribute(String key, Object value){
-        body.put("key",value);
+        body.put(key,value);
     }
     public void addAttributes(Map map){
         body.putAll(map);

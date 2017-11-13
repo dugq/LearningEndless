@@ -27,8 +27,6 @@ import java.util.List;
 /**
  * Created by dugq on 2017/11/1.
  */
-@WebFilter
-@Order(Integer.MAX_VALUE)
 public class MyPermissionsAuthorizationFilter extends PermissionsAuthorizationFilter {
     @Autowired
     private OperationsService operationsService;
@@ -40,11 +38,6 @@ public class MyPermissionsAuthorizationFilter extends PermissionsAuthorizationFi
 
     @Override
     public boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws IOException {
-            HttpServletResponse res = (HttpServletResponse)response;
-            res.setHeader("Access-Control-Allow-Origin", "*");
-        if(HttpUtils.isOptionsRequest(request)){
-            return true;
-        }
         Subject subject = SecurityUtils.getSubject();
         HttpServletRequest httpServletRequest = (HttpServletRequest)request;
         Object principal = subject.getPrincipal();
@@ -95,7 +88,7 @@ public class MyPermissionsAuthorizationFilter extends PermissionsAuthorizationFi
             } else {
                HttpServletResponse httpServletResponse = (HttpServletResponse)response;
                 if(HttpUtils.isAjax((HttpServletRequest) request)){
-                    HttpUtils.writeJson2Response(httpServletResponse,"-10","noPermission");
+                    HttpUtils.writeJson2Response(httpServletResponse,"noPermission","-10");
                 }else{
                    httpServletResponse.sendRedirect("/template/noPermission.html");
                 }

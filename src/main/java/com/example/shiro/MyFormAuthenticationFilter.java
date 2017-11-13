@@ -3,6 +3,7 @@ package com.example.shiro;
 import com.alibaba.fastjson.JSON;
 import com.example.pojo.dto.ResultBean;
 import com.example.util.HttpUtils;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.FormAuthenticationFilter;
 
@@ -28,11 +29,6 @@ public class MyFormAuthenticationFilter extends FormAuthenticationFilter {
     /*判断是否登陆*/
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
-        HttpServletResponse res = (HttpServletResponse)response;
-        res.setHeader("Access-Control-Allow-Origin", "*");
-        if(HttpUtils.isOptionsRequest(request)){
-            return true;
-        }
         Subject subject = getSubject(request, response);
         boolean authenticated = subject.isAuthenticated();
        if (!isLoginRequest(request, response) && isPermissive(mappedValue) && !Objects.isNull(subject.getPrincipals())){
