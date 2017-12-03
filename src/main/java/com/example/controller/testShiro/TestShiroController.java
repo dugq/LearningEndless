@@ -1,6 +1,8 @@
 package com.example.controller.testShiro;
 
 import com.example.pojo.dto.ResultBean;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,6 +15,8 @@ public class TestShiroController {
 
     @RequestMapping("test1")
     public ResultBean test1(){
+
+        Subject subject = SecurityUtils.getSubject();
         return new ResultBean("0","test1");
     }
     @RequestMapping("test2")

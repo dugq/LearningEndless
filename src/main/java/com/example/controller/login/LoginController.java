@@ -12,6 +12,7 @@ import org.apache.shiro.session.mgt.eis.SessionDAO;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.DefaultSubjectContext;
+import org.apache.shiro.util.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -51,6 +53,7 @@ public class LoginController {
             String browser = HttpUtils.getBrowser((HttpServletRequest) request);
             session.setAttribute("shiro_ip",ipAddr);
             session.setAttribute("shiro_browser",browser);
+            Map<Object, Object> resources = ThreadContext.getResources();
             return "home";
         }catch (AccountException e){
             System.out.println("账号密码错误");
@@ -68,12 +71,12 @@ public class LoginController {
             while (activeSessions.iterator().hasNext()){
                 Session session = activeSessions.iterator().next();
                 Object attribute = session.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
+                User user = (User)((PrincipalCollection) attribute).getPrimaryPrincipal();
                 Object shiro_ip = session.getAttribute("shiro_ip");
                 Object shiro_browser = session.getAttribute("shiro_browser");
                 if(Objects.isNull(attribute)){
                     return false;
                 }
-                User user = (User)((PrincipalCollection) attribute).getPrimaryPrincipal();
                 boolean AUTHENTICATED = (boolean) session.getAttribute(DefaultSubjectContext.AUTHENTICATED_SESSION_KEY);
                 String host = session.getHost();
                 if(!Objects.isNull(user) && AUTHENTICATED && host.equals(request.getRemoteHost()) && shiro_ip.equals(HttpUtils.getIpAddr((HttpServletRequest) request)) && shiro_browser.equals(HttpUtils.getBrowser((HttpServletRequest) request))){
@@ -83,9 +86,9 @@ public class LoginController {
             }
         }catch (Exception e){
             logger.error("登陆验证用户是否已经登陆",e);
-        }finally {
             return false;
         }
+        return false;
     }
 
 

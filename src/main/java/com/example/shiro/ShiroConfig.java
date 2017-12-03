@@ -54,7 +54,6 @@ public class ShiroConfig {
         return bean;
     }
 
-    @Bean
     public MyPermissionsAuthorizationFilter  myPermissionsAuthorizationFilter(){
         return new MyPermissionsAuthorizationFilter();
     }

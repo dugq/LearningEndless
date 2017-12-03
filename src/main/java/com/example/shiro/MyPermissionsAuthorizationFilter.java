@@ -28,41 +28,40 @@ import java.util.List;
  * Created by dugq on 2017/11/1.
  */
 public class MyPermissionsAuthorizationFilter extends PermissionsAuthorizationFilter {
-    @Autowired
-    private OperationsService operationsService;
+
 
     @Override
     public boolean onPreHandle(ServletRequest request, ServletResponse response, Object mappedValue) throws Exception {
         return super.onPreHandle(request, response, mappedValue);
     }
 
-    @Override
-    public boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws IOException {
-        Subject subject = SecurityUtils.getSubject();
-        HttpServletRequest httpServletRequest = (HttpServletRequest)request;
-        Object principal = subject.getPrincipal();
-        User user = null;
-        if(principal instanceof User){
-             user = (User) principal;
-        }else{
-            return false;
-        }
-        List<String> strings = operationsService.selectPermsListByUser(user.getUid());
-        String requestURI = httpServletRequest.getRequestURI();
-        return strings.contains(requestURI);
-    }
-
 //    @Override
 //    public boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws IOException {
-//        if(HttpUtils.isOptionsRequest(request)){
-//            return true;
-//        }
 //        Subject subject = SecurityUtils.getSubject();
 //        HttpServletRequest httpServletRequest = (HttpServletRequest)request;
+//        Object principal = subject.getPrincipal();
+//        User user = null;
+//        if(principal instanceof User){
+//             user = (User) principal;
+//        }else{
+//            return false;
+//        }
+//        List<String> strings = operationsService.selectPermsListByUser(user.getUid());
 //        String requestURI = httpServletRequest.getRequestURI();
-//        boolean permitted = subject.isPermitted(requestURI);
-//        return permitted;
+//        return strings.contains(requestURI);
 //    }
+
+    @Override
+    public boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) throws IOException {
+        if(HttpUtils.isOptionsRequest(request)){
+            return true;
+        }
+        Subject subject = SecurityUtils.getSubject();
+        HttpServletRequest httpServletRequest = (HttpServletRequest)request;
+        String requestURI = httpServletRequest.getRequestURI();
+        boolean permitted = subject.isPermitted(requestURI);
+        return permitted;
+    }
 
 
     /*当拦截返回false的时候执行*/
