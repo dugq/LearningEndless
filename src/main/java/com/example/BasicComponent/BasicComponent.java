@@ -2,7 +2,9 @@ package com.example.BasicComponent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.ContextLoader;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -18,6 +20,9 @@ import javax.servlet.http.HttpSession;
  */
 public class BasicComponent {
    protected static final Logger logger = LoggerFactory.getLogger(BasicComponent.class);
+  @Autowired
+   protected WebApplicationContext webApplicationContext;
+
 
    protected HttpServletRequest getRequest(){
       HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
@@ -37,14 +42,11 @@ public class BasicComponent {
          return  response;
       }
 
-   protected ServletContext getContext(){
-      return  ContextLoader.getCurrentWebApplicationContext().getServletContext();
+   protected ServletContext   getContext(){
+//      WebApplicationContext currentWebApplicationContext = ContextLoader.getCurrentWebApplicationContext();
+      return  webApplicationContext.getServletContext();
    }
 
 
-   public static void main(String[] args) {
-      double v = Math.random();
-      String tel = String.valueOf(v).substring(2,13);
-      System.out.print(tel);
-   }
 }
+

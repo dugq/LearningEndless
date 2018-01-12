@@ -18,27 +18,6 @@ management:
   security:
     enabled: false
 
-mybatis: 
-  type-aliases-package: com.example.pojo.entry
-  mapper-locations: classpath:mapper/*.xml
-  generator-driver-location: data/mysql-connector-java-5.1.21.jar
-  target-package:
-    java: com.example.pojo.entry
-    sql: mapper
-    mapper: com.example.dao.mapper
-  target-project:
-    java: src/main/java
-    sql: src/main/resources
-    mapper: src/main/java
-  mapper:
-    mappers: com.example.dao.mapper
-    not-empty: false
-    identity: MYSQL
-pagehelper:
-  helperDialect: mysql
-  reasonable: true
-  pagehelper:
-    supportMethodsArguments: true
 params:
   count: countSql
 endpoints:

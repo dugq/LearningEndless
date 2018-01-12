@@ -1,8 +1,9 @@
 package com.example.controller.login;
 
-import com.example.DemoApplication;
+import com.example.controller.BaseController;
 import com.example.pojo.dto.ResultBean;
 import com.example.pojo.entry.User;
+import com.example.service.UserService;
 import com.example.util.HttpUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AccountException;
@@ -17,27 +18,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * Created by dugq on 2017/10/26.
  */
 @Controller
 @RequestMapping("user")
-public class LoginController {
+public class LoginController extends BaseController{
     protected static final Logger logger = LoggerFactory.getLogger(LoginController.class);
     @Autowired
-    private SessionDAO sessionDAO;
+    private UserService userServiceImpl;
 
     @RequestMapping("login")
     public String login( User user,ServletRequest request){
@@ -66,28 +68,6 @@ public class LoginController {
     }
 
     public boolean isUserLogin(ServletRequest request){
-        try{
-            Collection<Session> activeSessions = sessionDAO.getActiveSessions();
-            while (activeSessions.iterator().hasNext()){
-                Session session = activeSessions.iterator().next();
-                Object attribute = session.getAttribute(DefaultSubjectContext.PRINCIPALS_SESSION_KEY);
-                User user = (User)((PrincipalCollection) attribute).getPrimaryPrincipal();
-                Object shiro_ip = session.getAttribute("shiro_ip");
-                Object shiro_browser = session.getAttribute("shiro_browser");
-                if(Objects.isNull(attribute)){
-                    return false;
-                }
-                boolean AUTHENTICATED = (boolean) session.getAttribute(DefaultSubjectContext.AUTHENTICATED_SESSION_KEY);
-                String host = session.getHost();
-                if(!Objects.isNull(user) && AUTHENTICATED && host.equals(request.getRemoteHost()) && shiro_ip.equals(HttpUtils.getIpAddr((HttpServletRequest) request)) && shiro_browser.equals(HttpUtils.getBrowser((HttpServletRequest) request))){
-                    logger.error("已经登陆~~~~~~~~~~~~~~~~~~~~~~~~");
-                    return true;
-                }
-            }
-        }catch (Exception e){
-            logger.error("登陆验证用户是否已经登陆",e);
-            return false;
-        }
         return false;
     }
 
@@ -127,6 +107,18 @@ public class LoginController {
             subject.logout(); // session 会销毁，在SessionListener监听session销毁，清理权限缓存
         }
         return "redirect:/";
+    }
+
+    @RequestMapping("test")
+    public String test(){
+        ServletContext context = getContext();
+        User user = userServiceImpl.selectByPrimaryKey(1);
+        User user1 = userServiceImpl.selectByPrimaryKey(2);
+        user.setUsername("23");
+        user1.setUsername("23");
+        userServiceImpl.updateByPrimaryKey(user);
+        userServiceImpl.test(user1);
+        return "test1";
     }
 
 }
