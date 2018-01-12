@@ -1,6 +1,10 @@
+#设置自定义属性，用于别的地方的占位符
+mycofig:
+  database: spring_boot
+
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/spring_boot
+    url: jdbc:mysql://localhost:3306/${mycofig.database}
     username: root
     password: 1234
     driver-class-name: com.mysql.jdbc.Driver
@@ -23,5 +27,3 @@ params:
 endpoints:
   health:
     sensitive: false
-
-test: faskdlfjklasjfklajsfkldfj
