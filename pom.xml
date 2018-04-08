@@ -134,6 +134,22 @@
 			<artifactId>shiro-ehcache</artifactId>
 			<version>1.2.2</version>
 		</dependency>
+
+		<!--redis-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>4.5.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.4</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -159,7 +175,6 @@
 
 		</plugins>
 	</build>
-
 	<repositories>
 		<repository>
 			<id>spring-snapshots</id>

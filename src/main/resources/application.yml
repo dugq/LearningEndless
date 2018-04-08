@@ -10,6 +10,15 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
   thymeleaf:
     cache: false
+  redis:
+    host: 47.254.27.100
+    password: 1234
+    port: 6379
+    pool:
+      max-idle: 100
+      min-idle: 1
+      max-active: 1000
+      max-wait: -1
 
 server: 
    port: 8080
