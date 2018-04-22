@@ -17,7 +17,7 @@ public class MyCommandLineRunner  implements CommandLineRunner {
     @Override
     public void run(String... var1) throws Exception{
         System.out.println("This will be execute when the project was started!");
-        BootUser bootUser = bootUserMapper.selectByPrimaryKey(1);
-        System.out.println(bootUser);
+//        BootUser bootUser = bootUserMapper.selectByPrimaryKey(1);
+//        System.out.println(bootUser);
     }
 }
