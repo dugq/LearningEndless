@@ -1,5 +1,6 @@
 package com.example;
 
+import com.example.intercepter.TestWebRequestInterceptor;
 import com.example.intercepter.ValidatorInterception;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,11 +50,11 @@ public class DemoApplication extends WebMvcConfigurerAdapter {
 				.addResourceLocations("classpath:/staticTemplate/");
 	}
 
-
-
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(new ValidatorInterception()).addPathPatterns("/**");
+		registry.addWebRequestInterceptor(new TestWebRequestInterceptor()).addPathPatterns("/**");
 		super.addInterceptors(registry);
 	}
+
 }

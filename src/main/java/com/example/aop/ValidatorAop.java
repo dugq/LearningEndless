@@ -2,9 +2,7 @@ package com.example.aop;
 
 import com.example.pojo.annotation.MyValidator;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -32,6 +30,8 @@ public class ValidatorAop {
     public void validate(){}
 
     @Before("validate()")
+    @After("")
+    @Around("")
     public void validating(JoinPoint point)throws Throwable{
         Object[] args = point.getArgs();
         Method method = ((MethodSignature) point.getSignature()).getMethod();
