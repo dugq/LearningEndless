@@ -1,5 +1,6 @@
 package com.example;
 
+import com.example.controller.login.Test123;
 import com.example.intercepter.TestWebRequestInterceptor;
 import com.example.intercepter.ValidatorInterception;
 import org.slf4j.Logger;
@@ -9,6 +10,7 @@ import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.context.annotation.Bean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -57,4 +59,8 @@ public class DemoApplication extends WebMvcConfigurerAdapter {
 		super.addInterceptors(registry);
 	}
 
+	@Bean
+	public Object test(){
+		return new Test123(1);
+	}
 }

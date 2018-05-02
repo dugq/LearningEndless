@@ -30,12 +30,13 @@ public class ValidatorAop {
     public void validate(){}
 
     @Before("validate()")
-    @After("")
-    @Around("")
     public void validating(JoinPoint point)throws Throwable{
         Object[] args = point.getArgs();
         Method method = ((MethodSignature) point.getSignature()).getMethod();
         Annotation[][] parameterAnnotations = method.getParameterAnnotations();
+        Before annotation1 = method.getAnnotation(Before.class);
+        annotation1.value();
+
         Parameter[] parameters = method.getParameters();
         for(int i = 0 ; i < parameters.length; i++){
             Parameter parameter = parameters[i];
@@ -46,6 +47,8 @@ public class ValidatorAop {
             }
         }
     }
+
+
 
     private void ValidatorByType(Object[] args, int i, Object value, MyValidator annotation) {
         if(Map.class.isAssignableFrom(value.getClass())){

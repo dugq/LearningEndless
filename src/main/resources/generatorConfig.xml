@@ -31,8 +31,8 @@
         <property name="beginningDelimiter" value="`"/>
         <property name="endingDelimiter" value="`"/>
         <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"/>
-        <plugin type="com.example.mybatisGenerator.MyPluginAdapter_web"/>
-        <commentGenerator type="com.example.mybatisGenerator.MyCommentGenerator_web">
+        <plugin type="com.example.mybatisGenerator.MyPluginAdapter"/>
+        <commentGenerator type="com.example.mybatisGenerator.MyCommentGenerator">
             <property name="suppressDate" value="true"/>
             <property name="suppressAllComments" value="true" />
         </commentGenerator>
@@ -147,7 +147,7 @@
         <!--<table tableName="role" enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>-->
         <!--<table tableName="user" enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>-->
         <!--<table tableName="user_role" enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>-->
-        <table tableName="ct_admission_produce" domainObjectName="AdmissionSalePrice"  enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>
+        <table tableName="ct_admission_sale_price" domainObjectName="AdmissionSalePrice"  enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>
 
     </context>
 </generatorConfiguration>
