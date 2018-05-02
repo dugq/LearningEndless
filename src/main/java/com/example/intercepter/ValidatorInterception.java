@@ -3,6 +3,7 @@ package com.example.intercepter;
 import com.example.pojo.annotation.MyValidator;
 import com.example.util.HttpUtils;
 import org.springframework.core.MethodParameter;
+import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
@@ -18,6 +19,7 @@ import java.util.Objects;
 /**
  * Created by dugq on 2017/7/11.
  */
+@Component
 public class ValidatorInterception implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
