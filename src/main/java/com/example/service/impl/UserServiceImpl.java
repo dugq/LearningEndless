@@ -1,6 +1,7 @@
 package com.example.service.impl;
 
 import com.example.pojo.entry.User;
+import com.example.service.OperationsService;
 import com.example.service.base.BasicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,10 @@ import java.util.List;
 public class UserServiceImpl extends BasicService implements com.example.service.UserService {
     @Autowired
     private UserMapper userMapper;
+    @Autowired
+    private OperationsService operationsService;
+
+
     @Override
     public int deleteByPrimaryKey(Integer uid) {
         return userMapper.deleteByPrimaryKey(uid);

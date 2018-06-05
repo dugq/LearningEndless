@@ -10,13 +10,17 @@ import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
+import org.springframework.cglib.core.DebuggingClassWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.Arrays;
+import java.util.Enumeration;
 
 @SpringBootApplication
 @EnableTransactionManagement
@@ -29,7 +33,7 @@ public class DemoApplication extends WebMvcConfigurerAdapter {
 //				.allowedMethods("GET", "POST", "DELETE", "PUT","OPTIONS").maxAge(3600);
 //	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		//启动参数添加：--Dfile.encoding=UTF-8 --mysql.database=spring-boot --server.port=8090 --mycofig.database=spring_boot 跟yml同名的属性将覆盖
 		ApplicationArguments applicationArguments = new DefaultApplicationArguments(
 				args);
@@ -41,6 +45,9 @@ public class DemoApplication extends WebMvcConfigurerAdapter {
 		//获取所有的参数即：args
 //		String[] sourceArgs = applicationArguments.getSourceArgs();
 
+//		开启代理生成的类打印
+//		System.setProperty(DebuggingClassWriter.DEBUG_LOCATION_PROPERTY, "D:\\class");
+//		System.getProperties().put("sun.misc.ProxyGenerator.saveGeneratedFiles", "true");
 		SpringApplication.run(DemoApplication.class, args);
 		logger.error("CONGRATULATIONS!!   demo effective!");
     }

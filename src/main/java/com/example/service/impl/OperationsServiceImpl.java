@@ -3,6 +3,8 @@ package com.example.service.impl;
 import com.example.dao.mapper.OperationModuleMapper;
 import com.example.dao.mapper.OperationsMapper;
 import com.example.pojo.entry.Operations;
+import com.example.pojo.statics.StaticVar;
+import com.example.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,8 @@ public class OperationsServiceImpl implements com.example.service.OperationsServ
     private OperationModuleMapper operationModuleMapper;
     @Autowired
     private OperationsMapper operationsMapper;
+    @Autowired
+    private UserService userService;
 
     @Override
     public int deleteByPrimaryKey(Integer id) {

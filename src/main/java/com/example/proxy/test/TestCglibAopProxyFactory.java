@@ -46,7 +46,6 @@ public class TestCglibAopProxyFactory {
         list.add(aop3);
         Person xiaoming = new Xiaoming();
         xiaoming =new MyCglibAopProxyFactory<Xiaoming>(list,xiaoming).getProxy();
-        xiaoming = new MyCglibAopProxyFactory<xiaoming>(list,xiaoming).getProxy();
         xiaoming.say();
     }
 }
