@@ -33,10 +33,6 @@ public class ValidatorAop {
     public void validating(JoinPoint point)throws Throwable{
         Object[] args = point.getArgs();
         Method method = ((MethodSignature) point.getSignature()).getMethod();
-        Annotation[][] parameterAnnotations = method.getParameterAnnotations();
-        Before annotation1 = method.getAnnotation(Before.class);
-        annotation1.value();
-
         Parameter[] parameters = method.getParameters();
         for(int i = 0 ; i < parameters.length; i++){
             Parameter parameter = parameters[i];

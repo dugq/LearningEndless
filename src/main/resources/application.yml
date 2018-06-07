@@ -21,14 +21,16 @@ spring:
       max-wait: -1
   aop:
     proxy-target-class : true # Whether subclass-based (CGLIB) proxies are to be created (true) as opposed to standard Java interface-based proxies (false).
+  profiles:
+    active: @active.profile@
 
 management:
-  port: 8081
   health:
     mail:
       enabled: false
   security:
     enabled: false
+  context-path: /management
 
 params:
   count: countSql
