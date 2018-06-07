@@ -3,8 +3,11 @@ package com.example;
 import com.example.controller.login.Test123;
 import com.example.intercepter.TestWebRequestInterceptor;
 import com.example.intercepter.ValidatorInterception;
+import com.example.pojo.statics.StaticVar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.DefaultApplicationArguments;
 import org.springframework.boot.SpringApplication;
@@ -50,7 +53,11 @@ public class DemoApplication extends WebMvcConfigurerAdapter {
 //		System.getProperties().put("sun.misc.ProxyGenerator.saveGeneratedFiles", "true");
 		SpringApplication.run(DemoApplication.class, args);
 		logger.error("CONGRATULATIONS!!   demo effective!");
-    }
+    	logger.error(StaticVar.myProperties);
+    	logger.error(StaticVar.url);
+
+
+	}
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		registry.addResourceHandler("/mystatic/**")
@@ -67,7 +74,10 @@ public class DemoApplication extends WebMvcConfigurerAdapter {
 	}
 
 	@Bean
-	public Object test(){
+	public Object test(@Autowired StaticVar staticVar){
+		System.out.println(staticVar.getFlag()+"==============================");
 		return new Test123(1);
 	}
+
+
 }

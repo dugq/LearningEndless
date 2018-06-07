@@ -147,7 +147,7 @@
         <!--<table tableName="role" enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>-->
         <!--<table tableName="user" enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>-->
         <!--<table tableName="user_role" enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>-->
-        <table tableName="ct_admission_sale_price" domainObjectName="AdmissionSalePrice"  enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>
+        <table tableName="sm_acceptance_group" domainObjectName="AcceptanceGroup"  enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>
 
     </context>
 </generatorConfiguration>

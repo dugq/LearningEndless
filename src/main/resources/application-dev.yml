@@ -1,0 +1,10 @@
+#设置自定义属性，用于别的地方的占位符
+mycofig:
+  database: spring_boot
+
+
+server: 
+   port: 8080
+
+myProperties:
+  flag: dev
