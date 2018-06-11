@@ -13,7 +13,7 @@ public class JMXProps {
     private String  port;
     private String authenticate;
     private String ssl;
-    @Value("${java.rmi.server.hostname}")
+//    @Value("${java.rmi.server.hostname}")
     private String hostName;
 
 

@@ -4,11 +4,6 @@ server:
 myProperties:
   flag: test
 
-java:
-  rmi:
-    server:
-      hostname: 192.168.31.214
-
 com:
   sun:
     management:

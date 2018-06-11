@@ -18,7 +18,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.cglib.core.DebuggingClassWriter;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.DependsOn;
+import org.springframework.context.annotation.EnableMBeanExport;
 import org.springframework.core.io.ClassPathResource;
+import org.springframework.jmx.support.ConnectorServerFactoryBean;
+import org.springframework.remoting.rmi.RmiRegistryFactoryBean;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -34,6 +38,7 @@ import java.util.Enumeration;
 @SpringBootApplication
 @EnableTransactionManagement
 @ServletComponentScan
+@EnableMBeanExport
 public class DemoApplication extends WebMvcConfigurerAdapter {
     protected static final Logger logger = LoggerFactory.getLogger(DemoApplication.class);
 //	@Override
@@ -66,10 +71,10 @@ public class DemoApplication extends WebMvcConfigurerAdapter {
         logger.error(StaticVar.url);
 
 
-//        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-//        ObjectName mxbeanName = new ObjectName("com.example.pojo.mbeans.impl:type=TestMBeanImpl");
-//        TestMBeanImpl mxbean = new TestMBeanImpl();
-//        mbs.registerMBean(mxbean, mxbeanName);
+        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        ObjectName mxbeanName = new ObjectName("com.example.pojo.mbeans.impl:type=TestMBeanImpl");
+        TestMBeanImpl mxbean = new TestMBeanImpl();
+        mbs.registerMBean(mxbean, mxbeanName);
     }
 
     @Override
@@ -101,4 +106,22 @@ public class DemoApplication extends WebMvcConfigurerAdapter {
         ClassPathResource resource = new ClassPathResource("generatorConfig.xml");
         return new Test123(1);
     }
+
+    //开启spring远程JMX
+    @Bean
+    public RmiRegistryFactoryBean rmiRegistryFactoryBean(){
+        RmiRegistryFactoryBean rmiRegistryFactoryBean = new RmiRegistryFactoryBean();
+        rmiRegistryFactoryBean.setPort(8804);
+        return rmiRegistryFactoryBean;
+    }
+    @Bean
+    @DependsOn("rmiRegistryFactoryBean")
+    public ConnectorServerFactoryBean connectorServerFactoryBean(){
+        ConnectorServerFactoryBean factoryBean = new ConnectorServerFactoryBean();
+        factoryBean.setServiceUrl("service:jmx:rmi://192.168.1.216/jndi/rmi://192.168.1.216:8804/springMbean");
+        return factoryBean;
+    }
+
+
+
 }
