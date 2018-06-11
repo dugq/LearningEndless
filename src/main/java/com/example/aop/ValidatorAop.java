@@ -31,6 +31,7 @@ public class ValidatorAop {
 
     @Before("validate()")
     public void validating(JoinPoint point)throws Throwable{
+        System.out.println(Thread.currentThread().getName());
         Object[] args = point.getArgs();
         Method method = ((MethodSignature) point.getSignature()).getMethod();
         Parameter[] parameters = method.getParameters();

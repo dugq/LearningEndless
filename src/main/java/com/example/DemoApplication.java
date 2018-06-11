@@ -3,6 +3,9 @@ package com.example;
 import com.example.controller.login.Test123;
 import com.example.intercepter.TestWebRequestInterceptor;
 import com.example.intercepter.ValidatorInterception;
+import com.example.pojo.mbeans.MBeanImpl.TestMBeanImpl;
+import com.example.pojo.mbeans.TestMBean;
+import com.example.pojo.statics.JMXProps;
 import com.example.pojo.statics.StaticVar;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +24,9 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import javax.management.*;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -37,7 +42,7 @@ public class DemoApplication extends WebMvcConfigurerAdapter {
 //				.allowedMethods("GET", "POST", "DELETE", "PUT","OPTIONS").maxAge(3600);
 //	}
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, MalformedObjectNameException, NotCompliantMBeanException, InstanceAlreadyExistsException, MBeanRegistrationException {
         //启动参数添加：--Dfile.encoding=UTF-8 --mysql.database=spring-boot --server.port=8090 --mycofig.database=spring_boot 跟yml同名的属性将覆盖
         ApplicationArguments applicationArguments = new DefaultApplicationArguments(
                 args);
@@ -59,6 +64,12 @@ public class DemoApplication extends WebMvcConfigurerAdapter {
         logger.error("CONGRATULATIONS!!   demo effective!");
         logger.error(StaticVar.myProperties);
         logger.error(StaticVar.url);
+
+
+//        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+//        ObjectName mxbeanName = new ObjectName("com.example.pojo.mbeans.impl:type=TestMBeanImpl");
+//        TestMBeanImpl mxbean = new TestMBeanImpl();
+//        mbs.registerMBean(mxbean, mxbeanName);
     }
 
     @Override
@@ -79,8 +90,14 @@ public class DemoApplication extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public Object test(@Autowired StaticVar staticVar) {
+    public Object test(@Autowired StaticVar staticVar, @Autowired JMXProps jmxProps) {
         System.out.println(staticVar.getFlag() + "==============================");
+        logger.error(jmxProps.getAuthenticate());
+        logger.error(jmxProps.getPort());
+        logger.error(jmxProps.getSsl());
+        logger.error(jmxProps.getHostName());
+
+
         ClassPathResource resource = new ClassPathResource("generatorConfig.xml");
         return new Test123(1);
     }

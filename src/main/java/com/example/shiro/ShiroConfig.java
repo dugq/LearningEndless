@@ -37,6 +37,7 @@ public class ShiroConfig {
         //配置访问权限
         LinkedHashMap<String, String> filterChainDefinitionMap=new LinkedHashMap<>();
         filterChainDefinitionMap.put("/template/login.html", "anon"); //表示可以匿名访问
+        filterChainDefinitionMap.put("/management/**", "anon"); //表示可以匿名访问
         filterChainDefinitionMap.put("/user/login", "anon"); //表示可以匿名访问
         filterChainDefinitionMap.put("/user/login4ajax", "anon"); //表示可以匿名访问
         filterChainDefinitionMap.put("/mystatic/**", "anon");
