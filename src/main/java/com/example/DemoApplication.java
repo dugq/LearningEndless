@@ -71,6 +71,10 @@ public class DemoApplication extends WebMvcConfigurerAdapter {
         logger.error(StaticVar.url);
 
 
+        configJMX();
+    }
+
+    private static void configJMX() throws MalformedObjectNameException, InstanceAlreadyExistsException, MBeanRegistrationException, NotCompliantMBeanException {
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         ObjectName mxbeanName = new ObjectName("com.example.pojo.mbeans.impl:type=TestMBeanImpl");
         TestMBeanImpl mxbean = new TestMBeanImpl();
@@ -106,22 +110,5 @@ public class DemoApplication extends WebMvcConfigurerAdapter {
         ClassPathResource resource = new ClassPathResource("generatorConfig.xml");
         return new Test123(1);
     }
-
-    //开启spring远程JMX
-    @Bean
-    public RmiRegistryFactoryBean rmiRegistryFactoryBean(){
-        RmiRegistryFactoryBean rmiRegistryFactoryBean = new RmiRegistryFactoryBean();
-        rmiRegistryFactoryBean.setPort(8804);
-        return rmiRegistryFactoryBean;
-    }
-    @Bean
-    @DependsOn("rmiRegistryFactoryBean")
-    public ConnectorServerFactoryBean connectorServerFactoryBean(){
-        ConnectorServerFactoryBean factoryBean = new ConnectorServerFactoryBean();
-        factoryBean.setServiceUrl("service:jmx:rmi://192.168.1.216/jndi/rmi://192.168.1.216:8804/springMbean");
-        return factoryBean;
-    }
-
-
 
 }
