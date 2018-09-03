@@ -7,6 +7,7 @@ import org.mybatis.generator.config.xml.ConfigurationParser;
 import org.mybatis.generator.exception.InvalidConfigurationException;
 import org.mybatis.generator.exception.XMLParserException;
 import org.mybatis.generator.internal.DefaultShellCallback;
+import org.mybatis.generator.internal.ObjectFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,6 +22,9 @@ import java.util.List;
 public class MainJava {
     public static void main(String[] args) throws URISyntaxException {
         try {
+            ClassLoader classLoader = ObjectFactory.class.getClassLoader();
+            classLoader.loadClass("com.example.mybatisGenerator.MyIntrospectedTableMybatis3Impl");
+
             List<String> warnings = new ArrayList<String>();
             boolean overwrite = true;
             ClassLoader classloader = Thread.currentThread().getContextClassLoader();
@@ -39,6 +43,8 @@ public class MainJava {
         } catch (InvalidConfigurationException e) {
             e.printStackTrace();
         } catch (XMLParserException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }

@@ -138,11 +138,10 @@ public class MyCommentGenerator implements CommentGenerator{
             return;
         }
         StringBuilder sb = new StringBuilder();
-//        sb.append("@ApiModelProperty(value = \"");
-//        sb.append(introspectedColumn.getRemarks());
-//        sb.append("\")");
-//        field.addJavaDocLine(sb.toString().replace("\n", " "));
-        field.addJavaDocLine("//"+introspectedColumn.getRemarks());
+        field.addJavaDocLine("/**");
+        field.addJavaDocLine("*");
+        field.addJavaDocLine("*"+introspectedColumn.getRemarks());
+        field.addJavaDocLine("*/");
     }
 
     public void addFieldComment(Field field, IntrospectedTable introspectedTable) {

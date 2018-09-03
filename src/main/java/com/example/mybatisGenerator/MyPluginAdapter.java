@@ -3,6 +3,7 @@ package com.example.mybatisGenerator;
 import org.mybatis.generator.api.*;
 import org.mybatis.generator.api.dom.java.*;
 
+import javax.swing.plaf.PanelUI;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -19,6 +20,7 @@ public class MyPluginAdapter extends PluginAdapter {
 //        topLevelClass.addImportedType("io.swagger.annotations.ApiModel");
 //        topLevelClass.addImportedType("javax.validation.constraints.Max");
 //        topLevelClass.addImportedType("javax.validation.constraints.NotNull");
+        FullyQualifiedJavaType type = topLevelClass.getType();
         return true;
     }
 
@@ -46,6 +48,8 @@ public class MyPluginAdapter extends PluginAdapter {
         return super.modelFieldGenerated(field, topLevelClass, introspectedColumn, introspectedTable, modelClassType);
     }
 
+
+
     @Override
     public boolean clientCountByExampleMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable) {
 
@@ -56,4 +60,5 @@ public class MyPluginAdapter extends PluginAdapter {
     public boolean validate(List<String> warnings) {
         return true;
     }
+
 }
