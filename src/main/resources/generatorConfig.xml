@@ -3,7 +3,7 @@
         PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
-    <properties resource="application.properties"/>
+    <properties resource="generator.properties"/>
     <!-- 在MBG工作的时候，需要额外加载的依赖包
         location属性指明加载jar/zip包的全路径
     -->
@@ -147,7 +147,8 @@
         <!--<table tableName="role" enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>-->
         <!--<table tableName="user" enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>-->
         <!--<table tableName="user_role" enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>-->
-        <table tableName="sm_acceptance_group" domainObjectName="AcceptanceGroup"  enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>
-
+       <!-- <table tableName="sm_acceptance_group" domainObjectName="AcceptanceGroup"  enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>-->
+        <table tableName="tb_activity" domainObjectName="ActivityGroupRelation"  enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>
+        <table tableName="tb_activity_group" domainObjectName="ActivityGroup"  enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>
     </context>
 </generatorConfiguration>

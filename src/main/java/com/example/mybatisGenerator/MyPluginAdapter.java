@@ -47,6 +47,12 @@ public class MyPluginAdapter extends PluginAdapter {
     }
 
     @Override
+    public boolean clientCountByExampleMethodGenerated(Method method, Interface interfaze, IntrospectedTable introspectedTable) {
+
+        return super.clientCountByExampleMethodGenerated(method, interfaze, introspectedTable);
+    }
+
+    @Override
     public boolean validate(List<String> warnings) {
         return true;
     }

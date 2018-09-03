@@ -3,6 +3,7 @@ package com.example;
 import com.example.controller.login.Test123;
 import com.example.intercepter.TestWebRequestInterceptor;
 import com.example.intercepter.ValidatorInterception;
+import com.example.pojo.entry.BootUser;
 import com.example.pojo.mbeans.MBeanImpl.TestMBeanImpl;
 import com.example.pojo.mbeans.TestMBean;
 import com.example.pojo.statics.JMXProps;
@@ -32,8 +33,10 @@ import javax.management.*;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.stream.Collectors;
 
 @SpringBootApplication
 @EnableTransactionManagement
@@ -105,7 +108,7 @@ public class DemoApplication extends WebMvcConfigurerAdapter {
         logger.error(jmxProps.getPort());
         logger.error(jmxProps.getSsl());
         logger.error(jmxProps.getHostName());
-
+        ArrayList<BootUser> list =new ArrayList();
 
         ClassPathResource resource = new ClassPathResource("generatorConfig.xml");
         return new Test123(1);
