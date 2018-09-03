@@ -23,6 +23,7 @@ public class MainJava {
     public static void main(String[] args) throws URISyntaxException {
         try {
             ClassLoader classLoader = ObjectFactory.class.getClassLoader();
+            System.out.println(MyIntrospectedTableMybatis3Impl.class.getName());
             classLoader.loadClass("com.example.mybatisGenerator.MyIntrospectedTableMybatis3Impl");
 
             List<String> warnings = new ArrayList<String>();
