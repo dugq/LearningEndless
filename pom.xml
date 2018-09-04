@@ -139,7 +139,7 @@
 			<scope>runtime</scope>
 		</dependency>
 
-			<!--mybatis-generator 插件-->
+			<!--mybatis-daoGenerator 插件-->
 		<dependency>
 			<groupId>org.mybatis.generator</groupId>
 			<artifactId>mybatis-generator-core</artifactId>

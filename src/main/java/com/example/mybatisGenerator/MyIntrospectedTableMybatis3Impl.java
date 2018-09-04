@@ -2,12 +2,18 @@ package com.example.mybatisGenerator;
 
 import org.mybatis.generator.api.GeneratedJavaFile;
 import org.mybatis.generator.api.GeneratedXmlFile;
+import org.mybatis.generator.api.ProgressCallback;
 import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.api.dom.xml.Attribute;
 import org.mybatis.generator.api.dom.xml.Document;
+import org.mybatis.generator.codegen.AbstractJavaClientGenerator;
 import org.mybatis.generator.codegen.AbstractJavaGenerator;
 import org.mybatis.generator.codegen.mybatis3.IntrospectedTableMyBatis3Impl;
+import org.mybatis.generator.codegen.mybatis3.javamapper.AnnotatedClientGenerator;
+import org.mybatis.generator.codegen.mybatis3.javamapper.JavaMapperGenerator;
+import org.mybatis.generator.codegen.mybatis3.javamapper.MixedClientGenerator;
 import org.mybatis.generator.config.PropertyRegistry;
+import org.mybatis.generator.internal.ObjectFactory;
 import org.springframework.beans.BeanUtils;
 
 import java.lang.reflect.Field;
@@ -19,6 +25,9 @@ import java.util.List;
  * Created by dugq on 2018/9/3 0003.
  */
 public class MyIntrospectedTableMybatis3Impl extends IntrospectedTableMyBatis3Impl {
+    /** The client generators. */
+    protected List<AbstractJavaGenerator> daoImplGen = new ArrayList<>();
+
     @Override
     protected void calculateModelAttributes() {
         String pakkage = calculateJavaModelPackage();
@@ -53,8 +62,8 @@ public class MyIntrospectedTableMybatis3Impl extends IntrospectedTableMyBatis3Im
     }
     @Override
     public List<GeneratedJavaFile> getGeneratedJavaFiles() {
-        List<GeneratedJavaFile> answer = super.getGeneratedJavaFiles();
-        for (AbstractJavaGenerator javaGenerator : clientGenerators) {
+        List<GeneratedJavaFile> answer = new ArrayList<GeneratedJavaFile>();
+        for (AbstractJavaGenerator javaGenerator : daoImplGen) {
             List<CompilationUnit> compilationUnits = javaGenerator
                     .getCompilationUnits();
             for (CompilationUnit compilationUnit : compilationUnits) {
@@ -68,6 +77,7 @@ public class MyIntrospectedTableMybatis3Impl extends IntrospectedTableMyBatis3Im
                 answer.add(gjf);
             }
         }
+        answer.addAll( super.getGeneratedJavaFiles());
         return answer;
     }
     @Override
@@ -109,4 +119,38 @@ public class MyIntrospectedTableMybatis3Impl extends IntrospectedTableMyBatis3Im
     }
 
 
+    protected AbstractJavaClientGenerator createJavaClientGenerator() {
+        if (context.getJavaClientGeneratorConfiguration() == null) {
+            return null;
+        }
+
+        String type = context.getJavaClientGeneratorConfiguration()
+                .getConfigurationType();
+
+        AbstractJavaClientGenerator javaGenerator;
+        if ("XMLMAPPER".equalsIgnoreCase(type)) { //$NON-NLS-1$
+            javaGenerator = new MyJavaMapperGenerator();
+        } else if ("MIXEDMAPPER".equalsIgnoreCase(type)) { //$NON-NLS-1$
+            javaGenerator = new MixedClientGenerator();
+        } else if ("ANNOTATEDMAPPER".equalsIgnoreCase(type)) { //$NON-NLS-1$
+            javaGenerator = new AnnotatedClientGenerator();
+        } else if ("MAPPER".equalsIgnoreCase(type)) { //$NON-NLS-1$
+            javaGenerator = new JavaMapperGenerator();
+        } else {
+            javaGenerator = (AbstractJavaClientGenerator) ObjectFactory
+                    .createInternalObject(type);
+        }
+
+        return javaGenerator;
+    }
+
+    @Override
+    protected AbstractJavaClientGenerator calculateClientGenerators(List<String> warnings,
+                                                                    ProgressCallback progressCallback) {
+
+        AbstractJavaClientGenerator javaGenerator = new MyJavaDaoImplGenerator();
+        initializeAbstractGenerator(javaGenerator, warnings, progressCallback);
+        daoImplGen.add(javaGenerator);
+        return super.calculateClientGenerators(warnings,progressCallback);
+    }
 }

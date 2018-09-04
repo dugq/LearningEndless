@@ -1,5 +1,7 @@
 package com.example.mybatisGenerator;
 
+import org.mybatis.generator.api.IntrospectedColumn;
+import org.mybatis.generator.api.IntrospectedTable;
 import org.mybatis.generator.api.dom.java.*;
 
 import java.util.*;
@@ -21,7 +23,6 @@ public class ImplClass extends InnerClass implements CompilationUnit {
     /** The file comment lines. */
     private List<String> fileCommentLines;
 
-    private CompilationUnit compilationUnit;
 
 
     public ImplClass(FullyQualifiedJavaType type) {
@@ -38,26 +39,101 @@ public class ImplClass extends InnerClass implements CompilationUnit {
     public ImplClass(CompilationUnit compilationUnit) {
         this(new FullyQualifiedJavaType(compilationUnit.getType().getPackageName()+"."+"impl"+"."+compilationUnit.getType().getShortName()+"Impl"));
         importedTypes.add(compilationUnit.getType());
-        this.addImportedType(new FullyQualifiedJavaType("com.example.BasicComponent.BasicComponent"));
-        this.setSuperClass(new FullyQualifiedJavaType("com.example.BasicComponent.BasicComponent"));
+        FullyQualifiedJavaType importedType = new FullyQualifiedJavaType("cn.com.duiba.activity.custom.center.dao.BaseDao");
+        this.addImportedType(importedType);
+        this.setSuperClass(importedType);
         this.addSuperInterface(compilationUnit.getType());
-        ((Interface)compilationUnit).getMethods().forEach(method -> {
-            if(method.getName().startsWith("select") && ! (method.getReturnType() instanceof Collection)){
+        ovverriteMethod();
+        ArrayList<Method> methods = (ArrayList<Method>) ((Interface) compilationUnit).getMethods();
+        for(int i = 0 ; i < methods.size();i++){
+            Method method = methods.get(i);
+            Method newM = new Method();
+            method.getParameters().forEach(parameter -> newM.addParameter(parameter));
+            newM.setVisibility(JavaVisibility.PUBLIC);
+            newM.addAnnotation("@Override");
+            newM.setReturnType(method.getReturnType());
+            newM.setName(method.getName());
+            if(newM.getName().startsWith("select") && (newM.getReturnType().getShortName().indexOf("List")!=-1)){
                 String key = "selectList";
-                methodBody(method, key);
-            }else if(method.getName().startsWith("select") && (method.getReturnType() instanceof Collection)){
-                String key = "selectList";
-                methodBody(method, key);
-            }else if(method.getName().startsWith("insert")){
+                methodBody(newM, key);
+            }else if(newM.getName().startsWith("select") && (newM.getReturnType().getShortName().indexOf("List")==-1)){
+                String key = "selectOne";
+                methodBody(newM, key);
+            }else if(newM.getName().startsWith("insert")){
                 String key = "insert";
-                methodBody(method, key);
-            }else if(method.getName().startsWith("delete")){
-                methodBody(method, "update");
-            }else if(method.getName().startsWith("update")){
-                methodBody(method, "update");
+                methodBody(newM, key);
+            }else if(newM.getName().startsWith("delete")){
+                MyInterface myInterface = (MyInterface)compilationUnit;
+                IntrospectedTable introspectedTable = myInterface.getIntrospectedTable();
+                FullyQualifiedJavaType parameterType = introspectedTable.getRules()
+                        .calculateAllFieldsClass();
+                if(hasDeleted(introspectedTable)){
+                    StringBuilder  sb = new StringBuilder();
+                    sb.append(parameterType.getShortName());
+                    sb.append(" pojo");
+                    sb.append(" = new ");
+                    sb.append(parameterType.getShortName());
+                    sb.append("();");
+                    newM.addBodyLine(sb.toString());
+                    newM.addBodyLine("pojo.setId(id);");
+                    newM.addBodyLine("pojo.setDeleted(Deleted.DELETED.getCode());");
+                    StringBuilder  sb1 = new StringBuilder();
+                    sb1.append("return super.update(\"");
+                    sb1.append(method.getName()+"\"");
+                    sb1.append(",");
+                    sb1.append("pojo");
+                    sb1.append(");");
+                    newM.addBodyLine(sb1.toString());
+                }else {
+                    StringBuilder  sb = new StringBuilder();
+                    sb.append("return super.delete(\"");
+                    sb.append(method.getName()+"\"");
+                    sb.append(",");
+                    sb.append("id");
+                    sb.append(");");
+                    newM.addBodyLine(sb.toString());
+                }
+            }else if(newM.getName().startsWith("update")){
+                methodBody(newM, "update");
             }
-            addMethod(method);
-        });
+            addMethod(newM);
+        }
+
+    }
+
+    private boolean hasDeleted(IntrospectedTable introspectedTable){
+        List<IntrospectedColumn> allColumns = introspectedTable.getAllColumns();
+        for (int i = 0 ; i< allColumns.size(); i++){
+            String actualColumnName = allColumns.get(i).getActualColumnName();
+            if(actualColumnName.equalsIgnoreCase("deleted")){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void initMethod() {
+        FullyQualifiedJavaType importedType2 = new FullyQualifiedJavaType("cn.com.duiba.activity.custom.center.constants.DbSchemaConstants");
+        this.addImportedType(importedType2);
+        this.addImportedType(new FullyQualifiedJavaType("javax.annotation.PostConstruct"));
+        Method init = new Method();
+        init.setName("init");
+        init.setReturnType(new FullyQualifiedJavaType("void"));
+        init.setVisibility(JavaVisibility.PUBLIC);
+        init.addBodyLine(" this.databaseSchema = DatabaseSchema.DEVELOPER_APP;");
+        init.addAnnotation("@PostConstruct");
+        addMethod(init);
+    }
+    private void ovverriteMethod() {
+        FullyQualifiedJavaType importedType2 = new FullyQualifiedJavaType("cn.com.duiba.activity.custom.center.constants.DbSchemaConstants");
+        this.addImportedType(importedType2);
+        Method init = new Method();
+        init.setName("chooseSchema");
+        init.setReturnType(new FullyQualifiedJavaType("java.lang.String"));
+        init.setVisibility(JavaVisibility.PUBLIC);
+        init.addBodyLine(" return DatabaseSchema.DEVELOPER_APP;");
+        init.addAnnotation("@Override");
+        addMethod(init);
     }
 
     private void methodBody(Method method, String key) {
@@ -140,8 +216,6 @@ public class ImplClass extends InnerClass implements CompilationUnit {
         if (importStrings.size() > 0) {
             newLine(sb);
         }
-
-        sb.append("public ");
 
         sb.append(super.getFormattedContent(0, this));
 
