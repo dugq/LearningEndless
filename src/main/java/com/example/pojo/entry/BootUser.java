@@ -1,6 +1,9 @@
 package com.example.pojo.entry;
 
-public class BootUser {
+import java.io.Serializable;
+
+public class BootUser implements Serializable {
+    private static final long serialVersionUID = 1961980292810329045L;
     private Integer id;
 
     private String name;
