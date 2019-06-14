@@ -149,8 +149,7 @@
         <!--<table tableName="user" enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>-->
         <!--<table tableName="user_role" enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>-->
        <!-- <table tableName="sm_acceptance_group" domainObjectName="AcceptanceGroup"  enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>-->
-        <table tableName="tb_landi_share_record" domainObjectName="shareRecord"  enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false">
-            <generatedKey column="id" sqlStatement="id"/>
-        </table>
+        <table tableName="tb_content_seller_relation" domainObjectName="ContentSellerRelation"  enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>
+        <table tableName="tb_seller_import_task" domainObjectName="SellerImportTask"  enableDeleteByExample = "false" enableCountByExample = "false" enableUpdateByExample = "false" enableSelectByExample = "false"></table>
     </context>
 </generatorConfiguration>

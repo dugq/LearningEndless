@@ -66,16 +66,16 @@ public class MyIntrospectedTableMybatis3Impl extends IntrospectedTableMyBatis3Im
         for (AbstractJavaGenerator javaGenerator : daoImplGen) {
             List<CompilationUnit> compilationUnits = javaGenerator
                     .getCompilationUnits();
-            for (CompilationUnit compilationUnit : compilationUnits) {
-                ImplClass newUnit = new ImplClass(compilationUnit);
-                newUnit.addImportedTypes(compilationUnit.getImportedTypes());
-                GeneratedJavaFile gjf = new GeneratedJavaFile(newUnit,
-                        context.getJavaClientGeneratorConfiguration()
-                                .getTargetProject(),
-                        context.getProperty(PropertyRegistry.CONTEXT_JAVA_FILE_ENCODING),
-                        context.getJavaFormatter());
-                answer.add(gjf);
-            }
+//            for (CompilationUnit compilationUnit : compilationUnits) {
+//                ImplClass newUnit = new ImplClass(compilationUnit);
+//                newUnit.addImportedTypes(compilationUnit.getImportedTypes());
+//                GeneratedJavaFile gjf = new GeneratedJavaFile(newUnit,
+//                        context.getJavaClientGeneratorConfiguration()
+//                                .getTargetProject(),
+//                        context.getProperty(PropertyRegistry.CONTEXT_JAVA_FILE_ENCODING),
+//                        context.getJavaFormatter());
+//                answer.add(gjf);
+//            }
         }
         answer.addAll( super.getGeneratedJavaFiles());
         return answer;
@@ -93,12 +93,12 @@ public class MyIntrospectedTableMybatis3Impl extends IntrospectedTableMyBatis3Im
                     String value = attribute.getValue();
                     String pre = value.substring(0, value.lastIndexOf("."));
                     String fix =  value.substring(value.lastIndexOf(".")+1);
-                    String namespcace = pre + ".impl." + fix + "Impl";
+//                    String namespcace = pre + ".impl." + fix + "Impl";
                     try {
                         Class<? extends Attribute> aClass = attribute.getClass();
                         Field field = aClass.getDeclaredField("value");
                         field.setAccessible(true);
-                        field.set(attribute,namespcace);
+//                        field.set(attribute,namespcace);
 
                     } catch (Exception e) {
                         e.printStackTrace();

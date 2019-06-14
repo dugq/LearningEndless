@@ -31,6 +31,7 @@ public class CrosFilter implements Filter {
         //Access-Control-Max-Age 用于 CORS 相关配置的缓存
         httpServletResponse.setHeader("Access-Control-Max-Age", "3600");
         httpServletResponse.setHeader("Access-Control-Allow-Headers", "content-type,sessionid,x-requested-with");
+        httpServletResponse.setHeader("Access-Control-Allow-Credentials", "true");
         if(!HttpUtils.isOptionsRequest(request)){
             filterChain.doFilter(request, response);
         }

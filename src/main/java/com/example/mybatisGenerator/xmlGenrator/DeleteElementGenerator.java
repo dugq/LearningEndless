@@ -21,12 +21,8 @@ public class DeleteElementGenerator extends
 
     @Override
     public void addElements(XmlElement parentElement) {
-           List<IntrospectedColumn> allColumns = introspectedTable.getAllColumns();
-       for(int i = 0 ; i<allColumns.size() ; i++){
-            if(allColumns.get(i).getActualColumnName().equalsIgnoreCase("deleted")){
-                return;
-            }
-       }
+       List<IntrospectedColumn> allColumns = introspectedTable.getAllColumns();
+
         XmlElement answer = new XmlElement("delete"); //$NON-NLS-1$
 
         answer.addAttribute(new Attribute(
@@ -34,11 +30,32 @@ public class DeleteElementGenerator extends
         context.getCommentGenerator().addComment(answer);
 
         StringBuilder sb = new StringBuilder();
-        sb.append("delete from "); //$NON-NLS-1$
-        sb.append(introspectedTable.getFullyQualifiedTableNameAtRuntime());
-        sb.append(" where id = #{id}");
+
+        if(hasDeleted(allColumns)){
+            sb.append("update  "); //$NON-NLS-1$
+            sb.append(introspectedTable.getFullyQualifiedTableNameAtRuntime());
+            sb.append(" set delete = 1");
+            sb.append(" where id = #{id}");
+       }else{
+            sb.append("delete from "); //$NON-NLS-1$
+            sb.append(introspectedTable.getFullyQualifiedTableNameAtRuntime());
+            sb.append(" where id = #{id}");
+       }
+
+
+
+
         answer.addElement(new TextElement(sb.toString()));
         parentElement.addElement(answer);
 
+    }
+
+    private boolean hasDeleted(List<IntrospectedColumn> allColumns){
+        for(int i = 0 ; i<allColumns.size() ; i++){
+            if(allColumns.get(i).getActualColumnName().equalsIgnoreCase("deleted")){
+                return true;
+            }
+        }
+        return false;
     }
 }
