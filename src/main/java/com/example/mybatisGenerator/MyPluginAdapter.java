@@ -19,8 +19,7 @@ public class MyPluginAdapter extends PluginAdapter {
 //        topLevelClass.addImportedType("io.swagger.annotations.ApiModelProperty");
 //        topLevelClass.addImportedType("io.swagger.annotations.ApiModel");
 //        topLevelClass.addImportedType("javax.validation.constraints.Max");
-//        topLevelClass.addImportedType("javax.validation.constraints.NotNull");
-        FullyQualifiedJavaType type = topLevelClass.getType();
+        topLevelClass.addImportedType("import lombok.Data");
         return true;
     }
 
@@ -60,5 +59,17 @@ public class MyPluginAdapter extends PluginAdapter {
     public boolean validate(List<String> warnings) {
         return true;
     }
+
+    @Override
+    public boolean modelGetterMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable, ModelClassType modelClassType) {
+        return false;
+    }
+
+    @Override
+    public boolean modelSetterMethodGenerated(Method method, TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn, IntrospectedTable introspectedTable, ModelClassType modelClassType) {
+        return false;
+    }
+
+
 
 }

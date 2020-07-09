@@ -23,7 +23,6 @@ import java.util.*;
 /**
  * Created by dugq on 2017/10/26.
  */
-@Configuration
 public class ShiroConfig {
 
 

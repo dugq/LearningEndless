@@ -15,13 +15,11 @@ import org.springframework.transaction.annotation.TransactionManagementConfigure
 
 import javax.sql.DataSource;
 
-@Configuration
-@EnableTransactionManagement
 public class MyBatisConfig implements TransactionManagementConfigurer {
-  
+
     @Autowired
     DataSource dataSource;
-  
+
     @Bean(name = "sqlSessionFactory")
     public SqlSessionFactory sqlSessionFactoryBean() {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
@@ -52,8 +50,8 @@ public class MyBatisConfig implements TransactionManagementConfigurer {
     @Bean
     public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
-    }  
-  
+    }
+
     @Bean
     @Override
     public PlatformTransactionManager annotationDrivenTransactionManager() {

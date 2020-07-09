@@ -101,17 +101,5 @@ public class DemoApplication extends WebMvcConfigurerAdapter {
         System.out.println();
     }
 
-    @Bean
-    public Object test(@Autowired StaticVar staticVar, @Autowired JMXProps jmxProps) {
-        System.out.println(staticVar.getFlag() + "==============================");
-        logger.error(jmxProps.getAuthenticate());
-        logger.error(jmxProps.getPort());
-        logger.error(jmxProps.getSsl());
-        logger.error(jmxProps.getHostName());
-        ArrayList<BootUser> list =new ArrayList();
-
-        ClassPathResource resource = new ClassPathResource("generatorConfig.xml");
-        return new Test123(1);
-    }
 
 }

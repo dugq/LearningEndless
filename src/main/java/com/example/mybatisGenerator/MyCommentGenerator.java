@@ -158,7 +158,6 @@ public class MyCommentGenerator implements CommentGenerator{
 
     @Override
     public void addModelClassComment(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
-//        topLevelClass.addJavaDocLine("@ApiModel");
         String remarks = introspectedTable.getRemarks();
         if(StringUtils.isBlank(remarks)){
             return;
@@ -174,6 +173,7 @@ public class MyCommentGenerator implements CommentGenerator{
         sb.append(" ");
         sb.append(currentDateStr);
         topLevelClass.addJavaDocLine(" */");
+        topLevelClass.addJavaDocLine("@Data");
     }
 
     public void addGeneralMethodComment(Method method, IntrospectedTable introspectedTable) {
@@ -206,7 +206,7 @@ public class MyCommentGenerator implements CommentGenerator{
         innerClass.addJavaDocLine(sb.toString().replace("\n", " "));
         sb.setLength(0);
         sb.append(" * @author ");
-        sb.append(systemPro.getProperty("user.name"));
+        sb.append(systemPro.getProperty("kjj mybatis generator"));
         sb.append(" ");
         sb.append(currentDateStr);
         innerClass.addJavaDocLine(" */");

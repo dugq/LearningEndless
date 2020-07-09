@@ -20,8 +20,6 @@ import java.lang.reflect.Method;
 /**
  * Created by dugq on 2018/3/2.
  */
-@Configuration
-@EnableCaching
 public class RedisConfig extends CachingConfigurerSupport {
 
     /**
