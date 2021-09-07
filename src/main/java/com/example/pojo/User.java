@@ -6,6 +6,8 @@ import org.hibernate.validator.constraints.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 import java.util.Date;
 

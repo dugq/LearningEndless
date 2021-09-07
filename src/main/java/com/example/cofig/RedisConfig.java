@@ -47,8 +47,7 @@ public class RedisConfig extends CachingConfigurerSupport {
      */
     @Bean
     public CacheManager cacheManager(RedisTemplate redisTemplate) {
-        RedisCacheManager rcm = new RedisCacheManager(redisTemplate);
-        return rcm;
+        return new RedisCacheManager(null,null);
     }
 
     /**

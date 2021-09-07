@@ -1,6 +1,7 @@
 package com.example.HeadFirst.templeteModel;
 
-import org.junit.jupiter.api.Test;
+
+import org.junit.Test;
 
 /**
  * Created by dugq on 2018/5/14.

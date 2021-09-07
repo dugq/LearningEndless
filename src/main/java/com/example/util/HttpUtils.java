@@ -2,7 +2,6 @@ package com.example.util;
 
 import com.alibaba.fastjson.JSON;
 import com.example.pojo.dto.ResultBean;
-import eu.bitwalker.useragentutils.UserAgent;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
@@ -87,8 +86,7 @@ public class HttpUtils {
     }
 
     public static String getBrowser(HttpServletRequest request){
-        UserAgent userAgent = UserAgent.parseUserAgentString(request.getHeader("User-Agent"));
-        return userAgent.getBrowser().getName() + "/" + userAgent.getBrowser().getVersion(request.getHeader("User-Agent"));
+        return "";
     }
 }
 

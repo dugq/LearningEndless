@@ -5,7 +5,6 @@ import com.example.proxy.Xiaoming;
 import com.example.proxy.cglib.MyCglibAopProxyFactory;
 import com.example.proxy.support.MyAdvisorSupport;
 import com.example.proxy.support.MyAop;
-import org.springframework.cglib.core.DebuggingClassWriter;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -16,7 +15,6 @@ import java.util.List;
  */
 public class TestCglibAopProxyFactory {
     public static void main(String[] args) {
-        System.setProperty(DebuggingClassWriter.DEBUG_LOCATION_PROPERTY, "D:\\class");
         MyAop aop1 = new MyAop() {
             @Override
             public void before(MyAdvisorSupport support) {

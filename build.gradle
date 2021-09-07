@@ -1,61 +1,148 @@
-apply plugin: 'java'
-apply plugin: 'maven'
+buildscript {
 
-group = 'com.example'
-version = '0.0.1-SNAPSHOT'
+    ext["duibaExtVersion"] = "2.0.0-h38"
+    ext["springBootVersion"] = "2.2.7.RELEASE"
+    ext["springCloudVersion"] = "Hoxton.SR6"
+    ext["hazelcast.version"] = "3.11"
+    ext["curator.version"] = "2.13.0"
+    ext["guava.version"] = "28.2-jre"
+    ext["lombok.version"] = "1.18.12"
 
-description = """demo"""
+    repositories {
+        maven { url "http://nexus.dui88.com:8081/nexus/content/groups/public/" }
+        maven { url "https://plugins.gradle.org/m2/" } //sonarqube
+        maven { url "http://repo.spring.io/plugins-release" }
+        mavenCentral()
+        mavenLocal()
+    }
+
+    dependencies {
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.5.RELEASE"
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.0" //sonarqube
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "org.springframework.build.gradle:propdeps-plugin:0.0.7"
+        classpath "gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:2.5.0"
+        classpath "cn.com.duiba:duiba-gradle-plugin:0.1.9"
+    }
+}
+
+apply plugin: "com.google.cloud.tools.jib"
+apply plugin: "duiba.gradle.plugin"
+apply plugin: "maven"
+apply plugin: "java"
+apply plugin: "idea"
+apply plugin: "eclipse"
+apply plugin: "jacoco"
+apply plugin: "io.spring.dependency-management"
+apply plugin: "org.springframework.boot"
+apply plugin: "propdeps"
+test {
+    ignoreFailures = true
+}
+
+group = "com.example"
+version = "0.0.1-SNAPSHOT"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
-tasks.withType(JavaCompile) {
-	options.encoding = 'UTF-8'
+
+bootJar {
+    archiveName = "demo.jar"
 }
 
-
+configurations {
+    all*.exclude group: "log4j", module: "log4j"
+    all*.exclude group: "org.slf4j", module: "slf4j-log4j12"
+    all*.exclude group: "javax.servlet", module: "servlet-api" //servlet 2.5
+    all*.exclude group: "com.alibaba", module: "dubbo"
+    all*.exclude group: "com.fasterxml.jackson.dataformat", module: "jackson-dataformat-xml"
+    all*.exclude group: "com.zaxxer", module: "HikariCP-java7"
+}
 
 repositories {
-        
-     maven { url "https://repo.spring.io/snapshot" }
-     maven { url "https://repo.spring.io/milestone" }
-     maven { url "https://repo1.maven.org/maven2/" }
-     maven { url "http://repo.maven.apache.org/maven2" }
+    maven { url "http://nexus.dui88.com:8081/nexus/content/groups/public/" }
+    maven { url "https://plugins.gradle.org/m2/" } //sonarqube
+    maven { url "http://repo.spring.io/plugins-release" }
+    mavenCentral()
+    mavenLocal()
 }
+
+dependencyManagement {
+
+    dependencies {
+        imports {
+            mavenBom "cn.com.duiba.boot:spring-boot-ext-dependencies:${duibaExtVersion}"
+            mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
+
+}
+
 dependencies {
-    compile group: 'org.projectlombok', name: 'lombok', version:'1.18.2'
-    compile group: 'junit', name: 'junit', version:'4.12'
-    compile group: 'org.jsoup', name: 'jsoup', version:'1.11.3'
-    compile group: 'c3p0', name: 'c3p0', version:'0.9.1.2'
-    compile group: 'com.github.pagehelper', name: 'pagehelper', version:'4.0.1'
-    compile group: 'com.alibaba', name: 'druid', version:'1.0.23'
-    compile(group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version:'1.5.4.RELEASE') {
-exclude(module: 'log4j-over-slf4j')
-    }
-    compile group: 'com.alipay.sdk', name: 'alipay-sdk-java', version:'3.3.4.ALL'
-    compile group: 'org.mybatis.spring.boot', name: 'mybatis-spring-boot-starter', version:'1.3.0'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version:'1.5.4.RELEASE'
-    compile(group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version:'1.5.4.RELEASE') {
-exclude(module: 'slf4j-api')
-    }
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version:'1.5.4.RELEASE'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version:'1.5.4.RELEASE'
-    compile group: 'com.caucho', name: 'hessian', version:'4.0.38'
-    compile group: 'commons-io', name: 'commons-io', version:'2.4'
-    compile group: 'com.google.guava', name: 'guava', version:'28.2-android'
-    compile group: 'org.hibernate', name: 'hibernate-validator', version:'5.3.5.Final'
-    compile group: 'com.alibaba', name: 'fastjson', version:'1.2.16'
-    compile group: 'eu.bitwalker', name: 'UserAgentUtils', version:'1.20'
-    compile group: 'org.mybatis.generator', name: 'mybatis-generator-core', version:'1.3.5'
-    compile group: 'ch.qos.logback', name: 'logback-classic', version:'1.1.11'
-    compile group: 'org.apache.shiro', name: 'shiro-core', version:'1.2.2'
-    compile group: 'org.apache.shiro', name: 'shiro-spring', version:'1.2.2'
-    compile group: 'org.apache.shiro', name: 'shiro-ehcache', version:'1.2.2'
-    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis', version:'1.5.4.RELEASE'
-    compile group: 'org.apache.httpcomponents', name: 'httpmime', version:'4.5.3'
-    compile group: 'org.apache.commons', name: 'commons-lang3', version:'3.4'
-    compile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version:'5.2.0-RC1'
-    runtime group: 'mysql', name: 'mysql-connector-java', version:'5.1.42'
-    testCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test', version:'1.5.4.RELEASE') {
-exclude(module: 'commons-logging')
-    }
+    compile "cn.com.duiba.boot:spring-boot-starter-perftest"
+    compile "cn.com.duiba.boot:spring-boot-starter-cat"
+    compile "cn.com.duiba.boot:spring-boot-starter-xss"
+
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile "org.springframework.boot:spring-boot-starter-actuator"
+    compile "org.springframework.boot:spring-boot-starter-freemarker"
+    compile "org.springframework.cloud:spring-cloud-starter-config"
+    compile "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
+    compile "org.springframework.cloud:spring-cloud-starter-netflix-hystrix"
+    compile "org.springframework.cloud:spring-cloud-starter-netflix-ribbon"
+    compile "org.springframework.cloud:spring-cloud-starter-openfeign"
+    compile("cn.com.duiba.boot:spring-boot-starter-accesslog")
+
+    compile group: 'org.apache.shiro', name: 'shiro-core', version: '1.2.2'
+    compile group: 'org.apache.shiro', name: 'shiro-spring', version: '1.2.2'
+    compile group: 'org.apache.shiro', name: 'shiro-ehcache', version: '1.2.2'
+
+    compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.3'
+    compile group: 'org.mybatis.generator', name: 'mybatis-generator-core', version: '1.3.5'
+
+    runtime group: 'mysql', name: 'mysql-connector-java', version: '5.1.42'
+
+    compile "cn.com.duiba.boot:spring-boot-starter-mybatis"
+    compile "org.springframework.boot:spring-boot-starter-jdbc"
+
+    compile group: 'org.jsoup', name: 'jsoup', version: '1.11.3'
+    compile group: 'com.github.pagehelper', name: 'pagehelper', version: '4.0.1'
+
+    compile('io.lettuce:lettuce-core')
+    compile("cn.com.duiba.boot:spring-boot-starter-redis")
+    compile("redis.clients:jedis")
+    compile group: 'com.alibaba', name: 'druid', version: '1.0.23'
+    compile group: 'com.alipay.sdk', name: 'alipay-sdk-java', version: '3.3.4.ALL'
+    compile('org.springframework.boot:spring-boot-autoconfigure')
+    compile group: 'com.caucho', name: 'hessian', version: '4.0.38'
+    compile group: 'org.hibernate', name: 'hibernate-validator', version: '5.3.5.Final'
+
+
+    // sso版本，请使用 3.0.20 以上
+
+    compile "org.springframework.boot:spring-boot-starter-test"
+
+    annotationProcessor 'org.projectlombok:lombok:1.18.4'
+    compileOnly 'org.projectlombok:lombok:1.18.4'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.4'
+    testCompileOnly 'org.projectlombok:lombok:1.18.4'
+
+    compile 'org.javatuples:javatuples:1.2'
+    compile 'com.google.guava:guava:29.0-jre'
+
+    compile 'eu.bitwalker:UserAgentUtils:1.21'
+
 }
+
+install {
+    enabled = false
+}
+uploadArchives {
+    enabled = false
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+

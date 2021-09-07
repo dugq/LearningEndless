@@ -1,0 +1,13 @@
+@startuml
+client -> server: HTTP request
+server -> server:read http request header \nUpgrade: websocket \n Connection: Upgrade
+server --> client: response status : 101
+note right:open
+client -> server: message
+note right: message
+server -> client: message
+
+client -> server: close
+server --> client: close
+
+@enduml
