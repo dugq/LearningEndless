@@ -6,6 +6,8 @@
 
 *那么接下来我们的研究的内容就是：阻塞IO，那么它阻塞在哪儿呢？*
 
+ [BIO线程模型示例](./BIOServerThreadModel.java) 
+ 
 ###BIO模型的发展历程
 ####1.单线程模型
              server
@@ -27,7 +29,7 @@
 * 每个客户端连接进来都需要新建一个线程，消耗太大
 * 虽然能够并发，但是并发量不能过高，否则将发生OOM
 
-####2.多线程模型
+####3.线程池模型
              server
                ｜
            threadPool               
@@ -36,7 +38,10 @@
     thread   thread  thread       
       |        |        |
     clinet   clinet   clinet
-此模型为当前BIO模式下最优线程模型。以此模型，我们来实现一个服务器。 [示例](./BIOServer.java) 
+此模型为当前BIO模式下最优线程模型。以此模型，我们来实现一个服务器。
 
 ###BIO Blocking在哪里？
-####socket连接的建立过程
+首先我们定义：当线程被挂起不能继续执行代码时，就认为线程当前出于阻塞状态。 
+- serverSocket.accept();
+- socket.getInputStream().read(byte[]);  
+*如何改进呢？*

@@ -36,6 +36,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @SpringBootApplication
@@ -56,19 +58,22 @@ public class DemoApplication extends WebMvcConfigurerAdapter {
                 args);
         logger.info("启动参数：" + Arrays.toString(args));
         //获取启动参数
-//		List<String> optionValues = applicationArguments.getOptionValues("Dmysql.database");
+		List<String> optionValues = applicationArguments.getOptionValues("Dmysql.database");
         //获取参数名称
-//		Set<String> optionNames = applicationArguments.getOptionNames();
+		Set<String> optionNames = applicationArguments.getOptionNames();
         //获取所有的参数即：args
 //		String[] sourceArgs = applicationArguments.getSourceArgs();
 
 //		开启代理生成的类打印
-//		System.setProperty(DebuggingClassWriter.DEBUG_LOCATION_PROPERTY, "D:\\class");
+		System.setProperty(DebuggingClassWriter.DEBUG_LOCATION_PROPERTY, "D:\\class");
 //		System.getProperties().put("sun.misc.ProxyGenerator.saveGeneratedFiles", "true");
 
         ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
 
         SpringApplication.run(DemoApplication.class, args);
+
+        new SpringApplication(DemoApplication.class).run(args);
+
         logger.error("CONGRATULATIONS!!   demo effective!");
         logger.error(StaticVar.myProperties);
         logger.error(StaticVar.url);
