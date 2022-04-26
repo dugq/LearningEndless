@@ -65,3 +65,4 @@ R0即是源操作数，也是目的操作数，表示R0寄存器上的数值为�
 
 #### 计算机输入输出设备  
 ![](../image/106.2022-04-26 10_52_28.gif)
+![](https://media.giphy.com/media/JsWIKoeRiGOQI12xdi/giphy.gif)
