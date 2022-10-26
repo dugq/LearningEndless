@@ -1,0 +1,37 @@
+@startuml
+'https://plantuml.com/component-diagram
+
+cloud {
+ node "弹幕集群" {
+   [danmu Component1]
+   [danmu Component2]
+ }
+}
+
+[MQ]
+
+node "弹幕后端服务"{
+
+}
+
+database mysql {
+}
+
+database redis {
+}
+
+note top of user1 : 当前端检测到socket断连时，降级使用http 提交用户发送的弹幕
+note top of user2 : 当前端检测到socket断连时，降级使用http轮训弹幕列表
+note bottom of redis : redis中按服务器的秒值，每秒存储一个队列
+
+user1 --> [danmu Component1] : 1、通过 http 将message提交到弹幕服务
+user2 <-- [danmu Component2] : 7、通过 http 定时拉取弹幕列表。并缓存返回的时间戳，用于去重
+[danmu Component1] --> MQ : 2、提交到
+[danmu Component2] --> MQ : 2、提交到
+MQ --> 弹幕后端服务 : 3、弹幕后端服务会对消息进行归类，过滤等操作
+弹幕后端服务 -->mysql : 异步持久化
+弹幕后端服务 --> redis : 4、缓存
+redis --> 弹幕后端服务 : 5、master周期循环拉取消息
+[danmu Component1] <-- 弹幕后端服务 : 6、发给所有的弹幕前端服务
+[danmu Component2] <-- 弹幕后端服务 : 6、发给所有的弹幕前端服务
+@enduml

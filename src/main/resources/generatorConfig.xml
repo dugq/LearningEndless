@@ -21,7 +21,7 @@
            2，MyBatis3Simple：类似MyBatis3，只是不生成XXXBySample；
        introspectedColumnImpl：类全限定名，用于扩展MBG
    -->
-    <context id="mysql" defaultModelType="conditional" targetRuntime="com.example.mybatisGenerator.MyIntrospectedTableMybatis3Impl">
+    <context id="mysql" defaultModelType="conditional" targetRuntime="com.example.learn.db.mybatisGenerator.MyIntrospectedTableMybatis3Impl">
 
         <!-- 自动识别数据库关键字，默认false，如果设置为true，根据SqlReservedWords中定义的关键字列表；
        一般保留默认值，遇到数据库关键字（Java关键字），使用columnOverride覆盖
@@ -32,8 +32,8 @@
         <property name="beginningDelimiter" value="`"/>
         <property name="endingDelimiter" value="`"/>
         <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"/>
-        <plugin type="com.example.mybatisGenerator.MyPluginAdapter"/>
-        <commentGenerator type="com.example.mybatisGenerator.MyCommentGenerator">
+        <plugin type="com.example.learn.db.mybatisGenerator.MyPluginAdapter"/>
+        <commentGenerator type="com.example.learn.db.mybatisGenerator.MyCommentGenerator">
             <property name="suppressDate" value="true"/>
             <property name="suppressAllComments" value="true" />
         </commentGenerator>

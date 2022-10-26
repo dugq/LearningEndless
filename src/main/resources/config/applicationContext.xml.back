@@ -9,9 +9,9 @@
 
     <context:property-placeholder location="classpath:config/conf.properties" ignore-unresolvable="true"/>
     <aop:aspectj-autoproxy/>
-    <context:component-scan base-package="com.example.dao"/>
-    <context:component-scan base-package="com.example.pojo"/>
-    <context:component-scan base-package="com.example.service"/>
+    <context:component-scan base-package="com.example.demo.spring.dao"/>
+    <context:component-scan base-package="com.example.demo.spring.pojo"/>
+    <context:component-scan base-package="com.example.demo.spring.service"/>
 
     <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
         <property name="driverClass" value="com.mysql.jdbc.Driver"/>
@@ -41,7 +41,7 @@
         <constructor-arg index="0" ref="sqlSessionFactory"/>
     </bean>
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.example.dao.mapper"></property>
+        <property name="basePackage" value="com.example.demo.spring.dao.mapper"></property>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
     </bean>
     <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">

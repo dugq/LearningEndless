@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.example.dao.mapper.OperationsMapper" >
-  <resultMap id="BaseResultMap" type="com.example.pojo.entry.Operations" >
+<mapper namespace="com.example.demo.spring.dao.mapper.OperationsMapper" >
+  <resultMap id="BaseResultMap" type="com.example.demo.spring.pojo.entry.Operations" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
     <result column="url" property="url" jdbcType="VARCHAR" />
@@ -12,7 +12,7 @@
     id, name, url, type, pid
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from operations
     where id = #{id,jdbcType=INTEGER}
@@ -28,13 +28,13 @@
     delete from operations
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.example.pojo.entry.Operations" >
-    insert into operations (id, name, url, 
+  <insert id="insert" parameterType="com.example.demo.spring.pojo.entry.Operations" >
+    insert into operations (id, name, url,
       type, pid)
-    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR}, 
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{url,jdbcType=VARCHAR},
       #{type,jdbcType=TINYINT}, #{pid,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.example.pojo.entry.Operations" >
+  <insert id="insertSelective" parameterType="com.example.demo.spring.pojo.entry.Operations" >
     insert into operations
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -71,7 +71,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.example.pojo.entry.Operations" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.spring.pojo.entry.Operations" >
     update operations
     <set >
       <if test="name != null" >
@@ -89,7 +89,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.example.pojo.entry.Operations" >
+  <update id="updateByPrimaryKey" parameterType="com.example.demo.spring.pojo.entry.Operations" >
     update operations
     set name = #{name,jdbcType=VARCHAR},
       url = #{url,jdbcType=VARCHAR},

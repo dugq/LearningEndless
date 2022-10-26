@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.example.dao.mapper.UserRoleMapper" >
-  <resultMap id="BaseResultMap" type="com.example.pojo.entry.UserRole" >
+<mapper namespace="com.example.demo.spring.dao.mapper.UserRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.example.demo.spring.pojo.entry.UserRole" >
     <result column="uid" property="uid" jdbcType="INTEGER" />
     <result column="rid" property="rid" jdbcType="INTEGER" />
   </resultMap>
-  <insert id="insert" parameterType="com.example.pojo.entry.UserRole" >
+  <insert id="insert" parameterType="com.example.demo.spring.pojo.entry.UserRole" >
     insert into user_role (uid, rid)
     values (#{uid,jdbcType=INTEGER}, #{rid,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.example.pojo.entry.UserRole" >
+  <insert id="insertSelective" parameterType="com.example.demo.spring.pojo.entry.UserRole" >
     insert into user_role
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="uid != null" >

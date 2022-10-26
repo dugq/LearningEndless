@@ -1,0 +1,39 @@
+@startuml
+'https://plantuml.com/component-diagram
+
+cloud {
+ node "弹幕集群" {
+   [master danmu Component]
+   [slaver1 danmu Component]
+   [slaver2 danmu Component]
+ }
+}
+
+[MQ]
+
+node "弹幕处理服务"{
+
+}
+
+database mysql {
+}
+
+database redis {
+
+}
+
+
+
+user1 --> [slaver1 danmu Component] : 通过 websocket将message提交到弹幕服务
+user2 --> [slaver2 danmu Component] : 通过 websocket将message提交到弹幕服务
+[slaver1 danmu Component] --> MQ : 提交到
+[slaver2 danmu Component] --> MQ : 提交到
+MQ --> 弹幕处理服务 : 弹幕处理服务会对消息进行归类，过滤等操作
+弹幕处理服务 -->mysql : 持久化
+弹幕处理服务 --> redis : 缓存
+redis --> [master danmu Component] : master周期循环拉取消息
+[slaver1 danmu Component] <-- [master danmu Component] : 发给所有的slaver
+[slaver2 danmu Component] <-- [master danmu Component] : 发给所有的slaver
+[slaver1 danmu Component] --> user1 : 通过websocket推送给用户
+[slaver2 danmu Component] --> user2 : 通过websocket推送给用户
+@enduml

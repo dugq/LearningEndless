@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.example.dao.mapper.ModuleRoleMapper" >
-  <resultMap id="BaseResultMap" type="com.example.pojo.entry.ModuleRole" >
+<mapper namespace="com.example.demo.spring.dao.mapper.ModuleRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.example.demo.spring.pojo.entry.ModuleRole" >
     <result column="rid" property="rid" jdbcType="INTEGER" />
     <result column="mid" property="mid" jdbcType="INTEGER" />
   </resultMap>
-  <insert id="insert" parameterType="com.example.pojo.entry.ModuleRole" >
+  <insert id="insert" parameterType="com.example.demo.spring.pojo.entry.ModuleRole" >
     insert into module_role (rid, mid)
     values (#{rid,jdbcType=INTEGER}, #{mid,jdbcType=INTEGER})
   </insert>
-  <insert id="insertSelective" parameterType="com.example.pojo.entry.ModuleRole" >
+  <insert id="insertSelective" parameterType="com.example.demo.spring.pojo.entry.ModuleRole" >
     insert into module_role
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="rid != null" >

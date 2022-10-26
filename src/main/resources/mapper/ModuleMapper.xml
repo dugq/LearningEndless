@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.example.dao.mapper.ModuleMapper" >
-  <resultMap id="BaseResultMap" type="com.example.pojo.entry.Module" >
+<mapper namespace="com.example.demo.spring.dao.mapper.ModuleMapper" >
+  <resultMap id="BaseResultMap" type="com.example.demo.spring.pojo.entry.Module" >
     <id column="mid" property="mid" jdbcType="INTEGER" />
     <result column="mname" property="mname" jdbcType="VARCHAR" />
   </resultMap>
@@ -9,7 +9,7 @@
     mid, mname
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from module
     where mid = #{mid,jdbcType=INTEGER}
@@ -18,11 +18,11 @@
     delete from module
     where mid = #{mid,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.example.pojo.entry.Module" >
+  <insert id="insert" parameterType="com.example.demo.spring.pojo.entry.Module" >
     insert into module (mid, mname)
     values (#{mid,jdbcType=INTEGER}, #{mname,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.example.pojo.entry.Module" >
+  <insert id="insertSelective" parameterType="com.example.demo.spring.pojo.entry.Module" >
     insert into module
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="mid != null" >
@@ -41,7 +41,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.example.pojo.entry.Module" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.spring.pojo.entry.Module" >
     update module
     <set >
       <if test="mname != null" >
@@ -50,7 +50,7 @@
     </set>
     where mid = #{mid,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.example.pojo.entry.Module" >
+  <update id="updateByPrimaryKey" parameterType="com.example.demo.spring.pojo.entry.Module" >
     update module
     set mname = #{mname,jdbcType=VARCHAR}
     where mid = #{mid,jdbcType=INTEGER}

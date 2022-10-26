@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.example.dao.mapper.DepartmentMapper" >
-  <resultMap id="BaseResultMap" type="com.example.pojo.entry.Department" >
+<mapper namespace="com.example.demo.spring.dao.mapper.DepartmentMapper" >
+  <resultMap id="BaseResultMap" type="com.example.demo.spring.pojo.entry.Department" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="name" property="name" jdbcType="VARCHAR" />
   </resultMap>
@@ -9,7 +9,7 @@
     id, name
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select 
+    select
     <include refid="Base_Column_List" />
     from department
     where id = #{id,jdbcType=INTEGER}
@@ -18,11 +18,11 @@
     delete from department
     where id = #{id,jdbcType=INTEGER}
   </delete>
-  <insert id="insert" parameterType="com.example.pojo.entry.Department" >
+  <insert id="insert" parameterType="com.example.demo.spring.pojo.entry.Department" >
     insert into department (id, name)
     values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR})
   </insert>
-  <insert id="insertSelective" parameterType="com.example.pojo.entry.Department" >
+  <insert id="insertSelective" parameterType="com.example.demo.spring.pojo.entry.Department" >
     insert into department
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -41,7 +41,7 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.example.pojo.entry.Department" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.example.demo.spring.pojo.entry.Department" >
     update department
     <set >
       <if test="name != null" >
@@ -50,7 +50,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.example.pojo.entry.Department" >
+  <update id="updateByPrimaryKey" parameterType="com.example.demo.spring.pojo.entry.Department" >
     update department
     set name = #{name,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}

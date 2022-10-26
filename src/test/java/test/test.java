@@ -1,10 +1,8 @@
 package test;
 
 import com.alibaba.fastjson.JSONObject;
-import com.example.util.HttpClientUtils;
-import com.example.util.HttpUtils;
+import com.example.demo.spring.util.HttpClientUtils;
 import org.junit.Test;
-import sun.net.www.http.HttpClient;
 
 /**
  * Created by dugq on 2018/3/23.
