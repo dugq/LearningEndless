@@ -133,6 +133,8 @@ dependencies {
 
     compile 'eu.bitwalker:UserAgentUtils:1.21'
 
+    compileOnly("org.openjdk.jol:jol-core:0.16")
+
 }
 
 install {

@@ -23,7 +23,6 @@ public class SocketTest {
 
     @SneakyThrows
     public static void startServerSocket(){
-        Short
         ServerSocket serverSocket = new ServerSocket(7777);
         final Socket client = serverSocket.accept();
         final InputStream inputStream = client.getInputStream();
