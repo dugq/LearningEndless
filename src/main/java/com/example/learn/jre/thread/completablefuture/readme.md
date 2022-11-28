@@ -8,6 +8,7 @@
 * 阶段抽象类
 * 定义了阶段任务的每个阶段模版方法
 * 简单的解释就是  火车头式函数调用的模版方法，并且支持 runnable consumer function Supplier 等不同方式，每种方式又提供了另起线程执行的方法
+* [接口](CompletableFutureTest.java)
 
 
 ## CompletableFuture

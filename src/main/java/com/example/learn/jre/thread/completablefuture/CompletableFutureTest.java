@@ -5,14 +5,90 @@ import org.junit.Test;
 
 import java.util.Objects;
 import java.util.concurrent.*;
+import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * Created by dugq on 2020-05-07.
  */
 public class CompletableFutureTest {
+
     private ExecutorService executorService = Executors.newFixedThreadPool(3);
 
-    @Test
+
+    /**
+     * {@link CompletionStage}
+     */
+    public interface CompletionStageTest<T>{
+
+        /**
+         * 在已有的一个阶段任务 追加一个任务
+         */
+        public <U> CompletionStage<U> thenApply(Function<? super T,? extends U> fn);
+        public <U> CompletionStage<U> thenApplyAsync(Function<? super T,? extends U> fn);
+        public <U> CompletionStage<U> thenApplyAsync(Function<? super T,? extends U> fn, Executor executor);
+
+        public CompletionStage<Void> thenAccept(Consumer<? super T> action);
+        public CompletionStage<Void> thenAcceptAsync(Consumer<? super T> action);
+        public CompletionStage<Void> thenAcceptAsync(Consumer<? super T> action, Executor executor);
+
+        public CompletionStage<Void> thenRun(Runnable action);
+        public CompletionStage<Void> thenRunAsync(Runnable action);
+        public CompletionStage<Void> thenRunAsync(Runnable action, Executor executor);
+
+        public <U> CompletionStage<U> thenCompose(Function<? super T, ? extends CompletionStage<U>> fn);
+        public <U> CompletionStage<U> thenComposeAsync(Function<? super T, ? extends CompletionStage<U>> fn);
+        public <U> CompletionStage<U> thenComposeAsync(Function<? super T, ? extends CompletionStage<U>> fn, Executor executor);
+
+        public CompletionStage<T> whenComplete(BiConsumer<? super T, ? super Throwable> action);
+        public CompletionStage<T> whenCompleteAsync(BiConsumer<? super T, ? super Throwable> action);
+        public CompletionStage<T> whenCompleteAsync(BiConsumer<? super T, ? super Throwable> action, Executor executor);
+
+        public <U> CompletionStage<U> handle(BiFunction<? super T, Throwable, ? extends U> fn);
+        public <U> CompletionStage<U> handleAsync(BiFunction<? super T, Throwable, ? extends U> fn);
+        public <U> CompletionStage<U> handleAsync(BiFunction<? super T, Throwable, ? extends U> fn, Executor executor);
+
+
+        /**
+         * 在已有的两个前置阶段任务后的第三个阶段任务
+         */
+        public <U,V> CompletionStage<V> thenCombine(CompletionStage<? extends U> other, BiFunction<? super T,? super U,? extends V> fn);
+        public <U,V> CompletionStage<V> thenCombineAsync(CompletionStage<? extends U> other, BiFunction<? super T,? super U,? extends V> fn);
+        public <U,V> CompletionStage<V> thenCombineAsync(CompletionStage<? extends U> other, BiFunction<? super T,? super U,? extends V> fn, Executor executor);
+
+        public <U> CompletionStage<Void> thenAcceptBoth(CompletionStage<? extends U> other, BiConsumer<? super T, ? super U> action);
+        public <U> CompletionStage<Void> thenAcceptBothAsync(CompletionStage<? extends U> other, BiConsumer<? super T, ? super U> action);
+        public <U> CompletionStage<Void> thenAcceptBothAsync(CompletionStage<? extends U> other, BiConsumer<? super T, ? super U> action, Executor executor);
+
+        public CompletionStage<Void> runAfterBoth(CompletionStage<?> other, Runnable action);
+        public CompletionStage<Void> runAfterBothAsync(CompletionStage<?> other, Runnable action);
+        public CompletionStage<Void> runAfterBothAsync(CompletionStage<?> other, Runnable action, Executor executor);
+
+        public <U> CompletionStage<U> applyToEither(CompletionStage<? extends T> other, Function<? super T, U> fn);
+        public <U> CompletionStage<U> applyToEitherAsync(CompletionStage<? extends T> other, Function<? super T, U> fn);
+        public <U> CompletionStage<U> applyToEitherAsync(CompletionStage<? extends T> other, Function<? super T, U> fn, Executor executor);
+
+        public CompletionStage<Void> acceptEither(CompletionStage<? extends T> other, Consumer<? super T> action);
+        public CompletionStage<Void> acceptEitherAsync(CompletionStage<? extends T> other, Consumer<? super T> action);
+        public CompletionStage<Void> acceptEitherAsync(CompletionStage<? extends T> other, Consumer<? super T> action, Executor executor);
+
+        public CompletionStage<Void> runAfterEither(CompletionStage<?> other, Runnable action);
+        public CompletionStage<Void> runAfterEitherAsync(CompletionStage<?> other, Runnable action);
+        public CompletionStage<Void> runAfterEitherAsync(CompletionStage<?> other, Runnable action, Executor executor);
+
+        /**
+         * 异常处理阶段任务
+         */
+        public CompletionStage<T> exceptionally(Function<Throwable, ? extends T> fn);
+
+        /**
+         * 自定义的CompletionStage 需要兼容官方的
+         */
+        public CompletableFuture<T> toCompletableFuture();
+    }
+
     public void completableFuture() throws ExecutionException, InterruptedException {
 
 
@@ -43,6 +119,7 @@ public class CompletableFutureTest {
          * 取消任务，并根据入参决定是否中断进行中的任务 {@link #testCancelInterrupt}
          * 任务结果被强行赋予 CancellationException
          * 任务的取消在每个阶段完成后，检测到已被中断，不再继续下个阶段，不会强行嘎调线程，也不会尝试 interrupt
+         * {@link #testCancelSource}
          */
         future.cancel(true);
 
@@ -200,5 +277,11 @@ public class CompletableFutureTest {
         System.out.println(future.isDone());
         ThreadUtil.sleep(5);
         System.out.println(future.isDone());
+    }
+
+    @Test
+    public void testCancelSource(){
+        CompletableFuture<Void> future = CompletableFuture.runAsync(() -> ThreadUtil.sleep(11)).thenRun(() -> ThreadUtil.sleep(1));
+        future.cancel(true);
     }
 }
