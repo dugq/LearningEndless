@@ -5,18 +5,12 @@ import org.junit.Test;
 
 import java.util.Objects;
 import java.util.concurrent.*;
-import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.function.*;
 
 /**
  * Created by dugq on 2020-05-07.
  */
 public class CompletableFutureTest {
-
-    private ExecutorService executorService = Executors.newFixedThreadPool(3);
-
 
     /**
      * {@link CompletionStage}
@@ -26,26 +20,27 @@ public class CompletableFutureTest {
         /**
          * 在已有的一个阶段任务 追加一个任务
          */
+        //一个参数 一个结果 function
         public <U> CompletionStage<U> thenApply(Function<? super T,? extends U> fn);
         public <U> CompletionStage<U> thenApplyAsync(Function<? super T,? extends U> fn);
         public <U> CompletionStage<U> thenApplyAsync(Function<? super T,? extends U> fn, Executor executor);
-
+        //一个参数 没有结果 consumer
         public CompletionStage<Void> thenAccept(Consumer<? super T> action);
         public CompletionStage<Void> thenAcceptAsync(Consumer<? super T> action);
         public CompletionStage<Void> thenAcceptAsync(Consumer<? super T> action, Executor executor);
-
+        //没有参数 没有结果 runnable
         public CompletionStage<Void> thenRun(Runnable action);
         public CompletionStage<Void> thenRunAsync(Runnable action);
         public CompletionStage<Void> thenRunAsync(Runnable action, Executor executor);
-
+        //一个参数，一个结果 和function的区别在于 function的入参是结果，而compose直接是Completion对象
         public <U> CompletionStage<U> thenCompose(Function<? super T, ? extends CompletionStage<U>> fn);
         public <U> CompletionStage<U> thenComposeAsync(Function<? super T, ? extends CompletionStage<U>> fn);
         public <U> CompletionStage<U> thenComposeAsync(Function<? super T, ? extends CompletionStage<U>> fn, Executor executor);
-
+        //两个参数，没有结果 和 consumer的区别在于，额外接收exception，如果发送异常了，还是会执行下个任务
         public CompletionStage<T> whenComplete(BiConsumer<? super T, ? super Throwable> action);
         public CompletionStage<T> whenCompleteAsync(BiConsumer<? super T, ? super Throwable> action);
         public CompletionStage<T> whenCompleteAsync(BiConsumer<? super T, ? super Throwable> action, Executor executor);
-
+        //两个参数，一个结果 和function的区别在于额外接收exception，如果发送异常了，还是会执行下个任务
         public <U> CompletionStage<U> handle(BiFunction<? super T, Throwable, ? extends U> fn);
         public <U> CompletionStage<U> handleAsync(BiFunction<? super T, Throwable, ? extends U> fn);
         public <U> CompletionStage<U> handleAsync(BiFunction<? super T, Throwable, ? extends U> fn, Executor executor);
@@ -89,11 +84,74 @@ public class CompletableFutureTest {
         public CompletableFuture<T> toCompletableFuture();
     }
 
+    /**
+     * Future 表示一个异步计算的结果
+     * jdk 实现类包括 {@link CompletableFuture} {@link ForkJoinTask} {@link RunnableFuture}
+     */
+    public interface futureTest<V>{
+        /**
+         * 尝试取消任务
+         *  若任务已完成，则无法取消，此方法返回false
+         *  如果任务已经开始但未结束，则根据入参决定是否进行中断尝试，并将结果标记为已取消
+         *  如果任务未开始，则将会被直接结束
+         */
+        boolean cancel(boolean mayInterruptIfRunning);
+        boolean isCancelled();
+
+        /**
+         * 取消也算在完成之内
+         */
+        boolean isDone();
+
+        /**
+         * 获取任务结果
+         * 如果任务尚在进行中，当前线程将会被阻塞，但当前阻塞可被中断。
+         */
+        V get() throws InterruptedException, ExecutionException;
+        V get(long timeout, TimeUnit unit) throws InterruptedException, ExecutionException, TimeoutException;
+    }
+
+    public abstract static class CompletableFutureMethodTest<T> implements Future<T>,CompletionStage<T>{
+
+        /**
+         *  提供了5个静态方法，以直接开始阶段任务的首个任务
+         */
+        public static <U> CompletableFuture<U> supplyAsync(Supplier<U> supplier) {return null;}
+        public static <U> CompletableFuture<U> supplyAsync(Supplier<U> supplier, Executor executor){return null;};
+        public static CompletableFuture<Void> runAsync(Runnable runnable) {return null;}
+        public static CompletableFuture<Void> runAsync(Runnable runnable, Executor executor) {return null;}
+        public static <U> CompletableFuture<U> completedFuture(U value) { return null;}
+
+        /**
+         * 提供对结果获取的快捷方法
+         */
+        public T join() {return null;}
+        public T getNow(T valueIfAbsent) {return null;}
+        public boolean isCompletedExceptionally() {return false;}
+
+        /**
+         * 提供对结果操作的额外方法
+         */
+        public boolean complete(Object value) {return true;}
+        public boolean completeExceptionally(Throwable ex) {return true;}
+        public void obtrudeValue(T value) {}
+        public void obtrudeException(Throwable ex) {}
+
+        /**
+         * 监控类
+         */
+        public int getNumberOfDependents() {return 0;}
+
+
+        public static CompletableFuture<Void> allOf(CompletableFuture<?>... cfs) {return null;}
+        public static CompletableFuture<Object> anyOf(CompletableFuture<?>... cfs) {return null;}
+    }
+
     public void completableFuture() throws ExecutionException, InterruptedException {
 
 
         /**
-         * 没有 *Async结尾的任务定义不会更换线程执行，继续使用上一个阶段任务使用的线程，有Async结尾的任务会更换线程。{@link #testThread()}
+         * 没有 *Async结尾的任务定义不会更换线程执行，继续使用上一个阶段任务使用的线程，有Async结尾的任务会更换线程(线程来自传入的ThreadPool，如果没有传入，则使用{@link ForkJoinPool#commonPool})。{@link #testThread()}
          * 如第一个则使用主线程{@link #testThread2}
          *
          */
@@ -152,38 +210,40 @@ public class CompletableFutureTest {
 
     @Test
     public void testThread() throws ExecutionException, InterruptedException {
+        ExecutorService threadPool = ThreadUtil.getThreadPool("test-one");
         CompletableFuture<Void> supply = CompletableFuture
                 .supplyAsync(() -> {
-                    System.out.println("start  "+Thread.currentThread().getId());
+                    ThreadUtil.printThreadInfo("start");
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
-                    System.out.println("supply "+Thread.currentThread().getId());
+                    ThreadUtil.printThreadInfo("supply");
                     throw new RuntimeException("fasf");
-                },executorService)
+                }, threadPool)
                 .handle((p, e) -> {
+                    ThreadUtil.printThreadInfo("handler");
                     if (Objects.isNull(p) && Objects.nonNull(e)){
-                        System.out.println("handler "+e.getMessage()+"  "+Thread.currentThread().getId());
+                        System.out.println("handler "+e.getMessage()+"  ");
                     }
                     return 2;
                 })
-                .thenAcceptAsync((p)-> System.out.println("accept :"+Thread.currentThread().getId()),executorService);
-        System.out.println("main "+Thread.currentThread().getId());
+                .thenAcceptAsync((p)-> ThreadUtil.printThreadInfo("accept"),ThreadUtil.getThreadPool("test-two"));
+        ThreadUtil.printThreadInfo("main");
         System.out.println(supply.get());
     }
 
     @Test
     public void testThread2(){
         CompletableFuture.completedFuture(null).handle((pre,ex)->{
-            System.out.println("handle 1 threadId = "+Thread.currentThread().getId());
+            ThreadUtil.printThreadInfo("handle 1");
             return 1;
         }).handleAsync((pre,ex)->{
-            System.out.println("handle 2 threadId = "+Thread.currentThread().getId());
+            ThreadUtil.printThreadInfo("handle 2");
             return 2;
         });
-        System.out.println("main threadId = "+Thread.currentThread().getId());
+        ThreadUtil.printThreadInfo("main");
     }
 
     @Test
@@ -284,4 +344,12 @@ public class CompletableFutureTest {
         CompletableFuture<Void> future = CompletableFuture.runAsync(() -> ThreadUtil.sleep(11)).thenRun(() -> ThreadUtil.sleep(1));
         future.cancel(true);
     }
+
+    @Test
+    public void testStack(){
+        CompletableFuture<String> completableFuture = CompletableFuture.supplyAsync(() -> "fasdf");
+        completableFuture.thenApply((param)->"fff");
+    }
+
+
 }

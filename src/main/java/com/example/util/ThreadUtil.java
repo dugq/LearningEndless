@@ -2,13 +2,14 @@ package com.example.util;
 
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.crypto.hash.Hash;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.redis.util.ByteUtils;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class ThreadUtil {
@@ -106,4 +107,31 @@ public class ThreadUtil {
         return Byte.parseByte(binary,2);
     }
 
+    private static final Map<String,ExecutorService> threadPoolMap = new ConcurrentHashMap<>();
+
+    public static ExecutorService getThreadPool(String key) {
+        if (threadPoolMap.containsKey(key)){
+            return threadPoolMap.get(key);
+        }
+        return threadPoolMap.computeIfAbsent(key,(sufferName)-> new ThreadPoolExecutor(5, 10, 10, TimeUnit.MINUTES, new ArrayBlockingQueue<>(100), new ThreadFactory() {
+            private final AtomicInteger index = new AtomicInteger(1);
+            @Override
+            public Thread newThread(@NotNull Runnable r) {
+                Thread thread = new Thread(r);
+                thread.setName("dugq-custom-"+sufferName+index.getAndAdd(1));
+                return thread;
+            }
+        }));
+    }
+
+    public static void printThreadInfo(String flag){
+        if (StringUtils.isBlank(flag)){
+            flag = "current";
+        }
+        System.out.println(flag+" thread id = "+Thread.currentThread().getId()+" name = "+Thread.currentThread().getName());
+    }
+
+    public static void printThreadInfo(){
+        printThreadInfo(null);
+    }
 }

@@ -16,7 +16,58 @@
 * [基本用法示例](CompletableFutureTest.java)
 
 ### 实现细节
-#### 异步
+#### 私有属性
+#####  volatile Object result;
+* 该字段存储异步计算结果，类型不一定是CompletableFuture声明的类型，也可能是AltResult封装的null对象，或者是各类异常（包括取消异常和各种任务抛出的异常）
+* 字段用volatile修饰，以便get等方法快速获取到任务的结果
+* result只有在任务初始化的时候为null，一旦任务完成，它将会被赋予任务的结果（可能是某个异常，AltResult 或者任务的实际结果）。
+#####  volatile Completion stack;
+###### 字段
+* 该字段用于触发依赖的任务，记录依赖当前结果的任务栈。类型为Completion
+* 同样用volatile修饰
+* 追加依赖当前任务的任务时，保证追加的任务一定会执行，必须分三步走
+  * 1、判断当前任务result!=null时，调用追加任务的tryFire方法，尝试直接触发任务的执行。如果result==null说明当前任务未结束，继续下一步
+  * 2、调用 push 方法，将新的依赖当前任务的任务到stack中。push依赖的是tryPushStack方法。
+    * tryPushStack 是一个死循环的操作，只要result不等于null(说明当前任务未结束),或者push失败，就会继续进行。
+    * 注意 tryPushStack 不是一个原子性，且没有事物性，所以在 tryPushStack 失败的时候，stack也会变更。所以push方法中，在tryPushStack 失败的时候，需要重置新任务的依赖栈
+  * 3、再调用一次新任务的tryFire尝试开始任务，以防止在push结束的同时，当前任务也结束，并且stack的遍历已经get到依赖任务栈的栈顶元素，或者是push的过程中当前任务已经结束，导致push失败。
+###### 关键方法
+* 
+#### 内部抽象类 Completion.java
+* Completion 继承了ForkJoinTask 利用ForkJoinTask的 compareAndSetForkJoinTaskTag 方法来保证任务的非重复执行
+* Completion 实现AsynchronousCompletionTask.class 用以标记归类
+* Completion 实现了Runnable 用以将任务提交线程执行
+* CompletableFuture 实现了各类CompletionStage方法，每种类型的任务以不同的Completion 子类去是实现
+* Completion 的tryFire 方法用以启动任务，支持：同步、异步、内嵌三种方式。
+* Completion 包含next属性，用以实现堆栈逻辑
+* UniCompletion
+  * 属性
+    * Executor executor 保存执行任务的线程池
+    * CompletableFuture<V> dep  当前任务的CompletableFuture对象，在任务执行完成时更新result的值，以及触发其依赖栈 stack的任务
+    * CompletableFuture<T> src  上一个任务，可理解为被依赖的任务
+  * 方法
+    * claim()，当需要触发时调用此方法，内部使用executor 异步调用tryFire方法，返回false 表示执行成功或者已经被执行，返回true，表示有任务可以执行，但没有线程去执行
+    * isLive()，判断当前任务是否可以正常被触发。判断持有任务的CompletableFuture是否存在为依据
+  * 子类 
+    * 各自实现构造方法接收不同类型的任务，以及tryFire 执行不同的任务
+      * tryFire的逻辑基本一致：
+        * 1、判断结果result==null，继续执行，如果非空说明已经执行过了，跳过
+        * 2、判断依赖的CompletableFuture是否有异常，如果有异常且当前任务不接收exception时，直接修改result为依赖CompletableFuture的异常,其他情况构建依赖Completable的结果和exception继续
+        * 3、如果tryFire的参数是同步(SYNC)，直接执行任务， 如果是异步或者嵌套则，调用claim方法尝试修改标记，并异步调用tryFire，以实现异步执行任务。如果方法返回true，则直接执行任务(使用当前线程继续执行)，返回false说明有指定线程池，claim方法会实现异步，当前方法return null; 表示任务还在进行中
+          * 这里注意： claim异步执行使用的是tryFire，tryFire 又调用了claim以实现异步，看上去会递归，实际不会。
+          * 因为claim内部借用父类 ForkJoinTask的compareAndSetForkJoinTaskTag方法阻断了线程的继续进行。
+        * 4、同步或者异步执行完任务后，会尝试将结果或者异常存入result中，不管结果有没有成功，如果CompletableFuture被取消或者其他原因导致结果有值的时候，任务虽然执行完了，但结果不会变更的
+        * 5、然后将所有的属性引用置空。看上去没啥必要。这里就是jdk作为底层API想的比较多了。这里是为了避免在任务队列很长且比较占用内存时，导致所有引用链持续存在，导致内存溢出。
+        * 最后 Completion 作为任务具体的执行对象的所有事情都完成了，调用CompletableFuture的postFire方法，将球交给还给CompletableFuture对象
+    * UniApply 属性 ： Function<? super T,? extends V> fn;  dp.result=fn.apply(src.result);  
+    * UniWhenComplete 属性： BiConsumer<? super T, ? super Throwable> fn; fn.apply(src.result,src.result.ex); dp.result=src.result;
+    * UniCompose 属性：Function<? super T, ? extends CompletionStage<V>> fn; dp.result = fn.apply(src.result).toCompletableFuture().result;(这里依赖UniRelay实现)
+    * UniExceptionally 属性 Function<? super Throwable, ? extends T> fn; 
+tryFire
+
+
+ postFire
+ get/join 的阻塞
 
 #### 任务中断 cancel 方法
 
