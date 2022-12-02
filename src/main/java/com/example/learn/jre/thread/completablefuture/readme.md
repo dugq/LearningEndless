@@ -2,7 +2,7 @@
 * Future表示异步计算的结果。
 * 方法用于检查计算是否完成、等待计算完成以及检索计算结果。
 * 只能在计算完成时使用get方法检索结果，如果需要则阻塞，直到它准备好。
-取消是由cancel方法执行的。还提供了其他方法来确定任务是正常完成还是被取消。 一旦计算完成，计算就不能取消。
+* 取消是由cancel方法执行的。还提供了其他方法来确定任务是正常完成还是被取消。 一旦计算完成，计算就不能取消。
 
 ## CompletionStage
 * 阶段抽象类
@@ -22,6 +22,8 @@
 * 字段用volatile修饰，以便get等方法快速获取到任务的结果
 * result只有在任务初始化的时候为null，一旦任务完成，它将会被赋予任务的结果（可能是某个异常，AltResult 或者任务的实际结果）。
 #####  volatile Completion stack;
+ 依赖任务的栈
+##### 内部类： Completion
 ###### 字段
 * 该字段用于触发依赖的任务，记录依赖当前结果的任务栈。类型为Completion
 * 同样用volatile修饰
@@ -31,8 +33,7 @@
     * tryPushStack 是一个死循环的操作，只要result不等于null(说明当前任务未结束),或者push失败，就会继续进行。
     * 注意 tryPushStack 不是一个原子性，且没有事物性，所以在 tryPushStack 失败的时候，stack也会变更。所以push方法中，在tryPushStack 失败的时候，需要重置新任务的依赖栈
   * 3、再调用一次新任务的tryFire尝试开始任务，以防止在push结束的同时，当前任务也结束，并且stack的遍历已经get到依赖任务栈的栈顶元素，或者是push的过程中当前任务已经结束，导致push失败。
-###### 关键方法
-* 
+
 #### 内部抽象类 Completion.java
 * Completion 继承了ForkJoinTask 利用ForkJoinTask的 compareAndSetForkJoinTaskTag 方法来保证任务的非重复执行
 * Completion 实现AsynchronousCompletionTask.class 用以标记归类
@@ -40,33 +41,75 @@
 * CompletableFuture 实现了各类CompletionStage方法，每种类型的任务以不同的Completion 子类去是实现
 * Completion 的tryFire 方法用以启动任务，支持：同步、异步、内嵌三种方式。
 * Completion 包含next属性，用以实现堆栈逻辑
-* UniCompletion
-  * 属性
-    * Executor executor 保存执行任务的线程池
-    * CompletableFuture<V> dep  当前任务的CompletableFuture对象，在任务执行完成时更新result的值，以及触发其依赖栈 stack的任务
-    * CompletableFuture<T> src  上一个任务，可理解为被依赖的任务
-  * 方法
-    * claim()，当需要触发时调用此方法，内部使用executor 异步调用tryFire方法，返回false 表示执行成功或者已经被执行，返回true，表示有任务可以执行，但没有线程去执行
-    * isLive()，判断当前任务是否可以正常被触发。判断持有任务的CompletableFuture是否存在为依据
-  * 子类 
-    * 各自实现构造方法接收不同类型的任务，以及tryFire 执行不同的任务
-      * tryFire的逻辑基本一致：
-        * 1、判断结果result==null，继续执行，如果非空说明已经执行过了，跳过
-        * 2、判断依赖的CompletableFuture是否有异常，如果有异常且当前任务不接收exception时，直接修改result为依赖CompletableFuture的异常,其他情况构建依赖Completable的结果和exception继续
-        * 3、如果tryFire的参数是同步(SYNC)，直接执行任务， 如果是异步或者嵌套则，调用claim方法尝试修改标记，并异步调用tryFire，以实现异步执行任务。如果方法返回true，则直接执行任务(使用当前线程继续执行)，返回false说明有指定线程池，claim方法会实现异步，当前方法return null; 表示任务还在进行中
-          * 这里注意： claim异步执行使用的是tryFire，tryFire 又调用了claim以实现异步，看上去会递归，实际不会。
-          * 因为claim内部借用父类 ForkJoinTask的compareAndSetForkJoinTaskTag方法阻断了线程的继续进行。
-        * 4、同步或者异步执行完任务后，会尝试将结果或者异常存入result中，不管结果有没有成功，如果CompletableFuture被取消或者其他原因导致结果有值的时候，任务虽然执行完了，但结果不会变更的
-        * 5、然后将所有的属性引用置空。看上去没啥必要。这里就是jdk作为底层API想的比较多了。这里是为了避免在任务队列很长且比较占用内存时，导致所有引用链持续存在，导致内存溢出。
-        * 最后 Completion 作为任务具体的执行对象的所有事情都完成了，调用CompletableFuture的postFire方法，将球交给还给CompletableFuture对象
-    * UniApply 属性 ： Function<? super T,? extends V> fn;  dp.result=fn.apply(src.result);  
-    * UniWhenComplete 属性： BiConsumer<? super T, ? super Throwable> fn; fn.apply(src.result,src.result.ex); dp.result=src.result;
-    * UniCompose 属性：Function<? super T, ? extends CompletionStage<V>> fn; dp.result = fn.apply(src.result).toCompletableFuture().result;(这里依赖UniRelay实现)
-    * UniExceptionally 属性 Function<? super Throwable, ? extends T> fn; 
-tryFire
+  * UniCompletion
+    * 属性
+      * Executor executor 保存执行任务的线程池
+      * CompletableFuture<V> dep  当前任务的CompletableFuture对象，在任务执行完成时更新result的值，以及触发其依赖栈 stack的任务
+      * CompletableFuture<T> src  上一个任务，可理解为被依赖的任务
+    * 方法
+      * claim()，当需要触发时调用此方法，内部使用executor 异步调用tryFire方法，返回false 表示执行成功或者已经被执行，返回true，表示有任务可以执行，但没有线程去执行
+      * isLive()，判断当前任务是否可以正常被触发。判断持有任务的CompletableFuture是否存在为依据
+      * tryFire()，抽象方法，各子类根据任务类型的不同，执行不同逻辑，但是大致步骤一致
+          * 1、判断结果result==null，继续执行，如果非空说明已经执行过了，跳过
+          * 2、判断依赖的CompletableFuture是否有异常，如果有异常且当前任务不接收exception时，直接修改result为依赖CompletableFuture的异常,其他情况构建依赖Completable的结果和exception继续
+          * 3、如果tryFire的参数是同步(SYNC)，直接执行任务， 如果是异步或者嵌套则，调用claim方法尝试修改标记，并异步调用tryFire，以实现异步执行任务。如果方法返回true，则直接执行任务(使用当前线程继续执行)，返回false说明有指定线程池，claim方法会实现异步，当前方法return null; 表示任务还在进行中
+            * 这里注意： claim异步执行使用的是tryFire，tryFire 又调用了claim以实现异步，看上去会递归，实际不会。
+            * 因为claim内部借用父类 ForkJoinTask的compareAndSetForkJoinTaskTag方法阻断了线程的继续进行。
+          * 4、同步或者异步执行完任务后，会尝试将结果或者异常存入result中，不管结果有没有成功，如果CompletableFuture被取消或者其他原因导致结果有值的时候，任务虽然执行完了，但结果不会变更的
+          * 5、然后将所有的属性引用置空。看上去没啥必要。这里就是jdk作为底层API想的比较多了。这里是为了避免在任务队列很长且比较占用内存时，导致所有引用链持续存在，导致内存溢出。
+          * 6、最后 Completion 作为任务者的使命都完成了，所以调用CompletableFuture的postFire方法，将球交给还给CompletableFuture对象
+    * 列举子类
+      * UniApply 
+        * 属性 ： Function<? super T,? extends V> fn;  
+        * 执行： src.result.ex != null ? dp.result=src.result.ex  :  dp.result=fn.apply(src.result);  
+      * UniWhenComplete 
+        * 属性： BiConsumer<? super T, ? super Throwable> fn; 
+        * 执行： fn.apply(src.result,src.result.ex); dp.result=src.result;
+      * UniCompose 
+        * 属性：Function<? super T, ? extends CompletionStage<V>> fn; 
+        * 执行： dp.result = fn.apply(src.result).toCompletableFuture().result;(这里依赖UniRelay实现)
+      * UniExceptionally 
+        * 属性 Function<? super Throwable, ? extends T> fn;  
+        * 执行： dp.result = src.result==AltResult?fn.apply(src.result.ex):src.result;
+      * UniAccept 
+        * 属性： Consumer<? super T> fn; 
+        * 执行：  src.result.ex != null ? (dp.result = src.result.ex ) : (fn.accept(src.result); dp.result = Nil)
+      * UniRun 
+        * 属性： Runnable fn;
+        * 执行： src.result.ex == null ? (dp.result = src.result.ex ) : (fn.run(); dp.result = Nil)
+      * UniHandle
+        * 属性： BiFunction<? super T, Throwable, ? extends V> fn;
+        * 执行： dp.result = fn.apply(src.result,src.result.ex)
+      * UniRelay
+        * 属性：无
+        * 执行：dp.result = src.result;
+      * BiCompletion
+        * 属性： CompletableFuture<U> snd;
+        * 执行：不实现tryFire方法，交给子类去实现
+          * OrRun
+            * 属性：Runnable fn;
+            * 执行： src.result.ex!=null || snd.result.ex!=null ? dp.result=ex : (fn.run(); dp.result=Nil)
+          * OrRelay
+            * src.result != null ? dp.result = src.result : dp.result = snd.result
+          * OrAccept
+          * OrApply
+          * BiAccept
+            * 属性： BiConsumer<? super T,? super U> fn;
+            * 执行： (src || snd).result.ex != null ? dp.result = ex : fn.accept(src.result,snd.result); dp.result = Nil
+          * BiApply 
+          * BiRun
+          * BiRelay
+            * 执行 src.result.ex!=null || snd.result.ex!=null ? dp.result=ex :  dp.result=Nil
+  * CoCompletion
+    * BiCompletion 的代理类。目前用在组合CompletableFuture对象时，给第二个依赖追加依赖栈时使用。难道避免两个CompletableFuture引用了同一个对象，从而造成假死或者死循环？      
+  * Signaller 为了实现get / join / getNow 等方法的任务 后续再细细研究
+    * tryFire 仅仅做了线程解锁的动作
+    * 额外实现了 ForkJoinPool.ManagedBlocker 。再研究
 
+##### 关键方法
+* postComplete
+* postFire
 
- postFire
  get/join 的阻塞
 
 #### 任务中断 cancel 方法

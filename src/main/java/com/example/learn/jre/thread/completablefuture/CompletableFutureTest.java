@@ -200,6 +200,10 @@ public class CompletableFutureTest {
     public void testGenerics() throws ExecutionException, InterruptedException {
         CompletableFuture<String> future2 = CompletableFuture.completedFuture(1).thenRun(()-> System.out.println("run 1")).handle((pre,ex)->1).thenRun(()-> System.out.println("run 2")).handle((pre,ex)->"");
         System.out.println(future2.get());
+
+        // null 也会继续执行
+        CompletableFuture<Void> future3 = CompletableFuture.completedFuture(null);
+        future3.thenAccept(a->{});
     }
 
     @Test
