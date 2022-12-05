@@ -1,5 +1,6 @@
 package com.example.learn.jre.base.unsafe;
 
+import com.example.util.StringNumberUtil;
 import com.example.util.ThreadUtil;
 import com.google.common.collect.Lists;
 import lombok.Getter;
@@ -197,7 +198,7 @@ public class UnSafeTest {
         /**
          * setMemory(Object o, long offset, long bytes, byte value) 设置int值，需要按照低4位到高4位倒序设置
          */
-//        List<Byte> byteList =ThreadUtil.getByte(20221122L);
+//        List<Byte> byteList =StringNumberUtil.getByte(20221122L);
 //        for (int i =0 ;i < byteList.size(); i++) {
 //            Byte b = byteList.get(i);
 //            unsafe.setMemory(user,offset+i,1L, b);
@@ -212,7 +213,7 @@ public class UnSafeTest {
 //        byte byte2 = unsafe.getByte(user, offset+1);
 //        byte byte3 = unsafe.getByte(user, offset+2);
 //        byte byte4 = unsafe.getByte(user, offset+3);
-//        long result = ThreadUtil.byte2Long(Arrays.asList(byte1, byte2, byte3, byte4));
+//        long result = StringNumberUtil.byte2Long(Arrays.asList(byte1, byte2, byte3, byte4));
 //        System.out.println(result);
         /**
          * 看看内存的情况
@@ -245,7 +246,7 @@ public class UnSafeTest {
         for (int i=0; i<4;i++){
             bytes.add(unsafe.getByte(o, offset+i));
         }
-        return ThreadUtil.byte2Long(bytes);
+        return StringNumberUtil.byte2Long(bytes);
     }
 
     private static long getAddress(Long address){
@@ -254,7 +255,7 @@ public class UnSafeTest {
         for (int i=0; i<8;i++){
             bytes.add(unsafe.getByte(address+i));
         }
-        return ThreadUtil.byte2Long(bytes);
+        return StringNumberUtil.byte2Long(bytes);
     }
 
     @Setter

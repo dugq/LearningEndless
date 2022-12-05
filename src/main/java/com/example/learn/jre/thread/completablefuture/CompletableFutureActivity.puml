@@ -1,0 +1,36 @@
+@startuml
+'https://plantuml.com/activity-diagram-beta
+skinparam ConditionEndStyle hline
+
+start
+: param : CompletableFuture src,Function fun,boolean sync,ThreadPool executor;
+: CompletableFuture dp = new CompletableFuture();
+: Completion c =  new Completion(fun,executor,src,dp);
+if (sync ?) then(true)
+  if (c.src.result != null ) then(true)
+    : c.mark;
+    : c.dp.result = c.fun.apply(c.src.result);
+    : c.executor = c.dp = c.src = null;
+    : dp.postFire(src, model = sync );
+  else (false)
+   stop
+  endif
+else (false)
+   : src.stack.push(c);
+   if (src.result == null ) then(true)
+     stop
+   else (no)
+      :c.tryFire;
+      if (c.executor != null )  then(true)
+       : c.executor.execute(异步执行);
+      endif
+      : c.mark;
+      : c.dp.result = c.fun.apply(c.src.result);
+      : c.executor = c.dp = c.src = null;
+      : dp.postFire(src,model = async );
+    endif
+endif
+
+stop
+@enduml
+

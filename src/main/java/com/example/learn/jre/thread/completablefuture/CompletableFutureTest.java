@@ -240,7 +240,7 @@ public class CompletableFutureTest {
 
     @Test
     public void testThread2(){
-        CompletableFuture.completedFuture(null).handle((pre,ex)->{
+        CompletableFuture.completedFuture(null).thenRunAsync(()->{}).handle((pre,ex)->{
             ThreadUtil.printThreadInfo("handle 1");
             return 1;
         }).handleAsync((pre,ex)->{
