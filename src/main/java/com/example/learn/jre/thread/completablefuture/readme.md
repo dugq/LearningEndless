@@ -8,7 +8,7 @@
 * 阶段抽象类
 * 定义了阶段任务的每个阶段模版方法
 * 简单的解释就是  火车头式函数调用的模版方法，并且支持 runnable consumer function Supplier 等不同方式，每种方式又提供了另起线程执行的方法
-* [接口](CompletableFutureTest.java)
+* [测试类](CompletableFutureTest.java)
 
 
 ## CompletableFuture
@@ -22,9 +22,6 @@
 * 字段用volatile修饰，以便get等方法快速获取到任务的结果
 * result只有在任务初始化的时候为null，一旦任务完成，它将会被赋予任务的结果（可能是某个异常，AltResult 或者任务的实际结果）。
 #####  volatile Completion stack;
- 依赖任务的栈
-##### 内部类： Completion
-###### 字段
 * 该字段用于触发依赖的任务，记录依赖当前结果的任务栈。类型为Completion
 * 同样用volatile修饰
 * 追加依赖当前任务的任务时，保证追加的任务一定会执行，必须分三步走
@@ -84,7 +81,7 @@
         * 属性：无
         * 执行：dp.result = src.result;
       * BiCompletion
-        * 属性： CompletableFuture<U> snd;
+        * 属性： CompletableFuture\<U> snd;
         * 执行：不实现tryFire方法，交给子类去实现
           * OrRun
             * 属性：Runnable fn;
@@ -107,16 +104,40 @@
     * 额外实现了 ForkJoinPool.ManagedBlocker 。再研究
 
 ##### 关键方法
-* 
-* postComplete
+* tryFire
+  * 1、判断当前Future是否执行完毕，如已经完毕，则返回null
+  * 2、调用具体的Complete进行具体的执行
+  * 3、调用Complete父类方法claim获取并发标记(ForkJoinTask#compareAndSetForkJoinTaskTag)
+  * 4、如果任务设置了异步线程，则唤起异步线程，开始执行。同时返回null
+  * 5、如果是同步或者内嵌模式，直接执行
+  * 6、4和5在任务执行完成以后都会将Complete的所有属性置空，以保证在递归未执行完时，无用的引用可以及时回收
+  * 7、调用postFire
 * postFire
-
- get/join 的阻塞
-
-#### 任务中断 cancel 方法
-
-#### 等待中断 get方法
+  * 1、处理源Future的stack
+    * 如果当前是内嵌模式或者源Source未执行（result==null）则清理掉sourceFuture的stack中不可执行或者依旧执行过的依赖（调用Source future的cleanStack方法）
+    * 如果不是内嵌模式，则调用source future的PostComplete方法。（帮助源Future分担压力。如果说源是第0级，当前Future是第1级，那么依赖当前Future的Future就是第2级了，优先帮助第0级处理任务，这也是应该的。同时如果没有第2级，那也不浪费当前线程）
+  * 2、处理当前Future的依赖栈
+    * 如果当前是内嵌模式，则把当前Future返回。postComplete会处理内嵌模式的依赖栈。
+    * 如果当前不是内嵌模式，则调用当前Future的PostComplete方法进行依赖栈处理
+  * 为什么postFire还要关心源Future的stack呢？
+    * 1、postComplete不仅仅只处理自己的依赖栈，它也处理了依赖当前Future且是同步执行的依赖栈（即为内嵌模式），所以要分模式选择是否自己处理依赖栈
+    * 2、为什么要有1呢？因为这样就可以将所有同步执行的依赖栈放在同一栈中，在异步模式的PostFire中，可以帮助源Future一起处理依赖栈
+    * 3、多线程通知执行依赖栈时，怎么保证一致性呢？stack节点的出入是原子性的，这样就保证多线程不会处理同一个节点。[测试类](CompletableFutureTest.java)testPostFireAndComplete2方法可窥见一般
+* postComplete
+  * 1、轮训stack
+  * 2、以内嵌模式调用每个节点的tryFire
+  * 3、将返回的Future的所有节点退出并push进当前stack中。
+    * 如果节点任务为异步的，那就不用源Future帮忙处理了。直接返回null
+    * 这样其实导致stack是乱的。[测试类](CompletableFutureTest.java)testPostFireAndComplete方法可窥见一般
+  * 4、当栈为空时，结束
+* get/join 的阻塞
+  * 
+* 任务中断 cancel 方法
+  * 
+* 等待中断 get方法
+  * 
 
 #### 线程安全
+* 首先任务在Future中定义一个Completion作为节点，存放在stack中，对于stack的所有操作都利用了Unsafe类实现了原子性
+* 任务的执行中，利用继承自ForkJoin的compareAndSetForkJoinTaskTag方法实现了原子锁
 
-#### get/join 如何做到获取到最终结果，而不是中间结果

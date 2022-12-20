@@ -8,10 +8,7 @@ start
 : Completion c =  new Completion(fun,executor,src,dp);
 if (sync ?) then(true)
   if (c.src.result != null ) then(true)
-    : c.mark;
-    : c.dp.result = c.fun.apply(c.src.result);
-    : c.executor = c.dp = c.src = null;
-    : dp.postFire(src, model = sync );
+    :c.tryFire(sync);
   else (false)
    stop
   endif
@@ -20,17 +17,42 @@ else (false)
    if (src.result == null ) then(true)
      stop
    else (no)
-      :c.tryFire;
+      partition tryFire{
       if (c.executor != null )  then(true)
        : c.executor.execute(异步执行);
       endif
       : c.mark;
       : c.dp.result = c.fun.apply(c.src.result);
       : c.executor = c.dp = c.src = null;
-      : dp.postFire(src,model = async );
+      : dp.postFire(src,"async" );
+      }
     endif
 endif
-
+partition postFire{
+if (src.result!=null && src.stack!=null?)  then(true)
+  if (model <0 ?) then(true)
+    :src.cleanStack;
+  else (false)
+    :src.postCompletion;
+  endif
+endif
+if (dp.result!=null && dp.stack!=null?)  then(true)
+  if (model < 0?) is (yes) then
+    :return dp;
+  else (no)
+    :dp.postCompletion;
+  endif
+else(false)
+:return null;
+endif
+}
+partition postCompletion{
+while (stack !=null ?)
+  :P = stack.next;
+  :H = P.tryFire("nested");
+  :stack.push(H);
+endwhile
+}
 stop
 @enduml
 

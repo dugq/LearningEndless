@@ -355,5 +355,44 @@ public class CompletableFutureTest {
         completableFuture.thenApply((param)->"fff");
     }
 
+    @Test
+    public void testPostFireAndComplete(){
+        CompletableFuture<Void> A = CompletableFuture.runAsync(()->{ThreadUtil.sleep(3);System.out.println("A");});
+        CompletableFuture<Void> A1 = A.thenRun(()-> System.out.println("A1"));
+        CompletableFuture<Void> A2 = A.thenRun(()-> System.out.println("A2"));
+        CompletableFuture<Void> A3 = A.thenRun(()-> System.out.println("A3"));
+
+        CompletableFuture<Void> B1 = A1.thenRun(()-> System.out.println("B1"));
+        CompletableFuture<Void> B2 = A1.thenRun(()-> System.out.println("B2"));
+        CompletableFuture<Void> B3 = A1.thenRun(()-> System.out.println("B3"));
+
+        CompletableFuture<Void> C1 = A2.thenRun(()-> System.out.println("C1"));
+        CompletableFuture<Void> C2 = A2.thenRun(()-> System.out.println("C2"));
+        CompletableFuture<Void> C3 = A2.thenRun(()-> System.out.println("C3"));
+
+        CompletableFuture<Void> D1 = A3.thenRun(()-> System.out.println("D1"));
+        CompletableFuture<Void> D2 = A3.thenRun(()-> System.out.println("D2"));
+        CompletableFuture<Void> D3 = A3.thenRun(()-> System.out.println("D3"));
+        ThreadUtil.sleep(6);
+    }
+
+    @Test
+    public void testPostFireAndComplete2(){
+        CompletableFuture<Void> A = CompletableFuture.runAsync(()->{ThreadUtil.sleep(3);System.out.println("A");},ThreadUtil.getThreadPool("ThreadA+"));
+        A.thenRun(()-> {ThreadUtil.sleep(1);ThreadUtil.printThreadInfo("A1");});
+        A.thenRun(()-> {ThreadUtil.sleep(1);ThreadUtil.printThreadInfo("A2");});
+        A.thenRun(()-> {ThreadUtil.sleep(1);ThreadUtil.printThreadInfo("A3");});
+        A.thenRun(()-> {ThreadUtil.sleep(1);ThreadUtil.printThreadInfo("A4");});
+        A.thenRun(()-> {ThreadUtil.sleep(1);ThreadUtil.printThreadInfo("A5");});
+        A.thenRun(()-> {ThreadUtil.sleep(1);ThreadUtil.printThreadInfo("A6");});
+        A.thenRun(()-> {ThreadUtil.sleep(1);ThreadUtil.printThreadInfo("A7");});
+        A.thenRun(()-> {ThreadUtil.sleep(1);ThreadUtil.printThreadInfo("A8");});
+        A.thenRun(()-> {ThreadUtil.sleep(1);ThreadUtil.printThreadInfo("A9");});
+        A.thenRun(()-> {ThreadUtil.sleep(1);ThreadUtil.printThreadInfo("A10");});
+        A.thenRunAsync(()->{ThreadUtil.sleep(1);ThreadUtil.printThreadInfo("B1");},ThreadUtil.getThreadPool("ThreadB-"));
+
+        ThreadUtil.sleep(600);
+    }
+
 
 }
