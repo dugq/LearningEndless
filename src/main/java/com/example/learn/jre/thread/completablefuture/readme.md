@@ -122,7 +122,7 @@
   * 为什么postFire还要关心源Future的stack呢？
     * 1、postComplete不仅仅只处理自己的依赖栈，它也处理了依赖当前Future且是同步执行的依赖栈（即为内嵌模式），所以要分模式选择是否自己处理依赖栈
     * 2、为什么要有1呢？因为这样就可以将所有同步执行的依赖栈放在同一栈中，在异步模式的PostFire中，可以帮助源Future一起处理依赖栈
-    * 3、多线程通知执行依赖栈时，怎么保证一致性呢？stack节点的出入是原子性的，这样就保证多线程不会处理同一个节点。[测试类](CompletableFutureTest.java)testPostFireAndComplete2方法可窥见一般
+    * 3、多线程同时执行依赖栈时，怎么保证一致性呢？stack节点的出入是原子性的，这样就保证多线程不会处理同一个节点。[测试类](CompletableFutureTest.java)testPostFireAndComplete2方法可窥见一般
 * postComplete
   * 1、轮训stack
   * 2、以内嵌模式调用每个节点的tryFire
