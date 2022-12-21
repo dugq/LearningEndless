@@ -131,11 +131,13 @@
     * 这样其实导致stack是乱的。[测试类](CompletableFutureTest.java)testPostFireAndComplete方法可窥见一般
   * 4、当栈为空时，结束
 * get/join 的阻塞
-  * 
-* 任务中断 cancel 方法
-  * 
-* 等待中断 get方法
-  * 
+  * 1、调用Runtime工具类判断当前处理器是否繁忙，如果不繁忙的话，自轮训256+随机数次判断result是否有值
+  * 2、创建一个Signaller任务
+  * 3、将任务提交到stack中
+  * 4、当前线程调用ForkJoinPool.managedBlock进行阻塞
+  * 5、当Future执行完成以后，Signaller任务执行并唤醒当前线程
+  * 6、判读是否线程中断，如果线程中断则返回
+  * 7、调用postComplete。不知道为什么这么做，但是这样会导致get在stack清空后才会返回。[测试类](CompletableFutureTest.java)testPostComInGet方法可测试
 
 #### 线程安全
 * 首先任务在Future中定义一个Completion作为节点，存放在stack中，对于stack的所有操作都利用了Unsafe类实现了原子性
