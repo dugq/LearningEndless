@@ -398,7 +398,6 @@ public class CompletableFutureTest {
     @Test
     public void testPostComInGet() throws ExecutionException, InterruptedException {
         CompletableFuture<Void> A = CompletableFuture.runAsync(()->{ThreadUtil.sleep(30);System.out.println("A");},ThreadUtil.getThreadPool("ThreadA+"));
-        A.cancel()
         A.thenRun(()-> {ThreadUtil.sleep(1);ThreadUtil.printThreadInfo("A1");});
         A.thenRun(()-> {ThreadUtil.sleep(1);ThreadUtil.printThreadInfo("A2");});
         A.thenRun(()-> {ThreadUtil.sleep(1);ThreadUtil.printThreadInfo("A3");});
