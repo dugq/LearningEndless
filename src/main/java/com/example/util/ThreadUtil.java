@@ -1,7 +1,6 @@
 package com.example.util;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jetbrains.annotations.NotNull;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -32,7 +31,7 @@ public class ThreadUtil {
         return threadPoolMap.computeIfAbsent(key,(sufferName)-> new ThreadPoolExecutor(5, 10, 10, TimeUnit.MINUTES, new ArrayBlockingQueue<>(100), new ThreadFactory() {
             private final AtomicInteger index = new AtomicInteger(1);
             @Override
-            public Thread newThread(@NotNull Runnable r) {
+            public Thread newThread( Runnable r) {
                 Thread thread = new Thread(r);
                 thread.setName("dugq-custom-"+sufferName+index.getAndAdd(1));
                 return thread;

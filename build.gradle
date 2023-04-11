@@ -1,6 +1,5 @@
 buildscript {
 
-    ext["duibaExtVersion"] = "2.0.0-h38"
     ext["springBootVersion"] = "2.2.7.RELEASE"
     ext["springCloudVersion"] = "Hoxton.SR6"
     ext["hazelcast.version"] = "3.11"
@@ -9,25 +8,23 @@ buildscript {
     ext["lombok.version"] = "1.18.12"
 
     repositories {
-        maven { url "http://nexus.dui88.com:8081/nexus/content/groups/public/" }
-        maven { url "https://plugins.gradle.org/m2/" } //sonarqube
+        maven { url "https://plugins.gradle.org/m2/" }
         maven { url "http://repo.spring.io/plugins-release" }
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        maven { url 'https://maven.aliyun.com/repository/spring/' }
         mavenCentral()
         mavenLocal()
     }
 
     dependencies {
         classpath "io.spring.gradle:dependency-management-plugin:1.0.5.RELEASE"
-        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.0" //sonarqube
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.0"
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-        classpath "org.springframework.build.gradle:propdeps-plugin:0.0.7"
         classpath "gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:2.5.0"
-        classpath "cn.com.duiba:duiba-gradle-plugin:0.1.9"
     }
 }
 
 apply plugin: "com.google.cloud.tools.jib"
-apply plugin: "duiba.gradle.plugin"
 apply plugin: "maven"
 apply plugin: "java"
 apply plugin: "idea"
@@ -35,7 +32,6 @@ apply plugin: "eclipse"
 apply plugin: "jacoco"
 apply plugin: "io.spring.dependency-management"
 apply plugin: "org.springframework.boot"
-apply plugin: "propdeps"
 test {
     ignoreFailures = true
 }
@@ -60,7 +56,6 @@ configurations {
 }
 
 repositories {
-    maven { url "http://nexus.dui88.com:8081/nexus/content/groups/public/" }
     maven { url "https://plugins.gradle.org/m2/" } //sonarqube
     maven { url "http://repo.spring.io/plugins-release" }
     mavenCentral()
@@ -71,7 +66,6 @@ dependencyManagement {
 
     dependencies {
         imports {
-            mavenBom "cn.com.duiba.boot:spring-boot-ext-dependencies:${duibaExtVersion}"
             mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
             mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
         }
@@ -80,19 +74,22 @@ dependencyManagement {
 }
 
 dependencies {
-    compile "cn.com.duiba.boot:spring-boot-starter-perftest"
-    compile "cn.com.duiba.boot:spring-boot-starter-cat"
-    compile "cn.com.duiba.boot:spring-boot-starter-xss"
 
     compile "org.springframework.boot:spring-boot-starter-web"
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "org.springframework.boot:spring-boot-starter-freemarker"
+    compile "org.springframework.boot:spring-boot-starter-data-redis"
     compile "org.springframework.cloud:spring-cloud-starter-config"
     compile "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
     compile "org.springframework.cloud:spring-cloud-starter-netflix-hystrix"
     compile "org.springframework.cloud:spring-cloud-starter-netflix-ribbon"
     compile "org.springframework.cloud:spring-cloud-starter-openfeign"
-    compile("cn.com.duiba.boot:spring-boot-starter-accesslog")
+    compile "org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2"
+    compile 'org.apache.commons:commons-lang3:3.12.0'
+    compile 'com.alibaba:fastjson:2.0.26'
+    compile 'org.apache.commons:commons-collections4:4.4'
+    compile 'commons-beanutils:commons-beanutils:20030211.134440'
+    compile 'commons-collections:commons-collections:20040616'
 
     compile group: 'org.apache.shiro', name: 'shiro-core', version: '1.2.2'
     compile group: 'org.apache.shiro', name: 'shiro-spring', version: '1.2.2'
@@ -103,14 +100,12 @@ dependencies {
 
     runtime group: 'mysql', name: 'mysql-connector-java', version: '5.1.42'
 
-    compile "cn.com.duiba.boot:spring-boot-starter-mybatis"
     compile "org.springframework.boot:spring-boot-starter-jdbc"
 
     compile group: 'org.jsoup', name: 'jsoup', version: '1.11.3'
     compile group: 'com.github.pagehelper', name: 'pagehelper', version: '4.0.1'
 
     compile('io.lettuce:lettuce-core')
-    compile("cn.com.duiba.boot:spring-boot-starter-redis")
     compile("redis.clients:jedis")
     compile group: 'com.alibaba', name: 'druid', version: '1.0.23'
     compile group: 'com.alipay.sdk', name: 'alipay-sdk-java', version: '3.3.4.ALL'
