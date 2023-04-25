@@ -9,6 +9,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class StringNumberUtil {
+
+    public static void main(String[] args) {
+        printBinaryString(-4);
+    }
+
     public static void printBinaryString(long num){
         String s = Long.toBinaryString(num);
         char[] chars = s.toCharArray();

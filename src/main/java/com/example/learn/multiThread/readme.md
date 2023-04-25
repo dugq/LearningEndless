@@ -71,7 +71,7 @@ jconsole
 * 同步： 不同线程对同一操作发生的相对顺序控制
 * Java采用的内存共享模型。通过共享内存中的数据交换数据，通过并发控制达到同步的效果
 * wait-notify 等待通知模式 进行线程间通信
-    * wait-notify 依赖synchronized关键字。它的实现是存储在对象头中的标准位来实现，为了保证线程安全，所以该模式必须配合synchronized关键字使用
+    * wait-notify 依赖synchronized关键字。它的实现是存储在对象头中的标志位来实现，为了保证线程安全，所以该模式必须配合synchronized关键字使用
 * Thread.join 当前线程等待目标线程完成后再继续执行
 * ThreadLocal [ThreadLocal详解](./ThreadLocal.md)
 
@@ -99,11 +99,11 @@ jconsole
     * volatile变量本身的操作也使用LOCK#开头的CPU指令修饰，以保证对于变量的修改会及时刷回主存，并通知其他线程变量个已修改
     * volatile变量每次读也会从主存读取数据。这个说法，不知道成不成立。因为存在也合理，但每次都从主存读取数据，有点浪费了吧，人家说不定不常变更呢？但无所谓了，相比来说，它已经是最轻量级的方案了
     * 总结 ： volatile关键字 通过只是保证了单个变量的读写操作具有原子性，解决的是最基本的可见性问题。
-* final关键字。在构造函数中初始化的final对象，在其他线程中读取到的值是最新的    
+* final关键字。在构造函数中初始化的final对象，在其他线程中读取到的值是最新的
+  * 通常情况下在构造函数中初始化的属性都定义为final类型，在构造的同时被其他线程读取后，其值必然完成初始化，如果特殊情况下不能定义为final属性，则在并发场景下，需要先进行判空处理。
 * 加锁 [LOCK详解](../JVM/lock/readme.md)
-    * synchronized 关键字
-    * 自己实现的CMS
-    * LOCK 接口及LockSupport工具类    
+    * synchronized 关键字 
+    * LOCK 接口及 LockSupport工具类    
     
 ##### 案例
  * 双重检测规则。对象的初始化和引用赋值的重排序
@@ -117,9 +117,17 @@ jconsole
 比如说i++，在Java代码里，它是一条指令，然而在CPU指令里，它确实两条指令，那可以把它当成一个单位去和其他指令进行排序吗？肯定是不能的
 但是AtomicInteger.increase()在java里也是一条指令，翻译成CPU指令，那可不止一两条指令了。但是它却可以。
 
+* [原子操作类](../JVM/atomic/readme.md)
+* [unsafe类](../jre/base/unsafe/readme.md)
+
 ##### 案例
 * 32位系统中double 和 long等64位变量的写入时，如果64位变量的写入不在同一个总线事物中，那么该次写入不满足原子性
 
 
 ## 多线程编程工具类
-### concurrentHashMap
+* [BlockingQueue](../jre/queue/readme.md)
+* [concurrentHashMap](../jre/hash/concurrentHashMap.md)
+* [fork/join](../jre/thread/forkjoin/readme.md)
+* [LockSupport](../JVM/lock/readme.md)
+* [ThreadPool](../jre/thread/pool/readme.md)
+* [CompletableFuture](../jre/thread/completablefuture/readme.md)
