@@ -1,10 +1,6 @@
-package com.example.learn.io.BIO;
+package com.example;
 
-import lombok.SneakyThrows;
-import org.apache.http.HttpHeaders;
-import org.apache.http.entity.ContentType;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,11 +10,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * @author dugq
- * @date 2021/7/19 6:02 下午
+ * Created by dugq on 2023/5/6.
  */
-public class BIOServerThreadModel {
-
+public class Main {
+    private static String response = "HTTP/1.1 200 OK\n" +
+            "Server: CLOUD ELB 1.0.0\n" +
+            "Date: Sat, 06 May 2023 02:09:11 GMT\n" +
+            "Content-Type: text/plain; charset=utf-8\n" +
+            "host: 127.0.0.1\n" +
+            "Connection: keep-alive\n\n"+
+            "hello";
     public static void main(String[] args) throws IOException {
         ExecutorService executor = Executors.newFixedThreadPool(100);//线程池
         ServerSocket serverSocket = new ServerSocket(8088);
@@ -47,16 +48,19 @@ public class BIOServerThreadModel {
         }
     }
 
-    @SneakyThrows
-    static void doOperation(Socket socket)  {
+    static void doOperation(Socket socket) throws IOException {
         while(!Thread.currentThread().isInterrupted()&&!socket.isClosed()){//死循环处理读写事件
             final InputStream inputStream = socket.getInputStream();
             byte[] buffer = new byte[1024];
             int len = inputStream.read(buffer);
-            final OutputStream outputStream = socket.getOutputStream();
+            if (len>0){
+                final OutputStream outputStream = socket.getOutputStream();
 //            ctrl 业务处理
-            outputStream.write(("you say "+ len+" words").getBytes());
-            outputStream.flush();
+                outputStream.write(response.getBytes());
+//                outputStream.write(("you say "+ len+" words\n").getBytes());
+                outputStream.flush();
+                socket.close();
+            }
         }
     }
 
@@ -65,12 +69,13 @@ public class BIOServerThreadModel {
         public CallBackRunnable(Socket socket){
             this.socket = socket;
         }
-        @SneakyThrows
         public void run(){
-            doOperation(socket);
+            try {
+                doOperation(socket);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
     }
-
-
 }
