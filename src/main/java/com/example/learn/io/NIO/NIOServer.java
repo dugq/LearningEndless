@@ -63,20 +63,27 @@ public class NIOServer {
                     final SocketChannel clientChannel = (SocketChannel)selectionKey.channel();
                     System.out.println("client can read:"+clientChannel.hashCode());
                     selectionKey.cancel();
-                    doOperation(clientChannel);
+                    // doOperation(clientChannel);
                     executor.execute(()->doOperation(clientChannel));
                 }
                 iterator.remove();
             }
         }
     }
+    private static String response = "HTTP/1.1 200 OK\n" +
+            "Server: CLOUD ELB 1.0.0\n" +
+            "Date: Sat, 06 May 2023 02:09:11 GMT\n" +
+            "Content-Type: text/plain; charset=utf-8\n" +
+            "host: 127.0.0.1\n" +
+            "Connection: keep-alive\n\n"+
+            "hello";
 
     @SneakyThrows
     private static void doOperation(SocketChannel socketChannel){
         final ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
         final int length = socketChannel.read(byteBuffer);
         System.out.println("client request : "+new String(byteBuffer.array(),0,length));
-        socketChannel.write(ByteBuffer.wrap("bye ~".getBytes()));
+        socketChannel.write(ByteBuffer.wrap(response.getBytes()));
         socketChannel.close();
     }
 }

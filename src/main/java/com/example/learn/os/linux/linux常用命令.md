@@ -20,3 +20,7 @@
 ## 网络
 moodinfo ： 驱动信息
 
+
+
+## 其他
+* pidof XXX | xargs pwdx 很多命令查看的command不知道是那个，可以通过此命令查找

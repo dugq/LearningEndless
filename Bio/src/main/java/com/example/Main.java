@@ -6,13 +6,28 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by dugq on 2023/5/6.
  */
 public class Main {
+    private static ExecutorService executor = new ThreadPoolExecutor(10, 10, 1, TimeUnit.MINUTES, new ArrayBlockingQueue<>(100), new ThreadFactory() {
+        private AtomicInteger index = new AtomicInteger(1);
+        @Override
+        public Thread newThread(Runnable r) {
+            Thread thread = new Thread(r);
+            thread.setName("dgq-Bio-"+index.getAndAdd(1));
+            return thread;
+        }
+    });
+
     private static String response = "HTTP/1.1 200 OK\n" +
             "Server: CLOUD ELB 1.0.0\n" +
             "Date: Sat, 06 May 2023 02:09:11 GMT\n" +
@@ -21,7 +36,6 @@ public class Main {
             "Connection: keep-alive\n\n"+
             "hello";
     public static void main(String[] args) throws IOException {
-        ExecutorService executor = Executors.newFixedThreadPool(100);//线程池
         ServerSocket serverSocket = new ServerSocket(8088);
         System.out.println("start up ");
         while (!Thread.currentThread().isInterrupted()) {//主线程死循环等待新连接到来
