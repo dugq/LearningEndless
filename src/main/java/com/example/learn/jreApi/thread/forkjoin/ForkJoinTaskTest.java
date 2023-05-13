@@ -1,20 +1,16 @@
-package com.example.learn.jre.thread.forkjoin;
+package com.example.learn.jreApi.thread.forkjoin;
 
 import com.example.util.ThreadUtil;
-import org.apache.commons.lang3.RandomUtils;
 import org.apache.shiro.util.CollectionUtils;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinTask;
-import java.util.concurrent.ForkJoinWorkerThread;
 import java.util.concurrent.RecursiveTask;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class ForkJoinTaskTest {
 

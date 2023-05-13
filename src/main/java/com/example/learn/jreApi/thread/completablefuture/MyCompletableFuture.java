@@ -1,4 +1,4 @@
-package com.example.learn.jre.thread.completablefuture;
+package com.example.learn.jreApi.thread.completablefuture;
 
 import java.util.LinkedList;
 import java.util.List;

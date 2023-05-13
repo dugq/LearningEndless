@@ -1,12 +1,9 @@
-package com.example.learn.jre.base.unsafe;
+package com.example.learn.jreApi.base.unsafe;
 
 import com.example.util.StringNumberUtil;
-import com.example.util.ThreadUtil;
-import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.openjdk.jol.vm.VM;
 import sun.misc.Unsafe;
@@ -14,7 +11,6 @@ import sun.misc.Unsafe;
 import java.lang.reflect.Field;
 import java.security.ProtectionDomain;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Slf4j

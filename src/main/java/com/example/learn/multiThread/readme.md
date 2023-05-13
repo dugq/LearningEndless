@@ -86,17 +86,17 @@
 但是AtomicInteger.increase()在java里也是一条指令，翻译成CPU指令，那可不止一两条指令了。但是它却可以。
 
 * [原子操作类](../JVM/atomic/readme.md)
-* [unsafe类](../jre/base/unsafe/readme.md)
+* [unsafe类](../jreApi/base/unsafe/readme.md)
 
 ##### 案例
 * 32位系统中double 和 long等64位变量的写入时，如果64位变量的写入不在同一个总线事物中，那么该次写入不满足原子性
 
 
 ## 多线程编程工具类
-* [BlockingQueue](../jre/queue/readme.md)
-* [concurrentHashMap](../jre/hash/concurrentHashMap.md)
-* [fork/join](../jre/thread/forkjoin/readme.md)
+* [BlockingQueue](../jreApi/queue/readme.md)
+* [concurrentHashMap](../jreApi/hash/concurrentHashMap.md)
+* [fork/join](../jreApi/thread/forkjoin/readme.md)
 * [LockSupport](../JVM/lock/readme.md)
-* [ThreadPool](../jre/thread/pool/readme.md)
-* [CompletableFuture](../jre/thread/completablefuture/readme.md)
+* [ThreadPool](../jreApi/thread/pool/readme.md)
+* [CompletableFuture](../jreApi/thread/completablefuture/readme.md)
 * [CountDownLatch、CyclicBarrier、Semaphore](./MultiThreadUtil.md)

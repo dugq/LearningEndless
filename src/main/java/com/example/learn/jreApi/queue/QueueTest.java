@@ -1,4 +1,4 @@
-package com.example.learn.jre.queue;
+package com.example.learn.jreApi.queue;
 
 import org.junit.jupiter.api.Test;
 

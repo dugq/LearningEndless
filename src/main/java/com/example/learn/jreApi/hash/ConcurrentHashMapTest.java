@@ -1,8 +1,7 @@
-package com.example.learn.jre.hash;
+package com.example.learn.jreApi.hash;
 
 import org.junit.Test;
 
-import java.lang.reflect.Field;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**

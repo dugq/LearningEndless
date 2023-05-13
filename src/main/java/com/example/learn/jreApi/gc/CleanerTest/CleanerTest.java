@@ -1,4 +1,4 @@
-package com.example.learn.jre.gc.CleanerTest;
+package com.example.learn.jreApi.gc.CleanerTest;
 
 import sun.misc.Cleaner;
 
