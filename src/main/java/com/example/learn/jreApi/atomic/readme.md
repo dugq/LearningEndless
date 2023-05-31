@@ -39,9 +39,9 @@
   * boolean compareAndSet（int i，int expect，int update）：如果当前值等于预期值，则以原子 方式将数组位置i的元素设置成update值。
 引用类型
 * AtomicReference：原子更新引用类型。 
-  * [AtomicReferenceTest](./AtomicReferenceTest.java)
+  * [AtomicReferenceTest](AtomicReferenceTest.java)
 * AtomicReferenceFieldUpdater：原子更新引用类型里的字段。
-  * [AtomicReferenceFieldUpdaterTest](./AtomicReferenceFieldUpdaterTest.java)
+  * [AtomicReferenceFieldUpdaterTest](AtomicReferenceFieldUpdaterTest.java)
   * 要求属性必须是volatile修饰
   * 要求属性必须是调用的地方可访问的 private会报错
 * AtomicMarkableReference：原子更新带有标记位的引用类型。可以原子更新一个布尔类 型的标记位和引用类型。

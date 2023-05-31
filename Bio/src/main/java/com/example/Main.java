@@ -36,7 +36,11 @@ public class Main {
             "Connection: keep-alive\n\n"+
             "hello";
     public static void main(String[] args) throws IOException {
-        ServerSocket serverSocket = new ServerSocket(8088);
+        String port = System.getProperty("port");
+        if (port==null){
+            port = "8088";
+        }
+        ServerSocket serverSocket = new ServerSocket(Integer.valueOf(port));
         System.out.println("start up ");
         while (!Thread.currentThread().isInterrupted()) {//主线程死循环等待新连接到来
             Socket socket = serverSocket.accept();

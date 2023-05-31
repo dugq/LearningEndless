@@ -1,4 +1,4 @@
-package com.example.learn.JVM.atomic;
+package com.example.learn.jreApi.atomic;
 
 import com.example.demo.spring.pojo.entry.User;
 import org.junit.Test;

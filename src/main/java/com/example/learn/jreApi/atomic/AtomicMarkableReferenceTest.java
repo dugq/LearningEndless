@@ -1,4 +1,4 @@
-package com.example.learn.JVM.atomic;
+package com.example.learn.jreApi.atomic;
 
 import java.util.concurrent.atomic.AtomicMarkableReference;
 

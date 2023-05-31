@@ -69,7 +69,7 @@
     * 总结 ： volatile关键字 通过只是保证了单个变量的读写操作具有原子性，解决的是最基本的可见性问题。
 * final关键字。在构造函数中初始化的final对象，在其他线程中读取到的值是最新的
   * 通常情况下在构造函数中初始化的属性都定义为final类型，在构造的同时被其他线程读取后，其值必然完成初始化，如果特殊情况下不能定义为final属性，则在并发场景下，需要先进行判空处理。
-* 加锁 [LOCK详解](../JVM/lock/readme.md)
+* 加锁 [LOCK详解](../jreApi/lock/readme.md)
     * synchronized 关键字 
     * LOCK 接口及 LockSupport工具类    
     
@@ -85,7 +85,7 @@
 比如说i++，在Java代码里，它是一条指令，然而在CPU指令里，它确实两条指令，那可以把它当成一个单位去和其他指令进行排序吗？肯定是不能的
 但是AtomicInteger.increase()在java里也是一条指令，翻译成CPU指令，那可不止一两条指令了。但是它却可以。
 
-* [原子操作类](../JVM/atomic/readme.md)
+* [原子操作类](../jreApi/atomic/readme.md)
 * [unsafe类](../jreApi/base/unsafe/readme.md)
 
 ##### 案例
@@ -96,7 +96,7 @@
 * [BlockingQueue](../jreApi/queue/readme.md)
 * [concurrentHashMap](../jreApi/hash/concurrentHashMap.md)
 * [fork/join](../jreApi/thread/forkjoin/readme.md)
-* [LockSupport](../JVM/lock/readme.md)
+* [LockSupport](../jreApi/lock/readme.md)
 * [ThreadPool](../jreApi/thread/pool/readme.md)
 * [CompletableFuture](../jreApi/thread/completablefuture/readme.md)
 * [CountDownLatch、CyclicBarrier、Semaphore](./MultiThreadUtil.md)
