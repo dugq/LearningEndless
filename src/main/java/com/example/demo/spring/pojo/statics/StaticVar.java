@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
  *
  */
 @Component("staticVar")
-@ConfigurationProperties(prefix = "myProperties")
+@ConfigurationProperties(prefix = "my-properties")
 public class StaticVar {
     private String flag;
 
@@ -27,7 +27,7 @@ public class StaticVar {
 
     public static String myProperties;
 
-    @Value("${myProperties.flag}")
+    @Value("${my-properties.flag}")
     private String myPropertiesFlag;
 
     public  String getTest1() {
@@ -41,7 +41,7 @@ public class StaticVar {
     public String getUrl() {
         return url;
     }
-    @Value("${spring.datasource.url}")
+    @Value("${spring.datasource.url:}")
     public void setUrl(String url) {
         StaticVar.url = url;
     }
@@ -57,7 +57,7 @@ public class StaticVar {
     public  String getMyProperties() {
         return myProperties;
     }
-    @Value("${myProperties.flag}")
+    @Value("${my-properties.flag}")
     public  void setMyProperties(String myProperties) {
         StaticVar.myProperties = myProperties;
     }

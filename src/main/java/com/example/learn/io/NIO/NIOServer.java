@@ -1,11 +1,11 @@
 package com.example.learn.io.NIO;
 
+import com.example.util.ThreadUtil;
 import lombok.SneakyThrows;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
@@ -24,20 +24,12 @@ public class NIOServer {
     @SneakyThrows
     public static void main(String[] args) {
         new Thread(NIOServer::startServerClient).start();
-        clientSendMsg();
     }
 
-    private static void clientSendMsg() throws IOException {
-        final SocketChannel clientChannel = SocketChannel.open(new InetSocketAddress("127.0.0.1", 9999));
-        clientChannel.write(ByteBuffer.wrap("hello boy!".getBytes()));
-        final ByteBuffer response = ByteBuffer.allocate(1024);
-        final int length = clientChannel.read(response);
-        System.out.println("server response: "+new String(response.array(),0,length));
-    }
-
+    static ExecutorService executor = Executors.newFixedThreadPool(5);//线程池
     @SneakyThrows
     private static void startServerClient() {
-        ExecutorService executor = Executors.newFixedThreadPool(5);//线程池
+
 
         final ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
         serverSocketChannel.bind(new InetSocketAddress(9999));
@@ -45,8 +37,9 @@ public class NIOServer {
 
         final Selector selector = Selector.open();
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+
         while (true){
-            if (selector.selectNow()==0){
+            if (selector.select(1000)==0){
                 continue;
             }
             final Set<SelectionKey> selectionKeys = selector.selectedKeys();
@@ -54,17 +47,15 @@ public class NIOServer {
             while (iterator.hasNext()){
                 final SelectionKey selectionKey = iterator.next();
                 if (selectionKey.isAcceptable()){
-                    SelectableChannel clientChannel = serverSocketChannel.accept();
+                    SocketChannel clientChannel =  serverSocketChannel.accept();
                     clientChannel.configureBlocking(false);
-                    clientChannel.register(selector,SelectionKey.OP_READ);
-//                    System.out.println("accept one client:"+clientChannel.hashCode());
+                    SelectionKey clientKey = clientChannel.register(selector, SelectionKey.OP_READ);
+                    clientKey.attach(new MyContent(clientChannel,clientKey));
+                    System.out.println("client connected!");
                 }
                 if (selectionKey.isReadable()){
-                    final SocketChannel clientChannel = (SocketChannel)selectionKey.channel();
-                    System.out.println("client can read:"+clientChannel.hashCode());
-                    selectionKey.cancel();
-                    // doOperation(clientChannel);
-                    executor.execute(()->doOperation(clientChannel));
+                    ThreadUtil.sleep(3);
+                    doOperation((MyContent)selectionKey.attachment());
                 }
                 iterator.remove();
             }
@@ -79,11 +70,92 @@ public class NIOServer {
             "hello";
 
     @SneakyThrows
-    private static void doOperation(SocketChannel socketChannel){
+    private static void doOperation( MyContent content){
+        System.out.println("read start ");
+        SocketChannel socketChannel = content.socketChannel;
         final ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
-        final int length = socketChannel.read(byteBuffer);
+        int length;
+        try {
+             length = socketChannel.read(byteBuffer);
+        }catch (Exception e){
+            e.printStackTrace();
+            // 发送异常时，如若没有关闭连接，TCP连接会持续卡在内核内存中
+//            socketChannel.close();
+            return;
+        }
+        if (length<=0){
+            // 必须正确的关闭连接，否则tcp连接将固定在close_wait 2小时，期间持续占用内存
+            // 而且必须立刻响应。如果不是立刻响应，期间tcp 可能会不定期发送窗口变更通知/轮训状态验证等消息，
+            // 由于对端已经关闭处于time_wait阶段，它会回复RST_ack消息，服务端下次发送消息时就会发生 connect peer rest 异常
+                content.clientKey.cancel();
+            System.out.println("client closed itself!");
+            socketChannel.close();
+            return;
+        }
+        byteBuffer.flip();
         System.out.println("client request : "+new String(byteBuffer.array(),0,length));
-        socketChannel.write(ByteBuffer.wrap(response.getBytes()));
-        socketChannel.close();
+        sendMsg(socketChannel);
+//        executor.execute(()->{
+//            try {
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//                if (socketChannel.isConnected() || socketChannel.isOpen()){
+//                    try {
+//                        socketChannel.close();
+//                    } catch (IOException ex) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        });
     }
+
+    private static void sendMsg(SocketChannel channel) throws IOException {
+        byte[] bytes = new byte[1024];
+        int len = System.in.read(bytes)-1;
+        if (!channel.isConnected() || !channel.isOpen()){
+            System.out.println("channel is already closed!");
+            return;
+        }
+        System.out.println("read size = "+len);
+        if (isClose(bytes,len)){
+            channel.close();
+            return;
+        }
+        if (len<=0){
+            System.out.println("blank msg send!");
+        }
+        ByteBuffer sendMsg = ByteBuffer.wrap(bytes,0,len);
+        channel.write(sendMsg);
+        System.out.println("send over");
+    }
+
+
+    static byte[] close = "close".getBytes();
+    private static boolean isClose(byte[] bytes, int len) {
+        if (len != close.length){
+            return false;
+        }
+        for (int i =0 ;i < close.length; i++){
+            if (close[i] != bytes[i]){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    static class MyContent{
+         SocketChannel socketChannel;
+        SelectionKey clientKey;
+
+        public MyContent(SocketChannel socketChannel, SelectionKey clientKey) {
+            this.socketChannel = socketChannel;
+            this.clientKey = clientKey;
+        }
+
+    }
+
+
+
 }

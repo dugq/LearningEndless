@@ -47,18 +47,6 @@ public class BIOServerThreadModel {
         }
     }
 
-    @SneakyThrows
-    static void doOperation(Socket socket)  {
-        while(!Thread.currentThread().isInterrupted()&&!socket.isClosed()){//死循环处理读写事件
-            final InputStream inputStream = socket.getInputStream();
-            byte[] buffer = new byte[1024];
-            int len = inputStream.read(buffer);
-            final OutputStream outputStream = socket.getOutputStream();
-//            ctrl 业务处理
-            outputStream.write(("you say "+ len+" words").getBytes());
-            outputStream.flush();
-        }
-    }
 
     static class CallBackRunnable implements Runnable{
         private Socket socket;
@@ -67,7 +55,15 @@ public class BIOServerThreadModel {
         }
         @SneakyThrows
         public void run(){
-            doOperation(socket);
+            while(!Thread.currentThread().isInterrupted()&&!socket.isClosed()){//死循环处理读写事件
+                final InputStream inputStream = socket.getInputStream();
+                byte[] buffer = new byte[1024];
+                int len = inputStream.read(buffer);
+                final OutputStream outputStream = socket.getOutputStream();
+//            ctrl 业务处理
+                outputStream.write(("you say "+ len+" words").getBytes());
+                outputStream.flush();
+            }
         }
 
     }

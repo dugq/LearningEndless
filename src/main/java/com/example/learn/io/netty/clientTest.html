@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>client</title>
+</head>
+<body>
+<h3 id="state">closed</h3>
+<button onclick="connect()">链接</button>
+<br/><br/> <input id="msg" type="text" style="width:60%;"/> &nbsp; <button onclick="send()">发送</button>
+
+<br/><br/><textarea id="res" style="width: 80%; height: 500px;"></textarea><br/>
+    <script type="text/javascript">
+        var socket;
+        function connect(){
+          if(!socket){
+            socket = new WebSocket("ws://127.0.0.1:8088/websocket");
+            document.getElementById("state").innerText = "init";
+
+            socket.onopen = function(event){
+                document.getElementById("state").innerText = "connected";
+            }
+
+            socket.onmessage = function(event){
+                printMsg(event.data);
+            }
+
+            socket.onclose = function(event){
+                document.getElementById("state").innerText = "closed";
+                socket = null;
+            }
+          }
+        }
+
+        function send(){
+           if(!socket){
+             printMsg("socket 未连接");
+             return
+           }
+           var msg = document.getElementById("msg").value;
+           if(!msg){
+             printMsg("msg为空");
+             return
+           }
+           socket.send(msg);
+           document.getElementById("msg").value = '';
+
+        }
+
+       function printMsg(str){
+          document.getElementById("res").value = document.getElementById("res").value + "\n" + str;
+       }
+
+    </script>
+</body>
+</html>

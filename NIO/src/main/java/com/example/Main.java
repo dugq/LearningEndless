@@ -75,6 +75,10 @@ public class Main {
             while (iterator.hasNext()){
                 final SelectionKey selectionKey = iterator.next();
                 if (selectionKey.isAcceptable()){
+                    // 这里为什么不能用 selectionKey.channel()
+                    // 要知道，channel方法返回的是 发生事件 的通道，
+                    // 而对于accept事件，发生的通道是 serverSocketChannel
+                    // 而 clientSocketChannel 是accept事件的结果，selectKey 是不提供结果的，所以无法从selectKey中获取到 client channel
                     SelectableChannel clientChannel = serverSocket.accept();
                     clientChannel.configureBlocking(false);
                     clientChannel.register(selector,SelectionKey.OP_READ);
@@ -90,9 +94,9 @@ public class Main {
     }
 
     static void doOperation(SocketChannel socketChannel) throws IOException {
-        final ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
-        while (socketChannel.read(byteBuffer)>0){
-            byteBuffer.clear();
+        final ByteBuffer byteBuffer = ByteBuffer.allocate(2048);
+        if (socketChannel.read(byteBuffer)>0){
+            byteBuffer.flip();
         }
         String response = dealRequest(byteBuffer.array());
         if (response == null){

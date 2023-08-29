@@ -9,7 +9,7 @@ import org.springframework.remoting.rmi.RmiRegistryFactoryBean;
 /**
  * Created by dugq on 2018\6\12 0012.
  */
-@Configuration
+//@Configuration
 public class RemoteSpringMBeanConfig {
 
     //开启spring远程JMX

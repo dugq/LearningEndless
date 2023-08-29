@@ -1,4 +1,4 @@
-# LOCK
+ # LOCK
 * 锁是并发开发中的一个重要工具
 * 锁解决的是多CPU并行前提下的内存资源竞争问题
 * 锁在内存的角度来说解决的是指令顺序性和可见性问题，有了锁的存在，指令执行的顺序被强制保证了，可见性也就有了
@@ -36,7 +36,7 @@
         * 在线程未获取到锁时，不会自旋，而是阻塞，直到锁释放被唤醒后，重新争夺锁
 * 锁的存在对象的markWord区域内。markWord区域是可变的。
    * 32位系统 ![](resource/32位系统无锁.png)
-   * 32位系统 ![](resource/32位系统锁.png)be
+   * 32位系统 ![](resource/32位系统锁.png)
    * 64位系统 ![](resource/64位系统无锁.png)
    * 验证markWord的变化 https://blog.csdn.net/lengxiao1993/article/details/81568130
 * 解说锁升级的过程    https://blog.csdn.net/u014044812/article/details/124302959

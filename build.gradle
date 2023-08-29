@@ -90,6 +90,7 @@ dependencies {
     compile 'org.apache.commons:commons-collections4:4.4'
     compile 'commons-beanutils:commons-beanutils:20030211.134440'
     compile 'commons-collections:commons-collections:20040616'
+    implementation 'org.springframework.boot:spring-boot-starter-reactor-netty'
 
     compile group: 'org.apache.shiro', name: 'shiro-core', version: '1.2.2'
     compile group: 'org.apache.shiro', name: 'shiro-spring', version: '1.2.2'
@@ -113,6 +114,10 @@ dependencies {
     compile group: 'com.caucho', name: 'hessian', version: '4.0.38'
     compile group: 'org.hibernate', name: 'hibernate-validator', version: '5.3.5.Final'
 
+    implementation 'io.protostuff:protostuff-core:1.4.0'
+    implementation 'io.protostuff:protostuff-runtime:1.4.0'
+
+    implementation group: 'org.apache.zookeeper', name: 'zookeeper', version: '3.9.0'
 
     // sso版本，请使用 3.0.20 以上
 

@@ -2,7 +2,7 @@
 
 ##介绍  
 跟操作系统进行交互，完成连接建立和数据读写。我们可以把它看成一系列网络协议的实现。
-比如 ServerSocket & Socket 就是TCP协议的实现。
+比如 ServerSocket & Socket 就是TCP协议的完整实现，相当于实现应用层协议的基础。
 
 ##[Socket通信示例](SocketTest.java)
 
@@ -99,13 +99,17 @@ public class ServerSocket implements java.io.Closeable{
 
 #### Socket: 客户端sockets的实现
 
-*socket.accept() 在做什么？*
+* socket.accept() 在做什么？
 
-*Stream(InputStream/OutputStream)这里的数据是哪里来的，又去向了哪里？*
+* Stream(InputStream/OutputStream)这里的数据是哪里来的，又去向了哪里？
+![IO过程](../image/277b6e31-26f0-437a-899f-202f5e65cd5e.png)是如何实现的？
+![](../resource/zero-copy.png)
+![](../resource/tcp_backlog.png)
 
-*[IO过程](../image/277b6e31-26f0-437a-899f-202f5e65cd5e.png)是如何实现的？*
+* Socket 完成了应用和操作系统之间的IO交互，怎么交互的呢？
+  * ![](../resource/TCP协议连接原理.png)
+  * 具体函数实现请看：[unix操作系统](../../os/linux/unix函数.md#a-idnetworkfun网络函数a)  
 
-*Socket 完成了应用和操作系统之间的IO交互，怎么交互的呢？*
 
 ##[BIO](../BIO/read.md)
 

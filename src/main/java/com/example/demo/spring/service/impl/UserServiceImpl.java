@@ -17,9 +17,7 @@ import java.util.List;
 @Service
 @Transactional
 public class UserServiceImpl extends BasicService implements com.example.demo.spring.service.UserService {
-    @Autowired
     private UserMapper userMapper;
-    @Autowired
     private OperationsService operationsService;
 
 

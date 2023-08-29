@@ -14,11 +14,8 @@ import java.util.List;
  */
 @Service
 public class OperationsServiceImpl implements com.example.demo.spring.service.OperationsService {
-    @Autowired
     private OperationModuleMapper operationModuleMapper;
-    @Autowired
     private OperationsMapper operationsMapper;
-    @Autowired
     private UserService userService;
 
     @Override

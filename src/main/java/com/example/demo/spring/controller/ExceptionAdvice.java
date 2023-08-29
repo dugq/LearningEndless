@@ -1,6 +1,7 @@
 package com.example.demo.spring.controller;
 
 import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindException;
@@ -22,6 +23,7 @@ import java.util.Set;
  * Created by dugq on 2017/6/27.
  */
 @ControllerAdvice
+@Slf4j
 public class ExceptionAdvice {
     /**
      * 400 - Bad Request
@@ -78,8 +80,7 @@ public class ExceptionAdvice {
     @ResponseStatus(HttpStatus.CREATED)
     @ExceptionHandler(Exception.class)
     public Object handleException(HttpServletRequest request, Exception e, HttpServletResponse response) {
-        System.out.print(e.getClass());
-        System.out.print("500-------------------------------------");
+        log.error("exception advice",e);
         if(isAjax(request)){
             ServletOutputStream outputStream = null;
             try {

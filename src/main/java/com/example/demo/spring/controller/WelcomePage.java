@@ -10,9 +10,11 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Validator;
+import java.io.IOException;
 import java.util.Set;
 
 /**
@@ -54,5 +56,11 @@ public class WelcomePage {
         System.out.println(StaticVar.test1);
         String url = StaticVar.url;
         return url;
+    }
+
+    @RequestMapping("/testResponseInt")
+    public void testResponse(HttpServletResponse response) throws IOException {
+        response.getOutputStream().write("123".getBytes());
+        response.getOutputStream().close();
     }
 }

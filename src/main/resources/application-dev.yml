@@ -6,5 +6,5 @@ mycofig:
 server:
    port: 80
 
-myProperties:
+my-properties:
   flag: dev

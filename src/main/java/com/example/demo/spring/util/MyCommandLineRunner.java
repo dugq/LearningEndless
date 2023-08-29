@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class MyCommandLineRunner  implements CommandLineRunner {
-    @Autowired
     private BootUserMapper bootUserMapper;
 
     @Override

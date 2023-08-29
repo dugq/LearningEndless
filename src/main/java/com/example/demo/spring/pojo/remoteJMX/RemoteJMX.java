@@ -14,7 +14,7 @@ import java.net.MalformedURLException;
  *
  *
  */
-@Configuration
+//@Configuration
 public class RemoteJMX {
     @Bean
     @Lazy

@@ -8,15 +8,9 @@ spring:
   aop:
     proxy-target-class : true # Whether subclass-based (CGLIB) proxies are to be created (true) as opposed to standard Java interface-based proxies (false).
   profiles:
-    active: @active.profile@
+    active: dev
 
-management:
-  health:
-    mail:
-      enabled: false
-  security:
-    enabled: false
-  context-path: /management
+
 
 params:
   count: countSql
@@ -24,5 +18,9 @@ endpoints:
   health:
     sensitive: false
 
-myProperties:
+my-properties:
   flag: all
+
+eureka:
+  client:
+    enabled: false
