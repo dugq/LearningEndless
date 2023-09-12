@@ -1,0 +1,22 @@
+buildscript
+group = 'com.example'
+version = '0.0.1-SNAPSHOT'
+buildscript{
+    ext['curatorVersion']="2.8.0"
+}
+dependencyManagement {
+    dependencies {
+        imports {
+            mavenBom "org.apache.curator:apache-curator:${curatorVersion}"
+        }
+    }
+
+}
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'org.apache.curator:curator-client'
+    implementation 'org.apache.curator:curator-framework'
+    implementation 'org.apache.curator:curator-recipes'
+}
+

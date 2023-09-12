@@ -1,4 +1,4 @@
-package com.example.learn.frameworkDesign.分布式系统设计;
+package com.example.learn.frameworkDesign.分布式RPC框架;
 
 import com.alibaba.fastjson2.JSON;
 import com.example.demo.spring.pojo.entry.User;

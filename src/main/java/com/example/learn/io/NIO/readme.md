@@ -9,7 +9,7 @@ java对于非阻塞IO的实现。实际上就是解决BIO的block问题
 废话不多说，先整个[示例](NIOServer.java)
 
 #原理  
-[图解](../image/20211011021624.jpg)
+![图解](../image/20211011021624.jpg)
 
 #核心组件
 ##1、Selector

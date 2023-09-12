@@ -75,44 +75,44 @@ dependencyManagement {
 
 dependencies {
 
-    compile "org.springframework.boot:spring-boot-starter-web"
-    compile "org.springframework.boot:spring-boot-starter-actuator"
-    compile "org.springframework.boot:spring-boot-starter-freemarker"
-    compile "org.springframework.boot:spring-boot-starter-data-redis"
-    compile "org.springframework.cloud:spring-cloud-starter-config"
-    compile "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
-    compile "org.springframework.cloud:spring-cloud-starter-netflix-hystrix"
-    compile "org.springframework.cloud:spring-cloud-starter-netflix-ribbon"
-    compile "org.springframework.cloud:spring-cloud-starter-openfeign"
-    compile "org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2"
-    compile 'org.apache.commons:commons-lang3:3.12.0'
-    compile 'com.alibaba:fastjson:2.0.26'
-    compile 'org.apache.commons:commons-collections4:4.4'
-    compile 'commons-beanutils:commons-beanutils:20030211.134440'
-    compile 'commons-collections:commons-collections:20040616'
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation "org.springframework.boot:spring-boot-starter-freemarker"
+    implementation "org.springframework.boot:spring-boot-starter-data-redis"
+    implementation "org.springframework.cloud:spring-cloud-starter-config"
+    implementation "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
+    implementation "org.springframework.cloud:spring-cloud-starter-netflix-hystrix"
+    implementation "org.springframework.cloud:spring-cloud-starter-netflix-ribbon"
+    implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
+    implementation "org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2"
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'com.alibaba:fastjson:2.0.26'
+    implementation 'org.apache.commons:commons-collections4:4.4'
+    implementation 'commons-beanutils:commons-beanutils:20030211.134440'
+    implementation 'commons-collections:commons-collections:20040616'
     implementation 'org.springframework.boot:spring-boot-starter-reactor-netty'
 
-    compile group: 'org.apache.shiro', name: 'shiro-core', version: '1.2.2'
-    compile group: 'org.apache.shiro', name: 'shiro-spring', version: '1.2.2'
-    compile group: 'org.apache.shiro', name: 'shiro-ehcache', version: '1.2.2'
+    implementation group: 'org.apache.shiro', name: 'shiro-core', version: '1.2.2'
+    implementation group: 'org.apache.shiro', name: 'shiro-spring', version: '1.2.2'
+    implementation group: 'org.apache.shiro', name: 'shiro-ehcache', version: '1.2.2'
 
-    compile group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.3'
-    compile group: 'org.mybatis.generator', name: 'mybatis-generator-core', version: '1.3.5'
+    implementation group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.3'
+    implementation group: 'org.mybatis.generator', name: 'mybatis-generator-core', version: '1.3.5'
 
     runtime group: 'mysql', name: 'mysql-connector-java', version: '5.1.42'
 
-    compile "org.springframework.boot:spring-boot-starter-jdbc"
+    implementation "org.springframework.boot:spring-boot-starter-jdbc"
 
-    compile group: 'org.jsoup', name: 'jsoup', version: '1.11.3'
-    compile group: 'com.github.pagehelper', name: 'pagehelper', version: '4.0.1'
+    implementation group: 'org.jsoup', name: 'jsoup', version: '1.11.3'
+    implementation group: 'com.github.pagehelper', name: 'pagehelper', version: '4.0.1'
 
     compile('io.lettuce:lettuce-core')
     compile("redis.clients:jedis")
-    compile group: 'com.alibaba', name: 'druid', version: '1.0.23'
-    compile group: 'com.alipay.sdk', name: 'alipay-sdk-java', version: '3.3.4.ALL'
+    implementation group: 'com.alibaba', name: 'druid', version: '1.0.23'
+    implementation group: 'com.alipay.sdk', name: 'alipay-sdk-java', version: '3.3.4.ALL'
     compile('org.springframework.boot:spring-boot-autoconfigure')
-    compile group: 'com.caucho', name: 'hessian', version: '4.0.38'
-    compile group: 'org.hibernate', name: 'hibernate-validator', version: '5.3.5.Final'
+    implementation group: 'com.caucho', name: 'hessian', version: '4.0.38'
+    implementation group: 'org.hibernate', name: 'hibernate-validator', version: '5.3.5.Final'
 
     implementation 'io.protostuff:protostuff-core:1.4.0'
     implementation 'io.protostuff:protostuff-runtime:1.4.0'
@@ -121,17 +121,17 @@ dependencies {
 
     // sso版本，请使用 3.0.20 以上
 
-    compile "org.springframework.boot:spring-boot-starter-test"
+    implementation "org.springframework.boot:spring-boot-starter-test"
 
     annotationProcessor 'org.projectlombok:lombok:1.18.4'
     compileOnly 'org.projectlombok:lombok:1.18.4'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.4'
     testCompileOnly 'org.projectlombok:lombok:1.18.4'
 
-    compile 'org.javatuples:javatuples:1.2'
-    compile 'com.google.guava:guava:29.0-jre'
+    implementation 'org.javatuples:javatuples:1.2'
+    implementation 'com.google.guava:guava:29.0-jre'
 
-    compile 'eu.bitwalker:UserAgentUtils:1.21'
+    implementation 'eu.bitwalker:UserAgentUtils:1.21'
 
     compileOnly("org.openjdk.jol:jol-core:0.16")
 

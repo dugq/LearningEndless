@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: dubbo-provider
+dubbo:
+  registry:
+    address: zookeeper://121.36.211.210:2181
+    timeout: 10000
+  protocol:
+    name: dubbo
+    port: -1

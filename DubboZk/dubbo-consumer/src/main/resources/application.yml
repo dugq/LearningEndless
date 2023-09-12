@@ -1,0 +1,12 @@
+spring.application.name: dubbo-consumer
+dubbo.registry.address: zookeeper://121.36.211.210:2181
+dubbo.registry.timeout: 10000
+dubbo.protocol.name: dubbo
+dubbo.protocol.port: -1
+management:
+  endpoints:
+    web:
+      exposure:
+        include: beans
+
+
