@@ -1,8 +1,9 @@
 # IO基础
 * linux系统下，所有的外部设备都被当作文件来操作
 * 对文件的读写都需要调用系统命令，返回一个file descriptor
-# IO 模型
 
+# IO 模型
+[打开本地文件：netty源码跟踪.excalidraw](https://excalidraw.com/)
 
 #### serverSocketChannel#read、write的实现
 ~~~java
