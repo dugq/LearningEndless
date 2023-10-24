@@ -18,3 +18,5 @@ include 'redis:springRedisTemplate'
 findProject(':redis:springRedisTemplate')?.name = 'springRedisTemplate'
 include 'redis:redission'
 findProject(':redis:redission')?.name = 'redission'
+include 'Learning'
+
