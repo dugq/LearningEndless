@@ -3,6 +3,7 @@ package com.example;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
+import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -19,6 +20,25 @@ public class Lock {
 //        testReEntrantLock(curatorClient);
         CountDownLatch countDownLatch = new CountDownLatch(1);
         countDownLatch.await();
+    }
+
+    @Test
+    public void test1() throws Exception {
+        CuratorFramework curatorClient = ZkClientFactory.getCuratorClient();
+        InterProcessMutex lock = new InterProcessMutex(curatorClient, "/dugq/locks/multiThread");
+        lock.acquire(10,TimeUnit.MINUTES);
+        System.out.println("i got it. test1");
+        TimeUnit.SECONDS.sleep(10);
+        curatorClient.close();
+    }
+
+    @Test
+    public void test2() throws Exception {
+        CuratorFramework curatorClient = ZkClientFactory.getCuratorClient();
+        InterProcessMutex lock = new InterProcessMutex(curatorClient, "/dugq/locks/multiThread");
+        lock.acquire(10,TimeUnit.MINUTES);
+        System.out.println("i got it. test2");
+        TimeUnit.MINUTES.sleep(10);
     }
 
     private static void testMultiLock(CuratorFramework curatorClient) throws InterruptedException {

@@ -153,10 +153,11 @@ struct iovec {
 #### 复用相关函数
 * select函数
   * 为什么限制1024个操作符
+  * ![select.png](..%2Fresource%2Fselect.png)
 * pselect函数
-  * 
+  * 文件操作
 * poll函数
-  * 
+  * ![poll.png](..%2Fresource%2Fpoll.png)
 * fcntl 函数
   * 配置socket参数，阻塞或者非阻塞等
 * epoll函数
@@ -173,7 +174,9 @@ struct iovec {
     * maxevents：告知内核events数组的大小
     * timeout -1:阻塞 0:非阻塞 >0 阻塞时间
     * return 成功返回有多少文件描述符就绪，时间到时返回0，出错返回-1
-
+  * ![epoll.png](..%2Fresource%2Fepoll.png)
+  * epoll-model : ![epoll-model.png](..%2Fresource%2Fepoll-model.png)
+  * epoll 实战 ![img.png](../resource/epoll-active.png)
 # 文件函数
 
 # 进程/线程函数

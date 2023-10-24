@@ -1,0 +1,7 @@
+bootJar {
+    archiveName = "jedisson.jar"
+}
+
+dependencies {
+    implementation 'org.redisson:redisson:3.23.5'
+}

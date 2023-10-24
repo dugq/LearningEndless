@@ -1,4 +1,4 @@
-package com.example.learn.JVM.lock;
+package com.example.learn.jreApi.lock;
 
 import com.example.util.ThreadUtil;
 import org.junit.Test;

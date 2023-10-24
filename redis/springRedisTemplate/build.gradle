@@ -1,0 +1,8 @@
+bootJar {
+    archiveName = "jedis.jar"
+}
+
+dependencies {
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-redis'
+    implementation 'org.apache.commons:commons-pool2'
+}

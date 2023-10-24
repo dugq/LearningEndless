@@ -1,0 +1,14 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+Slave -> Master:  replicaId=slaveId offset=0
+Master -> Slave:  replicaId=MasterId offset=0 firstSynFlag
+Master -> Master: build RDB log (可优化为写网络，跳过写文件)
+Master -> Master: write replica buffer
+Master -> Slave:  RDB log
+Slave -> Master: sync success
+Master ->Slave : replica buffer
+Slave -> Slave: sync replica buffer
+@enduml
