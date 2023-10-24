@@ -18,9 +18,9 @@
   * [lock](./jreApi/lock/readme.md)
   * [hash](./jreApi/hash/concurrentHashMap.md)
   * [queue](./jreApi/queue/readme.md)
-  * [thread pool](./jreApi/thread/pool/readme.md)
-  * [future](./jreApi/thread/completablefuture/readme.md)
-  * [fork-join](./jreApi/thread/forkjoin/readme.md)
+  * [thread pool](./jreApi/multiThread/pool/readme.md)
+  * [future](./jreApi/multiThread/completablefuture/readme.md)
+  * [fork-join](./jreApi/multiThread/forkjoin/readme.md)
 * [JVM](./JVM/深入理解JVM虚拟机.md)
 * [并发编程](./jreApi/multiThread/readme.md)
 
