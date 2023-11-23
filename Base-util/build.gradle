@@ -1,0 +1,56 @@
+buildscript {
+
+
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url "http://repo.spring.io/plugins-release" }
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        maven { url 'https://maven.aliyun.com/repository/spring/' }
+        mavenCentral()
+        mavenLocal()
+    }
+
+    dependencies {
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.5.RELEASE"
+        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.0"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:2.5.0"
+    }
+}
+
+apply plugin: "com.google.cloud.tools.jib"
+apply plugin: "maven"
+apply plugin: "java"
+apply plugin: "idea"
+apply plugin: "io.spring.dependency-management"
+apply plugin: "org.springframework.boot"
+test {
+    ignoreFailures = true
+}
+
+group = "com.dugq"
+version = "0.0.1-SNAPSHOT"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+bootJar {
+    archiveName = "dugq-base-util.jar"
+}
+
+repositories {
+    maven { url 'https://maven.aliyun.com/repository/public/' }
+    maven { url 'https://maven.aliyun.com/repository/spring/' }
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies{
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'org.apache.commons:commons-collections4:4.4'
+
+    annotationProcessor 'org.projectlombok:lombok:1.18.4'
+    compileOnly 'org.projectlombok:lombok:1.18.4'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.4'
+    testCompileOnly 'org.projectlombok:lombok:1.18.4'
+}

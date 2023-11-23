@@ -1,6 +1,6 @@
 package com.dugq.jreApi.multiThread.forkjoin;
 
-import com.example.util.ThreadUtil;
+import com.dugq.ThreadUtil;
 import org.apache.shiro.util.CollectionUtils;
 import org.junit.jupiter.api.Test;
 

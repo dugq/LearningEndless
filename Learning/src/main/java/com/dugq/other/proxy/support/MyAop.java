@@ -1,6 +1,5 @@
 package com.dugq.other.proxy.support;
 
-import com.example.learn.other.proxy.support.MyAdvisorSupport;
 
 import java.lang.reflect.Method;
 

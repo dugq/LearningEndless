@@ -1,6 +1,6 @@
 package com.dugq.jreApi.lock;
 
-import com.example.util.ThreadUtil;
+import com.dugq.ThreadUtil;
 import org.junit.Test;
 
 import java.util.concurrent.locks.Lock;

@@ -1,7 +1,7 @@
 package com.dugq.other.proxy.cglib;
 
-import com.example.learn.other.proxy.support.MyAdvisorSupport;
-import com.example.learn.other.proxy.support.MyAop;
+import com.dugq.other.proxy.support.MyAdvisorSupport;
+import com.dugq.other.proxy.support.MyAop;
 import org.springframework.aop.framework.AopProxy;
 import org.springframework.cglib.proxy.Enhancer;
 import org.springframework.cglib.proxy.MethodInterceptor;

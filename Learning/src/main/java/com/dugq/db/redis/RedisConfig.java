@@ -5,7 +5,6 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import redis.clients.jedis.JedisShardInfo;
@@ -40,9 +39,9 @@ public class RedisConfig {
 
         jackson2Template = new RedisTemplate();
         jackson2Template.setConnectionFactory(redisConnectionFactory);
-        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
-        jackson2Template.setDefaultSerializer(jackson2JsonRedisSerializer);
-        jackson2Template.afterPropertiesSet();
+//        Jackson2JsonRedisSerializer jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer(Object.class);
+//        jackson2Template.setDefaultSerializer(jackson2JsonRedisSerializer);
+//        jackson2Template.afterPropertiesSet();
 
         stringRedisTemplate = new StringRedisTemplate(redisConnectionFactory);
 

@@ -24,16 +24,22 @@
 ### 并发的应用
 #### 线程基础
 * 进程是系统资源分配的最小单位，而线程作为系统调用的最小单位。
-* 线程状态包括：
-
-              NEW -> runnable -> stop     其中，NEW 和 STOP是无法使用Jstack监控到的  
-                         ^
-                         | -> blocking  
-                         |
-           time-waiting<---> waiting
- * 线程中断interrupt： 中断只是一个标志，当线程被标记中断时，可抛出异常：ThreadInterruptException        
-
-
+* 线程状态包括： [测试类](ThreadStatusTest.java)
+                  
+~~~code
+                       start()              run执行结束
+             NEW -------------> runnable --------------------> stop     NEW 和 STOP是无法使用Jstack监控到的  
+                                   ^
+                                   |
+                                   |     synchorized
+                                   | ------------------> blocking  
+                                   |
+                                   | lock wait condition lockSupport
+                      sleep        |   依赖unsafe.park实现  
+ time-waiting<-------------------------------------------> waiting
+~~~
+* 线程中断interrupt： 中断只是一个标志，当线程被标记中断时，可抛出异常：ThreadInterruptException
+* 
 ### 并发中的难题
 * 上下文切换带来的消耗
     * 

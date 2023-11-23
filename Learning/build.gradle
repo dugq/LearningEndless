@@ -40,6 +40,13 @@ repositories {
     mavenLocal()
 }
 
+configurations {
+    all*.exclude group: "log4j", module: "log4j"
+    all*.exclude group: "org.slf4j", module: "slf4j-log4j12"
+    all*.exclude group: "javax.servlet", module: "servlet-api" //servlet 2.5
+    all*.exclude group: "com.fasterxml.jackson.dataformat", module: "jackson-dataformat-xml"
+}
+
 dependencyManagement {
     dependencies {
         imports {
@@ -71,6 +78,18 @@ dependencies {
     //cache
     implementation 'org.javatuples:javatuples:1.2'
     implementation 'com.google.guava:guava:29.0-jre'
+
+
+    implementation group: 'org.apache.shiro', name: 'shiro-core', version: '1.2.2'
+    implementation group: 'org.apache.shiro', name: 'shiro-spring', version: '1.2.2'
+    implementation group: 'org.apache.shiro', name: 'shiro-ehcache', version: '1.2.2'
+
+
+    compileOnly("org.openjdk.jol:jol-core:0.16")
+
+    implementation project(":Base-util")
+
+    compileOnly(group: "javax.servlet", name: "servlet-api",version:'2.5')
 
     // test
     annotationProcessor 'org.projectlombok:lombok:1.18.4'

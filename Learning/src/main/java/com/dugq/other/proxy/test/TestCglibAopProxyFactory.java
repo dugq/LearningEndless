@@ -1,10 +1,11 @@
 package com.dugq.other.proxy.test;
 
-import com.example.learn.other.proxy.Person;
-import com.example.learn.other.proxy.Xiaoming;
-import com.example.learn.other.proxy.cglib.MyCglibAopProxyFactory;
-import com.example.learn.other.proxy.support.MyAdvisorSupport;
-import com.example.learn.other.proxy.support.MyAop;
+
+import com.dugq.other.proxy.Person;
+import com.dugq.other.proxy.Xiaoming;
+import com.dugq.other.proxy.cglib.MyCglibAopProxyFactory;
+import com.dugq.other.proxy.support.MyAdvisorSupport;
+import com.dugq.other.proxy.support.MyAop;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;

@@ -1,5 +1,5 @@
 # 数据结构
-### redis 实现上的数据结构
+ ### redis 实现上的数据结构
 
 ###### 动态SDS
 * 解决C语言字符串的缺陷
@@ -100,7 +100,7 @@
   * 1、zipList 典型的空间换时间。
     * 结构存储和唯一性都可以使用代码取解决，在数据量不多时，性能差距不大
     * 限制1：节点个数小于 zset-max-ziplist-entries : 128（默认值）
-    * 限制2：节点字节数小于 zset-max-ziplist-value : 64字节（默认值）
+    * 限制2：节点字节数小于 zset-max-ziplist-value : 64kb（默认值）
   * 2、skipList + dict
     * skipList 满足sortset的有序性和唯一性，并天然根据score排序
     * dict 满足sortset的唯一性，以及通过元素快速查找其对应的score

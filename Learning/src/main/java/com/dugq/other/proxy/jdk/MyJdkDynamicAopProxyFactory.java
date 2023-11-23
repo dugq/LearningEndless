@@ -1,9 +1,10 @@
 package com.dugq.other.proxy.jdk;
 
-import com.example.learn.other.proxy.Person;
-import com.example.learn.other.proxy.support.MyAdvisorSupport;
-import com.example.learn.other.proxy.support.MyAop;
-import org.springframework.aop.framework.*;
+import com.dugq.other.proxy.Person;
+import com.dugq.other.proxy.support.MyAdvisorSupport;
+import com.dugq.other.proxy.support.MyAop;
+import org.springframework.aop.framework.AopProxy;
+import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.aop.support.AopUtils;
 import org.springframework.core.DecoratingProxy;
 

@@ -50,9 +50,6 @@ configurations {
     all*.exclude group: "log4j", module: "log4j"
     all*.exclude group: "org.slf4j", module: "slf4j-log4j12"
     all*.exclude group: "javax.servlet", module: "servlet-api" //servlet 2.5
-    all*.exclude group: "com.alibaba", module: "dubbo"
-    all*.exclude group: "com.fasterxml.jackson.dataformat", module: "jackson-dataformat-xml"
-    all*.exclude group: "com.zaxxer", module: "HikariCP-java7"
 }
 
 repositories {
@@ -74,7 +71,6 @@ dependencyManagement {
 }
 
 dependencies {
-
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-actuator"
     implementation "org.springframework.boot:spring-boot-starter-freemarker"
@@ -92,8 +88,8 @@ dependencies {
     implementation 'commons-collections:commons-collections:20040616'
     implementation 'org.springframework.boot:spring-boot-starter-reactor-netty'
 
-    implementation group: 'org.apache.shiro', name: 'shiro-core', version: '1.2.2'
-    implementation group: 'org.apache.shiro', name: 'shiro-spring', version: '1.2.2'
+    implementation group: 'org.apache.shiro', name: 'shiro-core', version: '1.10.0'
+    implementation group: 'org.apache.shiro', name: 'shiro-spring', version: '1.7.0'
     implementation group: 'org.apache.shiro', name: 'shiro-ehcache', version: '1.2.2'
 
     implementation group: 'org.apache.httpcomponents', name: 'httpmime', version: '4.5.3'

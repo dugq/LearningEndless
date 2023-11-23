@@ -1,0 +1,8 @@
+spring:
+  profiles:
+    active: pgy
+server:
+  port: 80
+rocketmq:
+  commonTopic: common_topic
+  delayTopic: delay_topic

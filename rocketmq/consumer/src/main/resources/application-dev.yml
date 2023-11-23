@@ -1,0 +1,5 @@
+rocketmq:
+  producer:
+    nameServerHost: 192.168.0.9:9876
+    groupName: dugq-producer-group-1
+

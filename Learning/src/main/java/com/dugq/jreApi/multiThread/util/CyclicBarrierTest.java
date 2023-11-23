@@ -1,6 +1,6 @@
 package com.dugq.jreApi.multiThread.util;
 
-import com.example.util.ThreadUtil;
+import com.dugq.ThreadUtil;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.Test;
 

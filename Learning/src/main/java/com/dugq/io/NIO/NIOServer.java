@@ -1,6 +1,6 @@
 package com.dugq.io.NIO;
 
-import com.example.util.ThreadUtil;
+import com.dugq.ThreadUtil;
 import lombok.SneakyThrows;
 
 import java.io.IOException;

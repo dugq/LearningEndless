@@ -1,6 +1,5 @@
 package com.dugq.jreApi.atomic;
 
-import com.example.demo.spring.pojo.entry.User;
 import org.junit.Test;
 
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;

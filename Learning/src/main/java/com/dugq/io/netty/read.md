@@ -219,3 +219,7 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
 }
 }
 ~~~
+
+## ChannelOption
+TCP_NODELA ：Nagle算法。默认开启，通过配置TCP_NODELA=false可关闭。
+

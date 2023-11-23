@@ -1,6 +1,6 @@
 package com.dugq.jreApi.multiThread.util;
 
-import com.example.util.ThreadUtil;
+import com.dugq.ThreadUtil;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.Test;
 
@@ -20,10 +20,11 @@ public class CountDownLatchTest {
         for (int i = 0; i< 10; i++){
             executors.submit(()->{
                 ThreadUtil.sleep(RandomUtils.nextInt(1,10));
-                countDownLatch.countDown();
                 System.out.println("end");
+                countDownLatch.countDown();
             });
         }
+        countDownLatch.await();
         countDownLatch.await();
         System.out.println("main end ");
     }

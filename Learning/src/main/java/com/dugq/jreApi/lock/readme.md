@@ -32,7 +32,7 @@
         * 相较于重量级锁，轻量级锁线程不挂起，利用CAS自旋替换markWord中锁指针位
         * 当CAS失败时，触发锁升级。至于CAS的次数，hotspot 是JVM自己自适应的，老版本是可配置的。
     * 重量级锁  
-        * 依赖操作系统的mutex实现的
+        * 依赖操作系统的mutex（互斥量）和信号量（semaphore）实现的monitor lock
         * 在线程未获取到锁时，不会自旋，而是阻塞，直到锁释放被唤醒后，重新争夺锁
 * 锁的存在对象的markWord区域内。markWord区域是可变的。
    * 32位系统 ![](resource/32位系统无锁.png)
@@ -73,9 +73,6 @@ LOCK的定义了一套锁的使用规则 AbstractQueuedSynchronizer.java，其�
     * 4、next线程从上述入队的第6步。代码重复出队第4步
 * 总结流程 ![](./resource/AQS.png)
 
-## 锁工具
-* LockSupport#park 阻塞当前线程。blocker只是为了标记阻塞对象，一般填this即可
-* LockSupport#unpark 唤醒线程，参数为需要解锁的线程。注意：唤醒是可以发生在阻塞前的。先唤醒，则后续的第一次阻塞，不会生效。
 
 
 

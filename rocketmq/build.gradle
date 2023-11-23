@@ -1,0 +1,69 @@
+allprojects {
+
+    buildscript{
+        ext["springBootVersion"] = "2.2.7.RELEASE"
+        ext["springCloudVersion"] = "Hoxton.SR6"
+
+        repositories {
+            maven { url "https://plugins.gradle.org/m2/" }
+            maven { url "http://repo.spring.io/plugins-release" }
+            maven { url 'https://maven.aliyun.com/repository/public/' }
+            maven { url 'https://maven.aliyun.com/repository/spring/' }
+            mavenCentral()
+            mavenLocal()
+        }
+
+        dependencies {
+            classpath "io.spring.gradle:dependency-management-plugin:1.0.5.RELEASE"
+            classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.0"
+            classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+            classpath "gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:2.5.0"
+        }
+    }
+    group = 'com.dugq'
+    version = '0.0.1-SNAPSHOT'
+
+    apply plugin: "com.google.cloud.tools.jib"
+    apply plugin: "maven"
+    apply plugin: "java"
+    apply plugin: "idea"
+    apply plugin: "io.spring.dependency-management"
+    apply plugin: "org.springframework.boot"
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencyManagement {
+
+        dependencies {
+            imports {
+                mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+                mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+            }
+        }
+
+    }
+
+    configurations {
+        all*.exclude group: "log4j", module: "log4j"
+        all*.exclude group: "org.slf4j", module: "slf4j-log4j12"
+        all*.exclude group: "javax.servlet", module: "servlet-api" //servlet 2.5
+        all*.exclude group: "com.fasterxml.jackson.dataformat", module: "jackson-dataformat-xml"
+    }
+
+    dependencies {
+        implementation group: 'org.apache.rocketmq', name: 'rocketmq-client', version: '4.9.4'
+
+        implementation project(":Base-util")
+        implementation "org.springframework.boot:spring-boot-starter-web"
+        implementation "org.springframework.boot:spring-boot-starter-test"
+        annotationProcessor 'org.projectlombok:lombok:1.18.4'
+        compileOnly 'org.projectlombok:lombok:1.18.4'
+        testAnnotationProcessor 'org.projectlombok:lombok:1.18.4'
+        testCompileOnly 'org.projectlombok:lombok:1.18.4'
+
+    }
+}
+
+

@@ -1,7 +1,6 @@
 package com.dugq.jreApi.multiThread.util;
 
-import com.example.util.ThreadUtil;
-import org.apache.commons.lang3.RandomUtils;
+import com.dugq.ThreadUtil;
 import org.junit.Test;
 
 import java.util.concurrent.ExecutorService;
@@ -23,6 +22,7 @@ public class SemaphoreTest {
             executors.submit(()->{
                 int index = atomicInteger.getAndAdd(1);
                 try {
+                    semaphore.acquire();
                     semaphore.acquire();
                     ThreadUtil.sleep(3);
                 } catch (InterruptedException e) {
