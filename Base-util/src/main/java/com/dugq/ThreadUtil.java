@@ -3,6 +3,7 @@ package com.dugq;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -54,5 +55,27 @@ public class ThreadUtil {
 
     public static void printThreadInfo(){
         printThreadInfo(null);
+    }
+
+    public static void threadWait(final Object lock){
+        if (Objects.isNull(lock)){
+            return;
+        }
+        synchronized (lock){
+            try {
+                lock.wait();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public static void threadNotify(Object lock){
+        if (Objects.isNull(lock)){
+            return;
+        }
+        synchronized (lock){
+            lock.notifyAll();
+        }
     }
 }

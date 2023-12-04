@@ -13,11 +13,12 @@ import java.util.stream.Collectors;
 
 public class StringNumberUtil {
 
-    public static void main(String[] args) {
-        printBinaryString(-4);
-    }
 
     public static void printBinaryString(long num){
+        printBinaryString(num,false,false);
+    }
+    public static void printBinaryString(long num,boolean printTenBy8,boolean printOxBy8){
+        System.out.println("--------------------------------");
         String s = Long.toBinaryString(num);
         char[] chars = s.toCharArray();
         LinkedList<Character> sb = new LinkedList<>();
@@ -28,21 +29,56 @@ public class StringNumberUtil {
             }
             sb.addFirst(chars[i]);
         }
-        sb.forEach(System.out::print);
-        System.out.println("  = "+num);
-        LinkedList<Byte> list =getByte(num);
-        Iterator<Byte> iterator = list.descendingIterator();
-        while (iterator.hasNext()){
-            System.out.println(iterator.next()+",");
+        int appendBits = (8-sb.size() & 8)&8;
+        for (int i =1 ; i< appendBits; i++){
+            sb.addFirst('0');
         }
-        System.out.println("  = "+num);
+        System.out.print("2进制      |");
+        sb.forEach(System.out::print);
+        System.out.println(" ");
+        if (printTenBy8){
+            System.out.print("10进制     |");
+            LinkedList<Integer> list =getByte(num);
+            Iterator<Integer> iterator = list.descendingIterator();
+            while (iterator.hasNext()){
+                Integer next = iterator.next();
+                int blankSize = 8 - next.toString().length();
+                for (int i =0; i<blankSize; i++){
+                    System.out.print(" ");
+                }
+                System.out.print(next);
+                if (iterator.hasNext()){
+                    System.out.print(",");
+                }
+            }
+            System.out.println(" ");
+        }
+        if (printOxBy8){
+            System.out.print("16进制     |");
+            LinkedList<Integer> list =getByte(num);
+            Iterator<Integer> iterator = list.descendingIterator();
+            while (iterator.hasNext()){
+                String hexString = Integer.toHexString(iterator.next());
+                int blankSize = 6 - hexString.length();
+                for (int i =0; i<blankSize; i++){
+                    System.out.print(" ");
+                }
+                System.out.print("0x"+hexString);
+                if (iterator.hasNext()){
+                    System.out.print(",");
+                }
+            }
+            System.out.println(" ");
+        }
+        System.out.println("原数       |"+num);
+        System.out.println("--------------------------------");
     }
 
     /**
      * 把Long 值 转化为二进制 再按字节切分为若干组，每组转为byte 类型
      * @return 地4位在前，高4位在后
      */
-    public static LinkedList<Byte> getByte(long value){
+    public static LinkedList<Integer> getByte(long value){
         String s = Long.toBinaryString(value);
         char[] chars = s.toCharArray();
         LinkedList<Character> sb = new LinkedList<>();
@@ -50,11 +86,11 @@ public class StringNumberUtil {
             sb.addFirst(character);
         }
         List<List<Character>> partition = ListUtils.partition(sb, 8);
-        LinkedList<Byte> result = new LinkedList<>();
+        LinkedList<Integer> result = new LinkedList<>();
         for (List<Character> character : partition) {
             Collections.reverse(character);
             String binary = StringUtils.join(character.toArray());
-            result.addLast(binary2Byte(binary));
+            result.addLast(byteBinary2Int(binary));
         }
         return result;
     }
@@ -99,6 +135,13 @@ public class StringNumberUtil {
             return (byte)(Integer.parseInt(binary,2)-256);
         }
         return Byte.parseByte(binary,2);
+    }
+
+    private static int byteBinary2Int(String binary){
+        if (StringUtils.isBlank(binary) || binary.length()>8){
+            return 0;
+        }
+       return Integer.parseInt(binary,2);
     }
 
 

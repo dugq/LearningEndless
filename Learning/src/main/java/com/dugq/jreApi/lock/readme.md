@@ -15,10 +15,12 @@
     * 2、这个写回操作会使得其他核上缓存的该变量的数据无效
     * 3、1/2 一定会发生，但具体是使用缓存锁定还是总线锁定，未知
 * 当volatile修饰的连续变量同时被读到缓存行时，多核会来回相互通知缓存无效，从而导致性能浪费。
-    * 所以jre的linkTransferQueue才会通过占位变量来追加字节，以提高CPU性能
+    * 所以jre的linkedTransferQueue才会通过占位变量来追加字节，以提高CPU性能
 
 
 ## synchronized
+* 它基于JVM内置锁实现，通过内部对象Monitor（监视器锁）来实现。
+* 而Monitor的实现依赖于底层操作系统的Mutex lock（互斥锁），因此是重量级锁，性能较低
 * jdk6以后引入锁升级概念，依次为：
     * 无锁 
     * 偏向锁    
@@ -44,6 +46,9 @@
     * 在什么时间点进行降级，就是个问题
     * 偏向锁和轻量级锁都依赖CAS自旋，自旋是需要耗费CPU的，一旦升级了，说明存在着竞争，那降级也还是会升级回来的不说，无用的自旋也是在浪费
 * 自我理解的完整的锁升级的过程 ![](resource/synchronizedew.png)               
+* 锁粗化是指将多个连续的synchronized代码块合并为一个大的synchronized代码块，以减少加锁和解锁的次数，提高性能。例如，如果有一个方法中包含多个synchronized代码块，且这些代码块之间没有竞争，那么可以将它们合并为一个大的synchronized代码块，以减少加锁和解锁的次数。
+* 锁消除是指编译器通过逃逸分析等技术，将不可能存在竞争的synchronized代码块去除掉，以减少不必要的锁竞争，提高性能。例如，如果一个synchronized代码块中没有修改共享变量，那么这个synchronized代码块就不需要加锁，因为其他线程无法通过这个代码块访问共享变量。
+* 锁状态 ：Thread#holdsLock [测试用例](LockStateTest.java)
     
 ## LOCK 接口
 * javaSE提供了LOCK接口的API，其功能相较于synchronized提升了不少![](./resource/LOCK接口.png)
@@ -72,7 +77,6 @@ LOCK的定义了一套锁的使用规则 AbstractQueuedSynchronizer.java，其�
     * 3、读取head标记，尝试唤起head的后续节点（head只是作为标记，本身为空节点或者正在执行或已执行完毕的节点）。如果head或者head的next为null，则判断tail是否为null，如果tail不为null，则尝试从tail出发重新修正头节点
     * 4、next线程从上述入队的第6步。代码重复出队第4步
 * 总结流程 ![](./resource/AQS.png)
-
-
+* * 锁状态 ：lock#isHeldByCurrentThread [测试用例](LockStateTest.java)
 
 

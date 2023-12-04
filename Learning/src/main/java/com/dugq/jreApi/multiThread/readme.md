@@ -78,10 +78,7 @@
 * 通信： 线程间的数据交换    
 * 同步： 不同线程对同一操作发生的相对顺序控制
 * Java采用的内存共享模型。通过共享内存中的数据交换数据，通过并发控制达到同步的效果
-* wait-notify 等待通知模式 进行线程间通信
-    * wait-notify 依赖synchronized关键字。它的实现是存储在对象头中的标志位来实现，为了保证线程安全，所以该模式必须配合synchronized关键字使用
-* Thread.join 当前线程等待目标线程完成后再继续执行
-* ThreadLocal [ThreadLocal详解](util/ThreadLocal.md)
+* [线程通信详解](线程通信.md)
 
 ### 可见性问题
 * JMM中，线程间通过访问共享属性以达到线程间通信的目的
@@ -104,13 +101,13 @@
 而这，JVM是不会明白如何处理的，但是它提供了一系列的方法供我们驱使：
 * volatile关键字
     * JVM通过插入内存屏障禁止了volatile变量读写的重排序
-    * volatile变量本身的操作也使用LOCK#开头的CPU指令修饰，以保证对于变量的修改会及时刷回主存，并通知其他线程变量个已修改
+    * volatile变量本身的操作使用LOCK#开头的CPU指令修饰，以保证对于变量的修改会及时刷回主存，并通知其他线程变量个已修改
     * volatile变量每次读也会从主存读取数据。这个说法，不知道成不成立。因为存在也合理，但每次都从主存读取数据，有点浪费了吧，人家说不定不常变更呢？但无所谓了，相比来说，它已经是最轻量级的方案了
     * volatile 变量还会限制指令重排序，避免变量的操作顺序被改变[测试方法](VolatileTest.java)
     * 总结 ： volatile关键字 通过只是保证了单个变量的读写操作具有原子性，解决的是最基本的可见性问题。
 * final关键字。在构造函数中初始化的final对象，在其他线程中读取到的值是最新的
   * 通常情况下在构造函数中初始化的属性都定义为final类型，在构造的同时被其他线程读取后，其值必然完成初始化，如果特殊情况下不能定义为final属性，则在并发场景下，需要先进行判空处理。
-* 加锁 [LOCK详解](../jreApi/lock/readme.md)
+* 加锁 [LOCK详解](../lock/readme.md)
     * synchronized 关键字 
     * LOCK 接口及 LockSupport工具类    
     
@@ -134,10 +131,44 @@
 
 
 ## 多线程编程工具类
-* [BlockingQueue](../jreApi/queue/readme.md)
-* [concurrentHashMap](../jreApi/hash/concurrentHashMap.md)
-* [fork/join](../jreApi/thread/forkjoin/readme.md)
-* [LockSupport](../jreApi/lock/readme.md)
-* [ThreadPool](../jreApi/thread/pool/readme.md)
-* [CompletableFuture](../jreApi/thread/completablefuture/readme.md)
+* [BlockingQueue](../queue/readme.md)
+* [concurrentHashMap](../hash/concurrentHashMap.md)
+* [fork/join](../multiThread/forkjoin/readme.md)
+* [LockSupport](../lock/readme.md)
+* [ThreadPool](../multiThread/pool/readme.md)
+* [CompletableFuture](../multiThread/completablefuture/readme.md)
 * [CountDownLatch、CyclicBarrier、Semaphore](util/MultiThreadUtil.md)
+
+
+# 线程总结
+* 线程 
+  * 问题1： 线程 vs 进程
+  * 问题2：多线程一定比单线程好吗？
+* 线程状态
+  * 问题1： java线程状态切换方法
+  * 问题2： lockSupport vs synchronized线程状态对比
+* 线程通信
+  * 不同线程：共享内存
+    * 问题1: 什么是伪共享
+    * 问题2: CAS的ABA如何解决 （volatile的缺陷）
+    * 问题3: 堆和栈的区别
+  * 线程内栈帧间对象引用传递,线程间数据隔离
+    * 问题: threadLocal的原理
+* 线程协作
+  * 线程同步
+    * 问题1: java中锁的分类
+    * 问题2: 请对比下 Synchronized 和 ReentrantLock 的异同 ？
+    * 问题3: synchronized 锁升级 引出 锁的性能优先级
+    * 问题4: CompletableFuture vs fork-join
+  * 线程通知
+    * 问题1: wait-notify vs condition
+    * 问题2: CountDownLatch vs wait-notify
+  * 闭锁 & 信号量
+    * 问题1: CyclicBarrier vs CountDownLatch
+    * 问题2: Semaphore vs 读锁
+  * 线程安全的集合
+    * 问题1: java中同步队列有那些
+    * 问题2: HashMap vs concurrentHashMap 
+    * 问题3: 同步集合 VS 并发集合 （hashTable vs concurrentHashMap）
+
+[面试题](面试题.md)
