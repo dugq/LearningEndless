@@ -169,6 +169,6 @@
   * 线程安全的集合
     * 问题1: java中同步队列有那些
     * 问题2: HashMap vs concurrentHashMap 
-    * 问题3: 同步集合 VS 并发集合 （hashTable vs concurrentHashMap）
+      * 问题3: 同步集合 VS 并发集合 （hashTable vs concurrentHashMap·）
 
 [面试题](面试题.md)

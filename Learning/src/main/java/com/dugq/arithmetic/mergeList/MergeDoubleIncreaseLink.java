@@ -1,6 +1,6 @@
 package com.dugq.arithmetic.mergeList;
 
-import com.dugq.arithmetic.LinkNode;
+import com.dugq.arithmetic.util.LinkNode;
 import org.junit.jupiter.api.Test;
 
 /**

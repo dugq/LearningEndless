@@ -1,23 +1,37 @@
 package com.dugq.arithmetic.sort;
 
-import com.alibaba.fastjson.JSON;
-import com.dugq.arithmetic.ArrayNode;
+import com.dugq.arithmetic.util.DoubleCounter;
+import com.dugq.arithmetic.util.MyArrayUtils;
 import org.junit.Test;
+
+import java.util.Arrays;
 
 /**
  * Created by dugq on 2023/8/15.
  */
 public class 归并排序 {
+    private DoubleCounter counter = new DoubleCounter(1);
 
     @Test
     public void test(){
-        int[] array = ArrayNode.randomNoRepeatArray(1000);
+        int[] source = MyArrayUtils.randomIntArray(1000,2000);
+        int[] array = Arrays.copyOf(source, source.length);
         //节省了空间，但是merge的时候会编程n的2次方，时间复杂度会高一点
 //        sortWithOutTemp(array,0,array.length-1);
         sortWithTemp(array,0,array.length-1,new int[array.length]);
-        ArrayNode.validatorSort(array,array);
-        System.out.println(JSON.toJSONString(array));
+        MyArrayUtils.validatorSortedArray(array,source);
 
+    }
+
+    public static DoubleCounter mergeSort(int[] array){
+        return new 归并排序().sort(array);
+    }
+
+    private DoubleCounter sort(int[] array){
+        counter.start();
+        sortWithTemp(array,0,array.length-1,new int[array.length]);
+        counter.end();
+        return this.counter;
     }
 
     private void sortWithTemp(int[] array, int left, int right, int[] temp) {
@@ -33,16 +47,20 @@ public class 归并排序 {
         int index = 0;
         int i = left , j = mid;
         while (i < mid){
+            counter.incrementFirst();
             // 当右子数组遍历完，将左子数组剩余的部分添加到temp
             if (j>right){
                 temp[index++]=array[i++];
+                counter.incrementSecond();
                 continue;
             }
             // 左右子数组当前游标位相比较，较小的一方加入到temp，并且游标后移一位
             if (array[i] < array[j]){
                 temp[index++] = array[i++];
+                counter.incrementSecond();
             }else{
                 temp[index++] = array[j++];
+                counter.incrementSecond();
             }
         }
         //这里放弃将右子数组的剩余数据加入temp。因为右边本来就是靠后，如果其剩余说明其较大，那剩余的数组位置就不会发生变动
@@ -51,6 +69,7 @@ public class 归并排序 {
         int t =0;
         while (t<index){
             array[left++] = temp[t++];
+            counter.incrementSecond();
         }
     }
 
@@ -68,11 +87,11 @@ public class 归并排序 {
         for (int i = left; i<mid; i++){
             // 主循环把右子序列较小的移动的左序列中
             if (array[i] > array[mid]){
-                ArrayNode.swap(array, mid, i);
+                MyArrayUtils.swapArray(array, mid, i);
                 // 当左子序列的值较大移动到右子序列首部后，需要进行一次循环以保证右子序列依然有序
                 for (int j = mid;j<right;j++){
                     if (array[j] > array[j+1]){
-                        ArrayNode.swap(array, j, j+1);
+                        MyArrayUtils.swapArray(array, j, j+1);
                     }else{
                         break;
                     }

@@ -1,6 +1,6 @@
 package com.dugq.arithmetic.revertList;
 
-import com.dugq.arithmetic.LinkNode;
+import com.dugq.arithmetic.util.LinkNode;
 import org.junit.Test;
 
 /**

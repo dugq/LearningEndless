@@ -1,6 +1,6 @@
 package com.dugq.arithmetic.revertList;
 
-import com.dugq.arithmetic.LinkNode;
+import com.dugq.arithmetic.util.LinkNode;
 
 /**
  * Created by dugq on 2023/8/15.

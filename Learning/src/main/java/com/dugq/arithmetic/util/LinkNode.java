@@ -1,4 +1,4 @@
-package com.dugq.arithmetic;
+package com.dugq.arithmetic.util;
 
 /**
  * Created by dugq on 2023/8/15.
