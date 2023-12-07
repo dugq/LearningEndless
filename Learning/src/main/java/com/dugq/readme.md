@@ -26,7 +26,7 @@
 
 # [架构设计](./frameworkDesign/readme.md)
 
-
+# [算法](arithmetic/readme.md)
 
 # 书籍
 * [《Java并发编程艺术》](./jreApi/multiThread/readme.md)

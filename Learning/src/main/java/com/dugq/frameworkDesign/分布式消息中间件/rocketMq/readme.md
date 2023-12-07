@@ -733,8 +733,17 @@ public class DefaultLitePullConsumerImpl {
     }
 }
 ~~~
-
-
+* 广播模式下，消费位点由节点自己保存。 每5s一次持久化到本地文件。  由：LocalFileOffsetStore实现
+* 集群模式下，为了提高效率，消费位点也不是每次消费都上报。而是定时任务每5s一次。 由RemoteBrokerOffsetStore实现
 ###### LocalFileOffsetStore
+* load() 服务启动时，从本地文件加载offset
+* 如果本地不存在该文件，则取broker的max-offset
+* persistAll() & persist(queue)进行持久化
 
 ###### RemoteBrokerOffsetStore
+* readOffset() 从broker读取服务端存储的offset
+* updateOffset() 方法只会更新本地的消费位点，不会实时上报broker
+* persistAll() & persist(queue) 上报本地已消费的offset
+* 缺陷： 在下一次persistAll之前异常宕机，会导致消息重复消费
+
+##### [rocket-Mq-RPC](mq-netty.md)

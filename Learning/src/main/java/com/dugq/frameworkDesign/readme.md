@@ -33,15 +33,18 @@
 
 
 ### 技术解决方案
-* [分布式架构](./分布式消息中间件/readme.md)
 * 集群模式
 * 容器化运维
   * Docker
   * Kubernetes
-* 常用组件
-  * Zookeeper协调
-  * MQ异步
-  * Redis缓存
+* 分布式组件
+  * [分布式消息中间件](./分布式消息中间件/readme.md)
+    * [rocketmq](%E5%88%86%E5%B8%83%E5%BC%8F%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%2FrocketMq%2Freadme.md)
+  * [分布式协调中间件](%E5%88%86%E5%B8%83%E5%BC%8F%E5%8D%8F%E8%B0%83%E7%BB%84%E4%BB%B6%2Freadme.md)
+    * [Zookeeper](%E5%88%86%E5%B8%83%E5%BC%8F%E5%8D%8F%E8%B0%83%E7%BB%84%E4%BB%B6%2FZookeeper.md)
+    * [分布式锁.md](%E5%88%86%E5%B8%83%E5%BC%8F%E5%8D%8F%E8%B0%83%E7%BB%84%E4%BB%B6%2F%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81.md)
+  * [分布式组建之间RPC](%E5%88%86%E5%B8%83%E5%BC%8FRPC%E6%A1%86%E6%9E%B6%2FRPC.md)
+    * [dubbo](%E5%88%86%E5%B8%83%E5%BC%8FRPC%E6%A1%86%E6%9E%B6%2Fdubbo.md)
 * 架构细节
   * 全局ID策略
   * 接口幂等性
@@ -51,7 +54,10 @@
   * 分布式事务
 * 数据源组件
   * 关系型数据库
+    * [mysql](..%2Fdb%2Fmysql%2Freadme.md)
   * [NoSQL数据库](./NoSQL数据库/readme.md)
+    * [elasticsearch](..%2Fdb%2Felasticsearch%2Freadme.md)
+    * [redis](..%2Fdb%2Fredis%2Freadme.md)
   * 数据管理策略
     * 分库分表
     * 读写分离
