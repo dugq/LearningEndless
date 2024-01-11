@@ -7,7 +7,7 @@ import io.netty.buffer.UnpooledByteBufAllocator;
 import io.netty.channel.Channel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.unix.Buffer;
-import sun.nio.ch.DirectBuffer;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -83,6 +83,7 @@ public class ByteBufferVSByteBufApi {
         //存于堆的字节流都是基于字节数组实现的，可以直接获取到
         buffer.array();
 
+
     }
 
 
@@ -135,7 +136,7 @@ public class ByteBufferVSByteBufApi {
         buf.retain();
         buf.release();
 
-        //对标 buffer.slice 都是浅copy 只是浅的层次不同。返回心的buf最好不要写。虽然你有办法写。
+        //对标 buffer.slice 都是浅copy 只是浅的层次不同。返回新的buf最好不要写。虽然你有办法写。
         buf.slice();
         buf.duplicate();
         //实际中，可能这两会使用更多。 因为如果源对象被回收了，新对象可能会发生一些不可预估的事情。
@@ -177,6 +178,19 @@ public class ByteBufferVSByteBufApi {
         ByteBufAllocator alloc = channel.alloc();
         return pooledHeapBuf;
     }
+
+    @Test
+    public void testDirectBuf(){
+        ByteBuf pooledDirectBuf = PooledByteBufAllocator.DEFAULT.directBuffer(1024);
+        pooledDirectBuf.writeBytes("这是一段测试语言".getBytes());
+        int oldSize = pooledDirectBuf.readableBytes();
+        System.out.println("size = "+oldSize);
+        while (pooledDirectBuf.readableBytes()>0){
+            byte b = pooledDirectBuf.readByte();
+        }
+    }
+
+
 
 }
 

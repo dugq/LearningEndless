@@ -53,4 +53,6 @@ dependencies{
     compileOnly 'org.projectlombok:lombok:1.18.4'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.4'
     testCompileOnly 'org.projectlombok:lombok:1.18.4'
+
+    implementation("org.openjdk.jol:jol-core:0.16")
 }

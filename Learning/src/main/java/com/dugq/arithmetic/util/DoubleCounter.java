@@ -38,11 +38,21 @@ public class DoubleCounter {
         System.out.println(s +" "+countFirst+" "+s1+" "+countSecond+" cost times = "+(endTime-startTime)+"ms");
     }
 
-    public void start() {
-        startTime = System.currentTimeMillis();
+    public void print() {
+        System.out.println("fist count = "+countFirst+" "+" second count = "+countSecond+" cost times = "+(endTime-startTime)+"ms");
     }
 
-    public void end(){
+    public void printFist(){
+        System.out.println("count = "+countFirst+" cost times = "+(endTime-startTime)+"ms");
+    }
+
+    public DoubleCounter start() {
+        startTime = System.currentTimeMillis();
+        return this;
+    }
+
+    public DoubleCounter end(){
         endTime = System.currentTimeMillis();
+        return this;
     }
 }

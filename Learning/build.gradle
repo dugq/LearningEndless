@@ -36,7 +36,8 @@ version = '0.0.1-SNAPSHOT'
 repositories {
     maven { url "https://plugins.gradle.org/m2/" } //sonarqube
     maven { url "http://repo.spring.io/plugins-release" }
-    mavenCentral()
+    maven { url 'https://maven.aliyun.com/repository/public/' }
+    maven { url 'https://maven.aliyun.com/repository/spring/' }
     mavenLocal()
 }
 
@@ -79,6 +80,7 @@ dependencies {
     implementation 'org.javatuples:javatuples:1.2'
     implementation 'com.google.guava:guava:29.0-jre'
 
+    implementation("com.github.ben-manes.caffeine:caffeine:2.9.3")
 
     implementation group: 'org.apache.shiro', name: 'shiro-core', version: '1.2.2'
     implementation group: 'org.apache.shiro', name: 'shiro-spring', version: '1.2.2'
@@ -90,6 +92,9 @@ dependencies {
     implementation project(":Base-util")
 
     compileOnly(group: "javax.servlet", name: "servlet-api",version:'2.5')
+
+    // fst 序列话
+    implementation group: 'de.ruedigermoeller', name: 'fst', version: '3.0.3'
 
     // test
     annotationProcessor 'org.projectlombok:lombok:1.18.4'

@@ -1,7 +1,11 @@
 package com.dugq.jreApi.guava;
 
+import com.dugq.ThreadUtil;
+import com.dugq.base.User;
+import com.github.benmanes.caffeine.cache.Caffeine;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -61,5 +66,23 @@ public class CacheTest {
                 e.printStackTrace();
             }
         }
+    }
+
+    private static final com.github.benmanes.caffeine.cache.Cache<User, List> userCache = Caffeine.newBuilder()
+            .expireAfterWrite(50, TimeUnit.SECONDS).maximumSize(1000).build();
+
+    @Test
+    public void testWeakReference() throws ExecutionException {
+        User user = new User(102);
+        List test = userCache.get(user, (k) -> Arrays.asList(0,1,2,3,4,5));
+        System.out.println("test size = "+test.size());
+        user = null;
+        test = null;
+        System.gc();
+        ThreadUtil.sleep(10);
+        System.gc();
+        List test1 = userCache.getIfPresent(new User(102));
+        System.out.println("test size = "+test1.size());
+
     }
 }

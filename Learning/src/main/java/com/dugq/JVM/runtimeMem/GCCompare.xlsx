@@ -1,0 +1,7 @@
+GC	目标	算法	过程		场景
+serial + serial old					
+parNew + parallel scavenge					
+parNew + cms					
+G1	"1. 为了适应现在不断扩大的内存和不断增加的处理器数量
+2. 进一步降低暂停时间（pause time）并且让停顿时长可控
+3. 同时兼顾良好的吞吐量"				

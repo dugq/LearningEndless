@@ -35,7 +35,7 @@ public class ThreadUtil {
         if (threadPoolMap.containsKey(key)){
             return threadPoolMap.get(key);
         }
-        return threadPoolMap.computeIfAbsent(key,(sufferName)-> new ThreadPoolExecutor(5, 10, 10, TimeUnit.MINUTES, new ArrayBlockingQueue<>(100), new ThreadFactory() {
+        return threadPoolMap.computeIfAbsent(key,(sufferName)-> new ThreadPoolExecutor(5, 10, 10, TimeUnit.MINUTES, new ArrayBlockingQueue<>(10000), new ThreadFactory() {
             private final AtomicInteger index = new AtomicInteger(1);
             @Override
             public Thread newThread( Runnable r) {

@@ -5,7 +5,7 @@ allprojects {
         ext["springBootVersion"] = "2.2.7.RELEASE"
         ext["springCloudVersion"] = "Hoxton.SR6"
         ext["lombok.version"] = "1.18.12"
-        ext["dubboVersion"] = "3.2.5"
+        ext["dubboVersion"] = "3.2.9"
 
         repositories {
             maven { url "https://plugins.gradle.org/m2/" }
@@ -79,6 +79,10 @@ allprojects {
         testAnnotationProcessor 'org.projectlombok:lombok:1.18.4'
 
         testCompileOnly 'org.projectlombok:lombok:1.18.4'
+
+        implementation('org.apache.dubbo:dubbo-serialization-kryo:2.7.23'){
+            exclude group:  'org.apache.dubbo' , module: 'dubbo-serialization-api'
+        }
     }
 
     install {

@@ -26,6 +26,10 @@ public class AtomicReferenceFieldUpdaterTest {
         System.out.println(atomicUser.getAndSet(user,"jack"));
         // jack
         System.out.println(atomicUser.get(user));
+
+        Student student = new Student("tom");
+        boolean result = student.setName(student.getName(), "jack");
+        System.out.println("更新结果"+result+" 学生："+student.getName());
     }
 
 
@@ -44,6 +48,23 @@ public class AtomicReferenceFieldUpdaterTest {
         }
         public int getOld() {
             return old;
+        }
+    }
+
+    static class Student {
+        private volatile String name;
+        public Student(String name) {
+            this.name = name;
+        }
+        public String getName() {
+            return name;
+        }
+        // 属性可访问的地方使用就没有问题
+        private static final AtomicReferenceFieldUpdater<Student,String> atomicUser = AtomicReferenceFieldUpdater.newUpdater(Student.class,String.class,"name");
+
+        public boolean setName(String expectedName,String newName){
+            return atomicUser.compareAndSet(this,expectedName,newName);
+
         }
     }
 

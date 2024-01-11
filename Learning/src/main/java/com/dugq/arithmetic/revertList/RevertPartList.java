@@ -1,6 +1,6 @@
 package com.dugq.arithmetic.revertList;
 
-import com.dugq.arithmetic.util.LinkNode;
+import com.dugq.arithmetic.util.ListNode;
 import org.junit.Test;
 
 /**
@@ -10,23 +10,23 @@ public class RevertPartList {
 
     @Test
     public void test(){
-        LinkNode list = LinkNode.build(1, 2, 3, 4, 5);
+        ListNode list = ListNode.build(1, 2, 3, 4, 5);
         doRevert(list,2,4);
-        LinkNode.printNode(list);
+        ListNode.printNode(list);
     }
 
-    private void doRevert(LinkNode head, int m , int n) {
+    private void doRevert(ListNode head, int m , int n) {
         if (head == null || m >= n || m <=0){
             return;
         }
         int index = 0;
-        LinkNode start = null;
-        LinkNode pre = null;
-        LinkNode partHead = null;
-        LinkNode next = head;
+        ListNode start = null;
+        ListNode pre = null;
+        ListNode partHead = null;
+        ListNode next = head;
         while (next!=null && index < n){
             index++;
-            LinkNode indexNode = next;
+            ListNode indexNode = next;
             next = next.next;
             if (index==m-1){
                start = indexNode;

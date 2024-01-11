@@ -25,4 +25,5 @@ include 'rocketmq:consumer'
 findProject(':rocketmq:consumer')?.name = 'consumer'
 include 'rocketmq:producer'
 findProject(':rocketmq:producer')?.name = 'producer'
+include 'mybatis'
 
