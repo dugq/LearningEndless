@@ -153,4 +153,102 @@ public class StringOp {
         }
     }
 
+    @Test
+    public void testMatch(){
+        System.out.println("s = aa; p= aa;  match = "+isMatch("aa","aa"));
+        System.out.println("s = aa; p= a;  match = "+isMatch("aa","a"));
+        System.out.println("s = aa; p= a*;  match = "+isMatch("aa","a*"));
+        System.out.println("s = aa; p= a*a;  match = "+isMatch("aa","a*a"));
+        System.out.println("s = aab; p= a*a;  match = "+isMatch("aab","a*a"));
+        System.out.println("s = ab; p= ?*;  match = "+isMatch("ab","?*"));
+        System.out.println("s = aa; p= *a*a;  match = "+isMatch("aa","*a*a"));
+        System.out.println("s = aa; p= *a;  match = "+isMatch("aa","*a"));
+        System.out.println("s = ab; p= *a;  match = "+isMatch("ab","*a"));
+        System.out.println("s = missingtest; p= mi*ing?s*t;  match = "+isMatch("missingtest","mi*ing?s*t"));
+    }
+
+    public boolean isMatch(String s, String p) {
+        if (p.length()==0){
+            return s.length()==0;
+        }
+        List<String> strs = new ArrayList<>();
+        boolean endWith = p.charAt(p.length()-1)=='*';
+        boolean startWith = p.charAt(0)=='*';
+        int start = -1;
+        for(int i=0; i<p.length();i++){
+            if(p.charAt(i)=='*'){
+                if (start!=i-1){
+                    strs.add(p.substring(start+1,i));
+                }
+                start = i;
+            }
+        }
+        if (start<p.length()-1){
+            strs.add(p.substring(start+1));
+        }
+        if (strs.size()==0){
+            return true;
+        }
+        int matchIndex = 0;
+        for(int i = 0;i<s.length();i++){
+            String p1 = strs.get(matchIndex);
+            // 不以*开头的情况，第一个子串必须从0开始完全匹配
+            if (matchIndex==0 && !startWith){
+                if (s.charAt(i)==p1.charAt(i) || p1.charAt(i)=='?'){
+                    if (i==p1.length()-1){
+                        // 兼容只有一个子串的情况
+                        if (strs.size()==1){
+                            return endWith || i==s.length()-1;
+                        }
+                        matchIndex++;
+                    }
+                    continue;
+                }else{
+                    return false;
+                }
+            }
+            // 处理最后一个子串
+            if(matchIndex==strs.size()-1){
+                if(endWith){ // 以*结尾
+                    return matchSub(s,i, p1,true)>=0;
+                }else{ // 从右往左找，找到了就行
+                    return matchSub(s,i, p1,false)>=0;
+                }
+            }
+            // 中间子串只需要最短匹配就行 也包括p以*开头且不只一个子串时的第一个子串
+            if ((i=matchSub(s,i,p1,true))<0){
+                return false;
+            }
+            matchIndex++;
+        }
+        return  p.equals("*");
+    }
+
+    // return match stop pos
+    public int matchSub(String s ,int start,String p,boolean left){
+        if(left){
+            for(int i = 0;i<s.length()-start;i++){
+                if(p.charAt(i)=='?' || p.charAt(i)==s.charAt(i+start)){
+                    if(i==p.length()-1){
+                        return i+start;
+                    }
+                    continue;
+                }
+                i = -1;
+                start++;
+            }
+            return -1;
+        }
+        if(s.length()-start<p.length()){
+            return -1;
+        }
+        for(int i =0;i<p.length();i++){
+            char c = p.charAt(p.length() - i - 1);
+            if(s.charAt(s.length()-i-1)!= c && c !='?'){
+                return -1;
+            }
+        }
+        return s.length()-1;
+    }
+
 }

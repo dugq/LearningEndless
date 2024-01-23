@@ -22,6 +22,114 @@
 # 考虑点：
 * 边界点
 * 极限情况
+* 递归转for循环
+  * 1、声明一个类型用以替换递归中参数传递。
+  * 2、在for外再加上while(Stack.size()>0)
+~~~java
+public class Test{
+   // for循环 
+  List<List<Integer>> combinationSum2(int []candidates,int target ){
+    List<List<Integer>> result = new LinkedList<>();
+    LinkedList<Path> paths = new LinkedList<>();
+    paths.add(new Path(target));
+    while(paths.size()>0){
+      Path path = paths.pop();
+      for(int j = path.start ;j < candidates.length;j++){
+        if (path.last == candidates[j]){
+          LinkedList<Integer> list = new LinkedList<>(path.list);
+          list.add(candidates[j]);
+          result.add(list);
+        }
+        if (path.last > candidates[j]){
+          paths.add(new Path(j,candidates[j],path));
+        }
+      }
+    }
+    return result;
+  }
+
+  class Path{
+    int last;
+    int start;
+    LinkedList<Integer> list = new LinkedList<>();
+
+    public Path(int target){
+      this.last = target;
+    }
+
+    public Path(int start,int val, Path path){
+      this.start = start;
+      this.last=path.last-val;
+      list.addAll(path.list);
+      list.add(val);
+    }
+
+  }
+
+  // 递归
+  public List<List<Integer>> combinationSum(int[] candidates, int target) {
+    int len = candidates.length;
+    List<List<Integer>> res = new ArrayList<>();
+    if (len == 0) {
+      return res;
+    }
+
+    Deque<Integer> path = new ArrayDeque<>();
+    dfs(candidates, 0, len, target, path, res);
+    return res;
+  }
+
+  private void dfs(int[] candidates, int begin, int len, int target, Deque<Integer> path, List<List<Integer>> res) {
+    // target 为负数和 0 的时候不再产生新的孩子结点
+    if (target < 0) {
+      return;
+    }
+    if (target == 0) {
+      res.add(new ArrayList<>(path));
+      return;
+    }
+
+    // 重点理解这里从 begin 开始搜索的语意
+    for (int i = begin; i < len; i++) {
+      path.addLast(candidates[i]);
+
+      // 注意：由于每一个元素可以重复使用，下一轮搜索的起点依然是 i，这里非常容易弄错
+      dfs(candidates, i, len, target - candidates[i], path, res);
+
+      // 状态重置
+      path.removeLast();
+    }
+  }
+}
+~~~
+* 重复vs不重复 
+  * 原数据是否重复  source = [1,2,2,2]
+  * 结果是否重复   result = [ [1,2] , [2,1] ]  
+  * 每个点是否重复  source = [1,2]  result = [1,1,2,2]
+  * 三种都满足时，先排序再操作是最优解
+~~~
+for(int i=0;int i < length;i++){
+   for(int j=0; j< length; j++){
+     // 每个点重复 && 结果重复
+   }
+}
+for(int i=0;int i < length;i++){
+   // arr 中如果有重复需要加上判断
+   if(arr[i]==arr[i-1]){continue;}
+   for(int j=i; j< length; j++){
+     // 每个点重复 && 结果不重复
+   }
+ }
+ 
+for(int i=0;int i < length;i++){
+   // arr 中如果有重复需要加上判断
+   if(arr[i]==arr[i-1]){continue;}
+   for(int j=i+1; j< length; j++){
+      if(arr[j]==arr[j-1]){continue;}
+     // 每个点不重复 && 结果不重复
+   }
+}
+~~~
 
 # 二分法注意点
 * 当节点数为偶数时，中点有两个，可以选择(left+right)/2 和 （left+right)/2 选择

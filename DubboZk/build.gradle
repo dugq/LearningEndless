@@ -41,8 +41,6 @@ allprojects {
     targetCompatibility = 1.8
 
     configurations {
-        all*.exclude group: "log4j", module: "log4j"
-        all*.exclude group: "org.slf4j", module: "slf4j-log4j12"
         all*.exclude group: "javax.servlet", module: "servlet-api" //servlet 2.5
         all*.exclude group: "com.alibaba", module: "dubbo"
         all*.exclude group: "com.fasterxml.jackson.dataformat", module: "jackson-dataformat-xml"

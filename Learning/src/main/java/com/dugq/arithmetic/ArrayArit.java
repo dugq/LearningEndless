@@ -1,12 +1,15 @@
 package com.dugq.arithmetic;
 
 import com.alibaba.fastjson2.JSON;
+import com.dugq.arithmetic.util.DoubleCounter;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Set;
 
@@ -514,5 +517,579 @@ public class ArrayArit {
         result += s.length()-charStart;
         result += s.charAt(s.length()-1);
         return result;
+    }
+
+    @Test
+    public  void testCombinationSum(){
+        System.out.println(JSON.toJSONString(combinationSum(new int[]{2,3,5},8)));
+        System.out.println(JSON.toJSONString(combinationSum2(new int[]{2,3,5},8)));
+        System.out.println(JSON.toJSONString(combinationSum(new int[]{2,3,6,7},7)));
+        System.out.println(JSON.toJSONString(combinationSum2(new int[]{2,3,6,7},7)));
+        System.out.println(JSON.toJSONString(combinationSum(new int[]{4,2,8},8)));
+        System.out.println(JSON.toJSONString(combinationSum2(new int[]{4,2,8},8)));
+    }
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        List<List<Integer>> result = new LinkedList<>();
+        int i =candidates.length-1;
+        Integer dp[][] = new Integer[candidates.length][candidates.length];
+        combinationSum(candidates,target,candidates.length-1,new ArrayList<>(),result,dp);
+        return result;
+    }
+
+    // 给你一个 无重复元素 的整数数组 candidates 和一个目标整数 target ，找出 candidates 中可以使数字和为目标数 target 的 所有 不同组合 ，并以列表形式返回。你可以按 任意顺序 返回这些组合。
+
+    void combinationSum(int[] candidates, int target,int stop,List<Integer> last, List<List<Integer>> result,Integer dp[][]){
+        for(int i = stop; i>=0;i--){
+            // 找到一个值=target，如果比目标值大，结束
+            if(candidates[i]>target){
+                continue;
+            }else if(candidates[i]==target){
+                List<Integer> list = new LinkedList<>();
+                list.add(candidates[i]);
+                list.addAll(last);
+                result.add(list);
+                continue;
+            }
+            for(int j =0; j<=i;j++){
+                if(dp[i][j]==null){
+                    dp[i][j] = candidates[i]+candidates[j];
+                }
+                if(dp[i][j]>target){
+                    break;
+                }else if(dp[i][j]==target){
+                    // 两个值相加等于目标值的
+                    List<Integer> list = new LinkedList<>(last);
+                    list.add(candidates[i]);
+                    list.add(candidates[j]);
+                    result.add(list);
+                }else{
+                    // 两个值相加小于目标值的，再加一个
+                    List<Integer> list = new LinkedList<>(last);
+                    list.add(candidates[i]);
+                    list.add(candidates[j]);
+                    int target1 = target - dp[i][j];
+                    combinationSum(candidates, target1,j,list,result,dp);
+                }
+            }
+        }
+    }
+
+    List<List<Integer>> combinationSum2(int []candidates,int target ){
+        List<List<Integer>> result = new LinkedList<>();
+        LinkedList<Path> paths = new LinkedList<>();
+        paths.add(new Path(target));
+        while(paths.size()>0){
+            Path path = paths.pop();
+            for(int j = path.start ;j < candidates.length;j++){
+                if (path.last == candidates[j]){
+                    LinkedList<Integer> list = new LinkedList<>(path.list);
+                    list.add(candidates[j]);
+                    result.add(list);
+                }
+                if (path.last > candidates[j]){
+                    paths.add(new Path(j,candidates[j],path));
+                }
+            }
+        }
+        return result;
+    }
+
+    class Path{
+        int last;
+        int start;
+        LinkedList<Integer> list = new LinkedList<>();
+
+        public Path(int target){
+            this.last = target;
+        }
+
+        public Path(int start,int val, Path path){
+            this.start = start;
+            this.last=path.last-val;
+            list.addAll(path.list);
+            list.add(val);
+        }
+
+    }
+
+    @Test
+    public void combinationSumTest(){
+        System.out.println(combinationSum3(new int[]{2,5,2,2},2));
+    }
+
+    public List<List<Integer>> combinationSum3(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        List<List<Integer>> result = new LinkedList<>();
+        LinkedList<Path> paths = new LinkedList<>();
+        paths.add(new Path(target));
+        while(paths.size()>0){
+            Path path = paths.pop();
+            for(int i = path.start;i<candidates.length;i++){
+                // 第一层重复数字不重复找
+                if(i>0 && candidates[i]==candidates[i-1]){
+                    continue;
+                }
+                if(candidates[i]==path.last){
+                    LinkedList<Integer> list = new LinkedList<>(path.list);
+                    list.add(candidates[i]);
+                    result.add(list);
+                    break;
+                }
+                if(candidates[i]<path.last){
+                    paths.add(new Path(i+1,candidates[i],path));
+                }else{
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    @Test
+    public void testFirstMissingPositive(){
+        System.out.println(firstMissingPositive(new int[]{2,2}));
+    }
+
+    public int firstMissingPositive(int[] nums) {
+        for(int i=0;i<nums.length;){
+            if(nums[i]<=0 || nums[i]>nums.length || nums[i]==i+1 || nums[nums[i]-1]==nums[i]){
+                i++;
+                continue;
+            }
+            int temp = nums[nums[i]-1];
+            nums[nums[i]-1] = nums[i];
+            nums[i] = temp;
+        }
+        for(int i=0;i<nums.length;i++){
+            if(nums[i]!=i+1){
+                return i+1;
+            }
+        }
+        return nums.length+1;
+    }
+
+    @Test
+    public void testPerMute(){
+        System.out.println(JSON.toJSONString(permute(new int[]{1,2,3})));;
+    }
+
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> result = new ArrayList<>();
+        List<Integer> last = new ArrayList<>();
+        for(int i =0 ;i < nums.length;i++){
+            last.add(nums[i]);
+        }
+        gen(last,new LinkedList<>(),result);
+        return result;
+    }
+
+    public void gen(List<Integer> last,LinkedList<Integer> list,List<List<Integer>> result){
+        if(last.size()==1){
+            List<Integer> cr = new ArrayList<>(list);
+            cr.add(last.get(0));
+            result.add(cr);
+            return;
+        }
+        for(int i =0; i<last.size();i++){
+            Integer cu = last.remove(i);
+            list.addLast(cu);
+            gen(last,list,result);
+            last.add(i,cu);
+            list.removeLast();
+        }
+    }
+
+    @Test
+    public void testMyPow(){
+        System.out.println(myPow(1.1,60));
+    }
+
+
+    public double myPow(double x, int n) {
+        char[] value = new char[10];
+        DoubleCounter counter = new DoubleCounter(1);
+        counter.start();
+        double result = x;
+        boolean positive = true;
+        if(n==0){
+            return 1;
+        }
+        if(n<0){
+            n = -n;
+            positive = false;
+        }
+        int max = n-1;
+        int step = 1;
+        double stepNum = x;
+        for(int i =0; i<max;){
+            counter.incrementFirst();
+            if(step<(max-i)/2){
+                stepNum = stepNum*stepNum;
+                step = step*2;
+            }else if(step>max-i){
+                counter.incrementSecond();
+                step = 1;
+                stepNum = x;
+            }
+            result = result * stepNum;
+            i+=step;
+        }
+        counter.end().print();
+
+        if(positive){
+            return result;
+        }
+        return 1/result;
+    }
+
+
+    @Test
+    public void testSolveNQueens() throws Exception{
+        System.out.println(JSON.toJSONString(solveNQueens(4)));
+    }
+
+    public List<List<String>> solveNQueens(int n) {
+        // 规律1: 每行必须存在一个，每列必须存在一个，每斜线上只能存在一个
+        // 规律2: 棋盘可以视为一个二位数组，由于n<10，所以可以把棋盘的每个点的坐标计作一个两位十进制数字
+
+
+        List<List<String>> result = new LinkedList<>();
+
+        genRow(new HashSet<>(),0,n-1,result,new HashSet<>(),new ArrayList<>());
+
+        return result;
+
+    }
+
+    // 从规律1可以得出 每行只能存在一个，也就是说每行有n中可能，我们逐个处理
+    public void genRow(Set<Integer> addedLine,int index,int maxIndex,List<List<String>> result,Set<Integer> disableUsedPoint,List<String> gened){
+        char[] chars = new char[maxIndex+1];
+        for (int i = 0; i <= maxIndex; i++) {
+            chars[i]='.';
+        }
+        // 每行的每列都可以尝试使用。只要不和disableUsedPoint冲突即可
+        for(int i =0 ;i <=maxIndex;i++){
+            if (index==2 && i==3){
+                System.out.println();
+            }
+            // 每个点转为一个 2位十进制数字
+            int point = i*10+index;
+            if(disableUsedPoint.contains(point) || addedLine.contains(i)){
+                continue;
+            }
+            chars[i]='Q';
+            String str = new String(chars);
+            chars[i]='.';
+            if(index==maxIndex){
+                List<String> list = new LinkedList<>(gened);
+                list.add(str);
+                result.add(list);
+                continue;
+            }
+
+            // 把 左后斜线 和右后斜线加入到disableUsedPoint中
+            Set<Integer> currentDisableUsedPoint = new HashSet<>(disableUsedPoint);
+            int row = index;
+            int line = i;
+            // 右后方
+            while(row++<maxIndex && line++<maxIndex){
+                currentDisableUsedPoint.add(line*10+row);
+            }
+            row = index;
+            line = i;
+            //左后方
+            while(line-->0 && row++<maxIndex){
+                currentDisableUsedPoint.add(line*10+row);
+            }
+
+            // 追加本行新增的记录
+            addedLine.add(i);
+            gened.add(str);
+            genRow(addedLine,index+1,maxIndex,result,currentDisableUsedPoint,gened);
+            // 恢复现场，删除本行新增的记录
+            addedLine.remove(i);
+            gened.remove(str);
+        }
+    }
+
+    @Test
+    public void testMerge(){
+        int[][] intervals = new int[][]{{1,3},{4,6},{3,4},{15,18}};
+        System.out.println(JSON.toJSONString(merge(intervals)));
+    }
+
+
+    public int[][] merge(int[][] intervals) {
+        LinkedList<Integer> hasValueIndex = new LinkedList<>();
+        hasValueIndex.add(0);
+        for (int i = 1; i < intervals.length; i++) {
+            int size = hasValueIndex.size();
+            int currentPos = i;
+            for(int pos = 0;pos<size;pos++){
+                int[] current = intervals[currentPos];
+                Integer comPos = hasValueIndex.removeFirst();
+                int[] compare = intervals[comPos];
+                if (current[0]> compare[1] || current[1] < compare[0]) {
+                    hasValueIndex.addLast(comPos);
+                }else{
+                    compare[0] = Math.min(compare[0], current[0]);
+                    compare[1] = Math.max(compare[1], current[1]);
+                    currentPos = comPos;
+                }
+            }
+            hasValueIndex.add(currentPos);
+        }
+        int[][] result = new int[hasValueIndex.size()][2];
+        int index = 0;
+        for (Integer pos : hasValueIndex) {
+            result[index++] = intervals[pos];
+        }
+        return result;
+    }
+
+    public int[][] insert(int[][] intervals, int[] newInterval) {
+        LinkedList<int[]> result = new LinkedList<>();
+        boolean added = false;
+        for (int[] interval : intervals) {
+            if (!added){
+                if(newInterval[1]<interval[0]){
+                    result.add(newInterval);
+                    result.add(interval);
+                    added = true;
+                }
+                else if(newInterval[0]>interval[1]){
+                   result.add(interval);
+                }else{
+                    newInterval[1] = Math.max(newInterval[1],interval[1]);
+                    newInterval[0] = Math.min(newInterval[0],interval[0]);
+                    added = true;
+                    result.add(newInterval);
+                }
+            }else{
+                if (newInterval[1]>=interval[0]){
+                    newInterval[1] = Math.max(newInterval[1],interval[1]);
+                }else{
+                    result.add(interval);
+                }
+            }
+        }
+        return result.toArray(new int[][]{});
+    }
+
+
+    @Test
+    public void testPermutation(){
+        for(int i=0;i<24;i++){
+            System.out.println(getPermutation(4,i+1));
+        }
+    }
+
+    public String getPermutation(int n, int k) {
+        char[] chars = new char[n];
+        // 记录 1！ ～ （n-1)!
+        int dp[] = new int[n];
+        dp[0] = 1;
+        for(int i = 1; i < n; i++){
+            dp[i] = dp[i-1] * i;
+        }
+        List<Integer> list = new ArrayList<>();
+        //把1 ～ n倒叙放入队列中
+        for(int i =0;i<n;i++){
+            list.add(i+1);
+        }
+        // 每一位有n-i种可能，取第 k/（n-i-1)! 个数字
+        for(int i = 0;i<n-1;i++){
+            int pos = (k-1) /dp[n-i-1];
+            int v = list.get(pos);
+            chars[i] = (char)(v+'0');
+            list.remove(pos);
+            k = k<=dp[n-1-i]?k:k-dp[n-1-i]*pos;
+        }
+        chars[n-1] = (char)(list.get(0)+'0');
+        return new String(chars);
+    }
+
+    @Test
+    public void testUniquePaths(){
+        System.out.println(uniquePaths(3,7));
+    }
+    public int uniquePaths(int m, int n) {
+        int dp[][] = new int[m][n];
+        dp[0][0] = 1;
+        for(int i =0; i<m;i++){
+            for(int j =0;j<n;j++){
+                if(i>0){
+                    dp[i][j] = dp[i][j] + dp[i-1][j];
+                }
+                if(j>0){
+                    dp[i][j] = dp[i][j] + dp[i][j-1];
+                }
+            }
+        }
+        return dp[m-1][n-1];
+    }
+
+    @Test
+    public void testMinPathSum(){
+        int[][] grid = new int[][]{{1,3,1},{1,5,1},{4,2,1}};
+        System.out.println(minPathSum(grid));
+    }
+    public int minPathSum(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int dp[][] = new int[m][n];
+        for(int i =0; i< m;i++){
+            for(int j =0;j<n;j++){
+                if(i>0 && j>0){
+                    dp[i][j] = grid[i][j] + Math.min(dp[i-1][j],dp[i][j-1]);
+                }else if(i>0){
+                    dp[i][j] = grid[i][j] + dp[i-1][j];
+                }else if(j>0){
+                    dp[i][j] = grid[i][j]+ dp[i][j-1];
+                }else{
+                    dp[i][j] = grid[i][j];
+                }
+            }
+        }
+        return dp[m-1][n-1];
+    }
+
+    @Test
+    public void testIsNumber(){
+        System.out.println(isNumber("."));
+    }
+
+    public boolean isNumber(String s) {
+        return isNumber(0,s,true);
+    }
+
+    public boolean isNumber(int start,String s,boolean canHasE){
+        boolean isPoint = false;
+        boolean isLastNumber = false;
+        boolean isNumber = false;
+        for(int i =start; i< s.length();i++){
+            if(s.charAt(i)=='+' || s.charAt(i)=='-'){
+                if(i!=start){
+                    return false;
+                }
+            }else if(s.charAt(i)=='.'){
+                if(isPoint){
+                    return false;
+                }
+                isPoint = true;
+                if(isLastNumber){
+                    continue;
+                }else{
+                    isNumber = false;
+                }
+            }else if(s.charAt(i)<'0' && s.charAt(i)>'9'){
+                return false;
+            }else if(s.charAt(i)=='E' || s.charAt(i)=='e'){
+                return isNumber && canHasE && isNumber(i+1,s,false);
+            }else{
+                isLastNumber = true;
+                isNumber = true;
+            }
+        }
+        return isNumber;
+    }
+
+    @Test
+    public void testAddBinary() {
+        addBinary("1010","1011");
+    }
+
+    public String addBinary(String a, String b) {
+        int added = 0;
+        StringBuilder sb = new StringBuilder();
+        for(int i =0; i<a.length() || i<b.length();i++){
+            int current = added;
+            added = 0;
+            if(i<a.length()){
+                current += a.charAt(i)-'0';
+            }
+            if(i<b.length()){
+                current += b.charAt(i)-'0';
+            }
+            if(current==0){
+                sb.insert(0,'0');
+            }else if(current==1){
+                sb.insert(0,'1');
+            }else if(current==2){
+                sb.insert(0,'0');
+                added = 1;
+            }else{
+                sb.insert(0,'1');
+                added = 1;
+            }
+        }
+        if(added==1){
+            sb.insert(0,'1');
+        }
+        return sb.toString();
+    }
+
+    @Test
+    public void testFullJustify(){
+        String[] words = new String[]{"This", "is", "an", "example", "of", "text", "justification."};
+        System.out.println(fullJustify(words,16));
+    }
+
+    public List<String> fullJustify(String[] words, int maxWidth) {
+        List<String> result = new LinkedList<>();
+        int currentLength = 0;
+        int start = 0;
+        for(int i =0; i< words.length;i++){
+            String currentStr = words[i];
+            currentLength = currentLength + currentStr.length();
+            // 当前字符串放进去就超标。 字符串长度+ 两个子字符串一个空格（子字符串数-1个空格）
+            if(currentLength + (i-start) > maxWidth){
+                currentLength = currentLength - currentStr.length();
+                result.add(appendBlank(maxWidth,currentLength,words,start,i-1,false));
+                // 放不下时回滚
+                currentLength = currentStr.length();
+                start = i;
+            }
+        }
+        // 追加最后一行
+        result.add(appendBlank(maxWidth,currentLength,words,start,words.length-1,true));
+        return result;
+    }
+
+    private String appendBlank(int maxWidth,int currentLength,String[] words,int start,int end,boolean left){
+        int wordsSize = end - start + 1;
+        //拼接新字符串
+        //空格数 = maxWidth-currentLength
+        //每个单词空格数 = wordsSize > 1 ?  (空格数 / i-start + 候补空格) ： 空格数
+        StringBuilder sb = new StringBuilder(words[start]);
+        int blankNums = maxWidth - currentLength;
+        if(wordsSize==1){
+            return appendBlank(sb,blankNums).toString();
+        }
+        if(left){
+            for(int i =start+1; i<end;i++){
+                blankNums--;
+                sb.append(' ').append(words[i]);
+            }
+            if(blankNums>0){
+                return appendBlank(sb,blankNums).toString();
+            }
+        }
+        int blankNum = blankNums / (wordsSize - 1);
+        int addBlank = blankNums - blankNum * (wordsSize-1);
+        for(int j = 1; j<wordsSize;j++){
+            //先追加空格，blankNum + j<addBlank ? 1 : 0;
+            appendBlank(sb,(j<= addBlank ? 1 : 0) + blankNum);
+            sb.append(words[start+j]);
+        }
+        return sb.toString();
+    }
+
+    private StringBuilder appendBlank(StringBuilder sb , int num){
+        for(int i = 0; i< num; i++){
+            sb.append(' ');
+        }
+        return sb;
     }
 }

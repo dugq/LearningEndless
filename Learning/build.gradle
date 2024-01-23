@@ -42,8 +42,6 @@ repositories {
 }
 
 configurations {
-    all*.exclude group: "log4j", module: "log4j"
-    all*.exclude group: "org.slf4j", module: "slf4j-log4j12"
     all*.exclude group: "javax.servlet", module: "servlet-api" //servlet 2.5
     all*.exclude group: "com.fasterxml.jackson.dataformat", module: "jackson-dataformat-xml"
 }
@@ -101,6 +99,10 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.4'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.4'
     testCompileOnly 'org.projectlombok:lombok:1.18.4'
+
+    implementation group: 'org.javassist', name: 'javassist', version: '3.30.2-GA'
+    implementation group: 'cglib', name: 'cglib', version: '3.3.0'
+
 }
 
 install {

@@ -1,5 +1,6 @@
 package com.dugq.base;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.Objects;
@@ -8,6 +9,7 @@ import java.util.Objects;
  * Created by dugq on 2023/10/24.
  */
 @Data
+@AllArgsConstructor
 public class User {
 
     private String username;
