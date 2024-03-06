@@ -1,0 +1,30 @@
+plugins {
+    id 'java'
+}
+
+group = 'game-time'
+version = '1.0'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+}
+
+jar {
+    manifest { //配置jar文件的manifest
+        attributes(
+                "Manifest-Version": 1.0,
+                'Main-Class': 'com.dugq.Gameing' //指定main方法所在的文件
+        )
+    }
+    //打包依赖包
+    from {
+        (configurations.runtimeClasspath).collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+}

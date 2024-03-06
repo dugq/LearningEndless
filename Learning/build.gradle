@@ -34,6 +34,7 @@ group = 'com.dugq'
 version = '0.0.1-SNAPSHOT'
 
 repositories {
+    mavenLocal()
     maven { url "https://plugins.gradle.org/m2/" } //sonarqube
     maven { url "http://repo.spring.io/plugins-release" }
     maven { url 'https://maven.aliyun.com/repository/public/' }

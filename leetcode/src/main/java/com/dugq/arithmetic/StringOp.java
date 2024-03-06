@@ -253,25 +253,27 @@ public class StringOp {
 
     @Test
     public void testSimplifyPath(){
-        simplifyPath();
+        System.out.println(simplifyPath("/a/../../b/../c//.//"));
     }
 
     public String simplifyPath(String path) {
         LinkedList<String> list = new LinkedList<>();
         int currentPathStart = 1;
-        for(int i = 1; i < path.length();i++){
-            char c = path.charAt(i);
-            if(c=='/'){
+        for(int i = 1; i <= path.length();i++){
+            if(i == path.length() || path.charAt(i) =='/' ){
                 if((i-currentPathStart)>0){
                     String currentPath = path.substring(currentPathStart,i);
-                    if(currentPath==".."){
-                        list.removeLast();
-                    }else if(currentPath=="."){
-                        continue;
+                    if(currentPath.equals("..")){
+                        if (list.size()>0){
+                            list.removeLast();
+                        }
+                    }else if(currentPath.equals(".")){
+                        // do nothing
                     }else{
                         list.addLast(currentPath);
                     }
                 }
+                currentPathStart = i+1;
             }
         }
         if(list.size()==0){

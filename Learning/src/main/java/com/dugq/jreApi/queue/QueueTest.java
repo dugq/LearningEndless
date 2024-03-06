@@ -2,8 +2,12 @@ package com.dugq.jreApi.queue;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.LinkedTransferQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -58,4 +62,44 @@ public class QueueTest {
         System.out.println(delayQueue.take());
 
     }
+
+    @Test
+    public void testArrayQueue() throws InterruptedException {
+        ArrayBlockingQueue<Integer> queue = new ArrayBlockingQueue<Integer>(11);
+        queue.add(1);
+        queue.take();
+        queue.offer(1);
+        queue.peek();
+        queue.poll();
+    }
+
+    @Test
+    public void testLinkedBlockingQueue() throws InterruptedException {
+        LinkedBlockingQueue<Integer> queue = new LinkedBlockingQueue<Integer>();
+        queue.add(1);
+        queue.take();
+        queue.offer(1);
+        queue.peek();
+        queue.poll();
+    }
+
+    @Test
+    public void testConcurrentLinkedBlockingQueue() throws InterruptedException{
+        ConcurrentLinkedQueue<Integer> queue = new ConcurrentLinkedQueue<Integer>();
+        queue.add(1);
+        queue.offer(1);
+        queue.peek();
+        queue.poll();
+        queue.remove();
+    }
+    @Test
+    public void testLinkedTransferQueue() throws InterruptedException{
+        LinkedTransferQueue<Integer> queue = new LinkedTransferQueue<Integer>();
+        queue.add(1);
+        queue.take();
+        queue.offer(1);
+        queue.peek();
+        queue.poll();
+    }
+
 }

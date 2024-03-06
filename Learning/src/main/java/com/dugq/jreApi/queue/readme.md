@@ -21,11 +21,14 @@
 * BlockingQueue实现的是Queue接口，所以它满足FIFO规则，所以其内部的Lock通常都是公平锁
 * BlockingQueue的实现有以下几种
   * ArrayBlockingQueue：一个由数组结构组成的有界阻塞队列。 
-    * 使用数组实现的队列，天然具有有界性，不可扩容。使用ReentrantLock保证线程安全。该lock定义为公平锁
+    * 使用数组实现的队列，天然具有有界性，不可扩容。使用ReentrantLock保证线程安全。该lock可选择是否公平
     * 使用AtomicInteger变量计数
     * 使用lock.condition实现线程阻塞和唤醒
   * LinkedBlockingQueue：一个由链表结构组成的有界阻塞队列。
     * 利用队列实现的阻塞队列，最大长度为Integer.MAX_VALUE
+    * 和 ConcurrentLinkedQueue 的区别在 竞争的处理方式。
+      * LinkedBlockingQueue 使用ReentrantLock保证线程安全
+      * ConcurrentLinkedQueue 利用CAS（head / tail）来保证的
   * PriorityBlockingQueue：一个支持优先级排序的无界阻塞队列。
     * 该Queue是一个优先级队列，使用PriorityQueue实现
     * 使用ReentrantLock来保证线程安全
