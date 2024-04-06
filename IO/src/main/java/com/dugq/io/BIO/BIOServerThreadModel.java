@@ -1,6 +1,8 @@
 package com.dugq.io.BIO;
 
+import com.dugq.pojo.User;
 import lombok.SneakyThrows;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -22,7 +24,6 @@ public class BIOServerThreadModel {
         while (!Thread.currentThread().isInterrupted()) {//主线程死循环等待新连接到来
             Socket socket = serverSocket.accept();
 //            doOperation(socket);
-
 
 
             /**

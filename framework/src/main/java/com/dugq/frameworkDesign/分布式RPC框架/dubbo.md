@@ -42,7 +42,7 @@ org.apache.dubbo.config.context.ConfigManager#loadConfigs
 
 #  [源码架构](https://cn.dubbo.apache.org/zh-cn/overview/mannual/java-sdk/reference-manual/architecture/code-architecture/)
 ## 整体设计
-![](../resource/dubbo-framework.jpg)
+![](../../../../../resources/dubbo/dubbo-framework.jpg)
 ##### 图例说明：
 * 图中左边淡蓝背景的为服务消费方使用的接口，右边淡绿色背景的为服务提供方使用的接口，位于中轴线上的为双方都用到的接口。
 * 图中从下至上分为十层，各层均为单向依赖，右边的黑色箭头代表层之间的依赖关系，每一层都可以剥离上层被复用，其中，Service 和 Config 层为 API，其它各层均为 SPI。
@@ -66,7 +66,7 @@ org.apache.dubbo.config.context.ConfigManager#loadConfigs
 * 而 Remoting 实现是 Dubbo 协议的实现，如果你选择 RMI 协议，整个 Remoting 都不会用上，Remoting 内部再划为 Transport 传输层和 Exchange 信息交换层，Transport 层只负责单向消息传输，是对 Mina, Netty, Grizzly 的抽象，它也可以扩展 UDP 传输，而 Exchange 层是在传输层之上封装了 Request-Response 语义。
 * Registry 和 Monitor 实际上不算一层，而是一个独立的节点，只是为了全局概览，用层的方式画在一起。
 ## 模块分包
-![](../resource/dubbo-modules.jpg)
+![](../../../../../resources/dubbo/dubbo-modules.jpg)
 ##### 模块说明：
 
 * dubbo-common 公共逻辑模块：包括 Util 类和通用模型。
@@ -85,7 +85,7 @@ org.apache.dubbo.config.context.ConfigManager#loadConfigs
 * Transport 层和 Exchange 层都放在 remoting 模块中，为 rpc 调用的通讯基础。
 * Serialize 层放在 common 模块中，以便更大程度复用。
 ## 依赖关系
-![](../resource/dubbo-relation.jpg)
+![](../../../../../resources/dubbo/dubbo-relation.jpg)
 
 ##### 图例说明：
 
@@ -96,17 +96,17 @@ org.apache.dubbo.config.context.ConfigManager#loadConfigs
 
 ## 调用链
 展开总设计图的红色调用链，如下：
-![](../resource/dubbo-extension.jpg)
+![](../../../../../resources/dubbo/dubbo-extension.jpg)
 
 ### 暴露服务时序
 展开总设计图右边服务提供方暴露服务的蓝色初始化链，时序图如下：
 
-![](../resource/dubbo-export.jpg)
+![](../../../../../resources/dubbo/dubbo-export.jpg)
 
 ### 引用服务时序
 展开总设计图左边服务消费方引用服务的绿色初始化链，时序图如下：
 
-![](../resource/dubbo-refer.jpg)
+![](../../../../../resources/dubbo/dubbo-refer.jpg)
 
 ## 领域模型
 在 Dubbo 的核心领域模型中：

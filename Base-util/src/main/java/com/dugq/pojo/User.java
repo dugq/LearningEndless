@@ -14,5 +14,6 @@ public class User {
 
     private String name;
     private Long id;
+    private String pwd;
 
 }

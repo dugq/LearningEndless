@@ -125,7 +125,7 @@
       * 这么设计一定程度上降低了MQ的高可用性，但是却大大提高了consumer的性能
 
 ##### 低效读写 ： index file
-* ![rocketmq_design_13.png](../../resource/rocketmq_design_13.png)
+* ![rocketmq_design_13.png](../../../../../../resources/rocketmq_design_13.png)
 * 写入步骤： 
   * 1、根据key进行hash计算其hash值，并用hash % 500w 得出 slot_index 。
   * 2、根据slot_length(4yte)*slot_index + header_length(40bit)计算出slot_start起始位置
@@ -593,7 +593,7 @@ consumerImpl.serviceState = ServiceState.RUNNING;
 ##### 负载均衡
 * MQClientInstance 会定时执行 轮训调用所有的consumer的RebalanceImpl的doRebalance方法
 * 而rebalanceImpl 又会轮训为所有订阅的topic进行重新负载均衡
-* ![](../../resource/rocketMq-rebalance.png)
+* ![](../../../../../../resources/rocketMq-rebalance.png)
 ~~~java 删掉了log日志行。 本类是抽象类，push 和 pull稍有不同的，在子类中进行.
 public abstract class RebalanceImpl {
   // 当下 consumer 消费的队列集合。  MessageQueue ： brokerName + topic + queueId 的集合； ProcessQueue： 队列消费快照。

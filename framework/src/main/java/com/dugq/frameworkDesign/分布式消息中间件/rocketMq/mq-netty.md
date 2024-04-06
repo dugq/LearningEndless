@@ -1,6 +1,6 @@
 # rocketMQ RPC 通信 ：netty
 ##### 整体架构
-<img src="../../resource/rocketmq-remote-service.png" style="background-color: white;"/>
+<img src="../../../../../../resources/rocketmq-remote-service.png" style="background-color: white;"/>
 **协议内容这里就跳过了。不去过分研究。这里主要看看netty的使用**
 
 ## 客户端

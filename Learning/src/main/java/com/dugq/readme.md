@@ -24,7 +24,7 @@
 * [JVM](./JVM/深入理解JVM虚拟机.md)
 * [并发编程](./jreApi/multiThread/readme.md)
 
-# [架构设计](./frameworkDesign/readme.md)
+# [架构设计](../../../../../../framework/src/main/java/com/dugq/frameworkDesign/readme.md)
 
 # [算法](arithmetic/readme.md)
 

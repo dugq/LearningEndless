@@ -1,7 +1,7 @@
 package com.dugq.frameworkDesign.分布式RPC框架;
 
 import com.alibaba.fastjson2.JSON;
-import com.dugq.base.User;
+import com.dugq.pojo.User;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 
@@ -13,9 +13,9 @@ public class SerializeAndDeserialize {
 
     public User getUser(){
         User user = new User();
-        user.setUsername("张三");
-        user.setPassword("q23e123213");
-        user.setUid(123);
+        user.setName("张三");
+        user.setPwd("q23e123213");
+        user.setId(123L);
         return user;
     }
 

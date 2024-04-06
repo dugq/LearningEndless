@@ -38,7 +38,7 @@
   * Docker
   * Kubernetes
 * 分布式组件
-  * [分布式消息中间件](./分布式消息中间件/readme.md)
+  * [分布式消息中间件](分布式消息中间件/readme.md)
     * [rocketmq](%E5%88%86%E5%B8%83%E5%BC%8F%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6%2FrocketMq%2Freadme.md)
   * [分布式协调中间件](%E5%88%86%E5%B8%83%E5%BC%8F%E5%8D%8F%E8%B0%83%E7%BB%84%E4%BB%B6%2Freadme.md)
     * [Zookeeper](%E5%88%86%E5%B8%83%E5%BC%8F%E5%8D%8F%E8%B0%83%E7%BB%84%E4%BB%B6%2FZookeeper.md)
@@ -55,7 +55,7 @@
 * 数据源组件
   * 关系型数据库
     * [mysql](..%2Fdb%2Fmysql%2Freadme.md)
-  * [NoSQL数据库](./NoSQL数据库/readme.md)
+  * [NoSQL数据库](NoSQL数据库/readme.md)
     * [elasticsearch](..%2Fdb%2Felasticsearch%2Freadme.md)
     * [redis](..%2Fdb%2Fredis%2Freadme.md)
   * 数据管理策略

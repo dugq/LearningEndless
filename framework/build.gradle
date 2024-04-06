@@ -56,60 +56,39 @@ dependencyManagement {
     }
 }
 
-dependencies {
-    // redis client
-    implementation("redis.clients:jedis")
-    implementation "org.springframework.boot:spring-boot-starter-data-redis"
-    implementation 'org.springframework.boot:spring-boot-starter-reactor-netty'
 
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
     //hessian serializer
     implementation group: 'com.caucho', name: 'hessian', version: '4.0.38'
     // protostuff serializer
     implementation 'io.protostuff:protostuff-core:1.4.0'
     implementation 'io.protostuff:protostuff-runtime:1.4.0'
 
-    // common
+
     implementation 'org.apache.commons:commons-lang3:3.12.0'
     implementation 'com.alibaba:fastjson:2.0.26'
     implementation 'org.apache.commons:commons-collections4:4.4'
     implementation group: 'commons-io', name: 'commons-io', version: '2.14.0'
-    implementation "org.springframework.boot:spring-boot-starter-test"
 
-    //cache
     implementation 'org.javatuples:javatuples:1.2'
     implementation 'com.google.guava:guava:29.0-jre'
-
     implementation("com.github.ben-manes.caffeine:caffeine:2.9.3")
-
-
-
-    compileOnly("org.openjdk.jol:jol-core:0.16")
-
-    implementation project(":Base-util")
-
-    compileOnly(group: "javax.servlet", name: "servlet-api",version:'2.5')
-
-    // fst 序列话
-    implementation group: 'de.ruedigermoeller', name: 'fst', version: '3.0.3'
 
     // test
     annotationProcessor 'org.projectlombok:lombok:1.18.4'
     compileOnly 'org.projectlombok:lombok:1.18.4'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.4'
     testCompileOnly 'org.projectlombok:lombok:1.18.4'
+    implementation "org.springframework.boot:spring-boot-starter-test"
 
-    implementation group: 'org.javassist', name: 'javassist', version: '3.30.2-GA'
-    implementation group: 'cglib', name: 'cglib', version: '3.3.0'
+    implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.3'
+    implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.3'
 
+    implementation project(":Base-util")
 }
 
-install {
-    enabled = false
-}
-uploadArchives {
-    enabled = false
-}
-
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
+test {
+    useJUnitPlatform()
 }

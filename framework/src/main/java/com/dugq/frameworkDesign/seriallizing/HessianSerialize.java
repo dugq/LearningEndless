@@ -2,10 +2,8 @@ package com.dugq.frameworkDesign.seriallizing;
 
 import com.caucho.hessian.io.Hessian2Input;
 import com.caucho.hessian.io.Hessian2Output;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.redis.serializer.SerializationException;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -19,9 +17,9 @@ import java.util.zip.InflaterInputStream;
 /**
  * Created by dugq on 2023/12/8.
  */
+@Slf4j
 public class HessianSerialize implements MySerialize{
 
-    private static final Logger log = LoggerFactory.getLogger(HessianSerialize.class);
 
     /**
      * flag,表示数据是压缩过的
