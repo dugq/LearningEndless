@@ -2,6 +2,24 @@
 * linux系统下，所有的外部设备都被当作文件来操作
 * 对文件的读写都需要调用系统命令，返回一个file descriptor
 
+# netty的reactor模型
+
+# 异步模型 
+
+# 核心组件
+* channel
+  * NioSocketChannel
+  * NioServerSocketChannel
+* ChannelPipeline
+* ChannelHandlerContext
+* ChannelHandler
+  * ChannelInboundHandlerAdapter
+  * ChannelOutboundHandlerAdapter
+* BootStrap
+  * ServerBootStrap
+* Buf
+
+
 # IO 模型
 [打开本地文件：netty源码跟踪.excalidraw](https://excalidraw.com/)
 

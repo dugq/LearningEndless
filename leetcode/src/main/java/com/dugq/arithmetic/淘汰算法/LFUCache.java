@@ -1,5 +1,8 @@
 package com.dugq.arithmetic.淘汰算法;
 
+import com.dugq.arithmetic.util.DoubleCounter;
+import org.apache.commons.lang3.RandomUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,29 +25,31 @@ import java.util.Map;
  * 但是当采用二维时，二维中的head表示最久，tail表示最新
  */
 public class LFUCache {
+    DoubleCounter doubleCounter = new DoubleCounter(1);
 
     public static void main(String[] args) {
-        LFUCache cache = new LFUCache(2);
-        cache.put(1,1);
-        cache.print();
-        cache.put(2,2);
-        cache.print();
-        System.out.println(cache.get(1)==1);
-        cache.print();
-        cache.put(3,3);
-        cache.print();
-        System.out.println(cache.get(2)==-1);
-        cache.print();
-        System.out.println(cache.get(3)==3);
-        cache.print();
-        cache.put(4,4);
-        cache.print();
-        System.out.println(cache.get(1)==-1);
-        cache.print();
-        System.out.println(cache.get(3)==3);
-        cache.print();
-        System.out.println(cache.get(4)==4);
-        cache.print();
+        LFUCache cache = new LFUCache(100);
+        LFUCacheByHeapArray cache2 = new LFUCacheByHeapArray(100);
+        cache.doubleCounter.start();
+        cache2.counter.start();
+        for(int i = 0 ; i<100000;i++){
+            int key = RandomUtils.nextInt(0,200);
+            cache.put(key,key);
+            cache2.set(key,key);
+        }
+        cache.doubleCounter.printFist();
+        cache2.counter.printFist();
+
+        cache.doubleCounter.start();
+        cache2.counter.start();
+        for(int i = 0 ; i<100000;i++){
+            int key = RandomUtils.nextInt(0,200);
+            cache.get(key);
+            cache2.get(key);
+        }
+        cache.doubleCounter.printFist();
+        cache2.counter.printFist();
+
     }
     class LFUNode {
         int key;
@@ -160,6 +165,7 @@ public class LFUCache {
             }else{
                 index = index.next;
             }
+            doubleCounter.incrementFirst();
         }
         LFUSlot slot = new LFUSlot(node);
         node.slot = slot;

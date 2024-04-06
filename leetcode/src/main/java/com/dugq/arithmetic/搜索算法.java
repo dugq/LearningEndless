@@ -1,6 +1,6 @@
 package com.dugq.arithmetic;
 
-import com.alibaba.fastjson.JSON;
+import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
@@ -16,7 +16,9 @@ public class 搜索算法 {
 //        System.out.println(JSON.toJSONString(This.findLadders("hit","cog", list)));
 
 //        System.out.println(This.longestConsecutive(new int[]{-7,-1,3,-9,-4,7,-3,2,4,9,4,-9,8,-7,5,-1,-7}));
-        System.out.println(JSON.toJSONString(This.minCut("aab")));
+//        System.out.println(JSON.toJSONString(This.minCut("aab")));
+//        System.out.println(This.maxAreaOfIsland(MyArrayUtils.readIntArray("[[0,0,1,0,0,0,0,1,0,0,0,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,1,1,0,1,0,0,0,0,0,0,0,0],[0,1,0,0,1,1,0,0,1,0,1,0,0],[0,1,0,0,1,1,0,0,1,1,1,0,0],[0,0,0,0,0,0,0,0,0,0,1,0,0],[0,0,0,0,0,0,0,1,1,1,0,0,0],[0,0,0,0,0,0,0,1,1,0,0,0,0]]")));
+        System.out.println(This.countBinarySubstrings("00110011"));
     }
 
     public List<List<String>> findLadders(String beginWord, String endWord, List<String> wordList) {
@@ -252,6 +254,127 @@ public class 搜索算法 {
             }
             step++;
 
+        }
+    }
+
+    public int maxAreaOfIsland(int[][] grid) {
+        int m = grid.length;
+        int n = grid[0].length;
+        int maxArea = 0;
+        for(int i =0;i<m;i++){
+            for(int j =0;j<n;j++){
+                if(grid[i][j]==1){
+                    maxArea = Math.max(next(grid,i,j),maxArea);
+                }
+            }
+        }
+        for(int i =0; i<m;i++){
+            for(int j =0; j<n;j++){
+                if(grid[i][j]==2){
+                    grid[i][j] = 1;
+                }
+            }
+        }
+        return maxArea;
+    }
+
+    public int next(int[][] grid,int i,int j){
+        int m = grid.length;
+        int n = grid[0].length;
+        if(i<0 || i>=m || j<0 || j>=n){
+            return 0;
+        }
+        if(grid[i][j]!=1){
+            return 0;
+        }
+        grid[i][j] = 2;
+        int area = 1;
+        area+=next(grid,i+1,j);
+        area+=next(grid,i-1,j);
+        area+=next(grid,i,j+1);
+        area+=next(grid,i,j-1);
+        return area;
+    }
+
+    public int countBinarySubstrings(String s) {
+        int len = s.length();
+        int result = 0;
+        // 由于题目限制必须连续子串，所以每个字符开头的子串最多只能有一次机会
+        for(int i =0; i<len-1;i++){
+            char first = s.charAt(i);
+            int val = first == '1' ? 1 : -1;
+            for(int j = i+1;j<len;j++){
+                char last = s.charAt(j-1);
+                char cur = s.charAt(j);
+                // 不连续了，说明当前子串废了
+                if(cur!=last && cur == first){
+                    break;
+                }
+                val =val + (cur == '1' ? 1 : -1);
+                if(val==0){
+                    result++;
+                    break;
+                }
+            }
+        }
+        return result;
+
+    }
+
+    @Test
+    public void test(){
+        KthLargest k = new KthLargest(3,new int[]{});
+        k.add(3);
+        k.add(5);
+        k.add(7);
+        k.add(9);
+        k.add(4);
+    }
+    class KthLargest {
+        int[] nums;
+        int size = 0;
+        int k;
+        public KthLargest(int k, int[] nums) {
+            this.nums = new int[1];
+            this.k = k;
+            for(int i = 0;i<nums.length;i++){
+                add(nums[i]);
+            }
+        }
+
+        public int add(int val) {
+            if(size==nums.length){
+                int[] nums1 = new int[size*2];
+                int j = 0;
+                for(int i = 0; i<=size;i++){
+                    if(i==j){
+                        if(j ==size || nums[j] > val){
+                            nums1[i] = val;
+                            continue;
+                        }else{
+                            nums1[i] = nums[j];
+                        }
+                    }else{
+                        nums1[i] = nums[j];
+                    }
+                    j++;
+                }
+                nums = nums1;
+            }else{
+                int i = size;
+                for(;i>0;i--){
+                    if(val>nums[i-1]){
+                        break;
+                    }
+                    nums[i] = nums[i-1];
+                }
+                nums[i] = val;
+            }
+            size++;
+            if(size>=k){
+                return nums[size-k];
+            }
+            return 0;
         }
     }
 

@@ -1,0 +1,106 @@
+buildscript {
+
+    ext["springBootVersion"] = "2.2.7.RELEASE"
+    ext["springCloudVersion"] = "Hoxton.SR6"
+
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url "http://repo.spring.io/plugins-release" }
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        maven { url 'https://maven.aliyun.com/repository/spring/' }
+        mavenCentral()
+        mavenLocal()
+    }
+
+    dependencies {
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.5.RELEASE"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:2.5.0"
+    }
+}
+
+apply plugin: "com.google.cloud.tools.jib"
+apply plugin: "maven"
+apply plugin: "java"
+apply plugin: "idea"
+apply plugin: "jacoco"
+apply plugin: "io.spring.dependency-management"
+apply plugin: "org.springframework.boot"
+
+group = 'com.dugq'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenLocal()
+    maven { url "https://plugins.gradle.org/m2/" } //sonarqube
+    maven { url "http://repo.spring.io/plugins-release" }
+    maven { url 'https://maven.aliyun.com/repository/public/' }
+    maven { url 'https://maven.aliyun.com/repository/spring/' }
+    mavenLocal()
+}
+
+configurations {
+    all*.exclude group: "javax.servlet", module: "servlet-api" //servlet 2.5
+    all*.exclude group: "com.fasterxml.jackson.dataformat", module: "jackson-dataformat-xml"
+}
+
+dependencyManagement {
+    dependencies {
+        imports {
+            mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
+}
+
+dependencies {
+    implementation "org.springframework.boot:spring-boot-starter-data-redis"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation 'org.springframework.boot:spring-boot-starter-reactor-netty'
+
+    //hessian serializer
+    implementation group: 'com.caucho', name: 'hessian', version: '4.0.38'
+    // protostuff serializer
+    implementation 'io.protostuff:protostuff-core:1.4.0'
+    implementation 'io.protostuff:protostuff-runtime:1.4.0'
+
+    // common
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    implementation 'com.alibaba:fastjson:2.0.26'
+    implementation 'org.apache.commons:commons-collections4:4.4'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.14.0'
+    implementation "org.springframework.boot:spring-boot-starter-test"
+
+    //cache
+    implementation 'org.javatuples:javatuples:1.2'
+    implementation 'com.google.guava:guava:29.0-jre'
+
+    implementation("com.github.ben-manes.caffeine:caffeine:2.9.3")
+
+    implementation group: 'org.apache.shiro', name: 'shiro-core', version: '1.2.2'
+    implementation group: 'org.apache.shiro', name: 'shiro-spring', version: '1.2.2'
+    implementation group: 'org.apache.shiro', name: 'shiro-ehcache', version: '1.2.2'
+
+
+    compileOnly("org.openjdk.jol:jol-core:0.16")
+
+    implementation project(":Base-util")
+
+    compileOnly(group: "javax.servlet", name: "servlet-api",version:'2.5')
+
+    // fst 序列话
+    implementation group: 'de.ruedigermoeller', name: 'fst', version: '3.0.3'
+
+    // test
+    annotationProcessor 'org.projectlombok:lombok:1.18.4'
+    compileOnly 'org.projectlombok:lombok:1.18.4'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.4'
+    testCompileOnly 'org.projectlombok:lombok:1.18.4'
+
+    implementation group: 'org.javassist', name: 'javassist', version: '3.30.2-GA'
+    implementation group: 'cglib', name: 'cglib', version: '3.3.0'
+}
+
+test {
+    useJUnitPlatform()
+}

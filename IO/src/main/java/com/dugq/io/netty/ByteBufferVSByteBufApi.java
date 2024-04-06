@@ -7,6 +7,7 @@ import io.netty.buffer.UnpooledByteBufAllocator;
 import io.netty.channel.Channel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.unix.Buffer;
+import org.apache.commons.lang3.RandomUtils;
 import org.junit.Test;
 
 import java.io.File;
@@ -187,10 +188,24 @@ public class ByteBufferVSByteBufApi {
         System.out.println("size = "+oldSize);
         while (pooledDirectBuf.readableBytes()>0){
             byte b = pooledDirectBuf.readByte();
+            int i = RandomUtils.nextInt(0, 10);
         }
     }
 
+    @Test
+    public void testDirectClean(){
+//        ByteBuf pooledDirectBuf = PooledByteBufAllocator.DEFAULT.directBuffer(1024);
+//        PooledByteBufAllocator.PoolThreadLocalCache;
+//        PooledByteBufAllocator.PoolArena;
+//        PoolSubpage;//队列结构
+//        PoolChunk;
+//        PoolChunkList; //队列结构
+//        PoolChunk;
 
+
+
+
+    }
 
 }
 

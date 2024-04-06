@@ -19,6 +19,41 @@ import java.util.Set;
 @Slf4j
 public class 动态规划 {
     DoubleCounter doubleCounter = new DoubleCounter(1);
+
+    /**
+     * <h1>动态规划的核心点在于状态转移方程的定义</h1>
+     * <h2>状态转移方程的关键点包括： 变量、 遍历的对象、递推的过程（遍历的下一个对象和上一个的必然关系）状态dp的定义</h2>
+     * <h2>答案与遍历元素存在必然关系<h2/>
+     * 这里列举一些常考例子：
+     * <li> 0-1背包问题/购物车问题
+     *   <br/>变量包括：物品数量、物品重量、背包最大重量、背包最大价值。这里背包的最大重量和最大价值看上去是限定条件，但它也可以是变量，从初始值递增到限定值
+     *   <br/>遍历对象：1、物品,包括它的价值和重量 2、背包的最大重量
+     *   <br/>推导&遍历过程： 首先肯定是物品，此时分为物品放入和不放入，选择maxValue(放入、不放入) 不放入=dp[物品-1][背包限量]，
+     *        放入=max(dp[物品-1][0~背包限量-物品重量])+物品价值
+     *   <br/>状态定义：dp[前i个物品][背包限量]
+     * <li>最长回文串问题
+     * <br/>变量： 字符串 、 子字符串
+     * <br/>可遍历： 子字符串 / 字符
+     * <br/>递推&遍历： 子字符串首位不相同，则必然不是回文串，子字符串首位相同，则是否为回文串取决于：字符串去掉首位后的子字符串是否回文串 或者没有子字符串
+     * <br/>状态定义： dp[i][j] 以i开头j结尾的子字符串
+     * <li>公共子串问题
+     * <br/>变量： 两个字符串 、 两个字符串的子子字符串，两个字符串的字符
+     * <br/>可遍历：两个字符串的字符，或者两个字符串的子字符串
+     * <br/>推导&遍历：必然关系：公共子串必然以某个字符结尾或者开头，公共子串必然是两个字符串的子字符串
+     * <br/>状态： 定义dp[i][j] 表示公共字符串是在s1中i结尾 在s2以j结尾，此时公共字符串的最大长度，
+     * <br/>递推关系：
+     * <li>买卖股票问题（已知每日股票价格，求n次交易后的最大收益）
+     * <br/>变量：每日、股票价格、 n次交易、n次交易后的收益、每次交易卖出/买入
+     * <br/>变量和答案关系：收益最大 => 最低的价格买入，最高的价格卖出 => 第i天完成第j次交易卖出的最大收益 => max(E i n) max(第i天完成n次交易)
+     * <br/>递推&遍历：每日的支出最小，每日的收入最大
+     * <br/>递推关系：dp[i][j][0] 第i天完成第j次买入后的最大收入 dp[i][j][1]第i天完成第j次交易后的最大收入
+     * <br/>    => dp[i][j][0] = dp[i][j-1][1]-price[i] && dp[i][j][1]=dp[i][j][0] + price[i]
+     * <br/>  如果限制每日只能交易一次：=> dp[i][j][0] = dp[i-1][j-1][1]-price[i] && dp[i][j][1]=dp[i-1][j][0] + price[i]  (i > j)
+     * <br/>  答案为max(dp[i~n][n]) i<n
+     *
+     * <br/><br/>
+     * <h3>细节点需要处理的是边界情况
+     */
     public static void main(String[] args) {
 //        System.out.println(isMatch("","a*"));
 //        System.out.println(isMatch("aa","a*"));
@@ -73,12 +108,15 @@ public class 动态规划 {
         //交错字符串
 //        System.out.println(This.isInterleave("aabcc","dbbca","aadbbcbcac"));
 
-        System.out.println(This.wordBreak("leetcode",Arrays.asList("leet","code")));
+//        System.out.println(This.wordBreak("leetcode",Arrays.asList("leet","code")));
 
+//        System.out.println(This.numSubarrayProductLessThanK(new int[]{10,9,10,4,3,8,3,3,6,2,10,10,9,3},19));
+
+
+        System.out.println(This.LIS(new int[]{2,3,4,1,5}));
     }
     // 正则表达式匹配
     public static boolean isMatch(String s, String p) {
-
         int m = s.length();
         int n = p.length();
         boolean dp[][] = new boolean[m+1][n+1];
@@ -499,6 +537,7 @@ public class 动态规划 {
     //给定一个仅包含 0 和 1 、大小为 rows x cols 的二维二进制矩阵，找出只包含 1 的最大矩形，并返回其面积。
     //https://leetcode.cn/problems/maximal-rectangle/description/
     public int maximalRectangle(char[][] matrix) {
+
         int m = matrix.length;
         int n = matrix[0].length;
         int max = 0;
@@ -1045,5 +1084,75 @@ public class 动态规划 {
 
         }
         return false;
+    }
+
+    public int numSubarrayProductLessThanK(int[] nums, int k) {
+        int len = nums.length;
+        int[][] dp = new int[len][len];
+        int count = 0;
+        for(int i = 0 ; i<len;i++){
+            dp[i][i] = nums[i];
+            if(dp[i][i] < k){
+                count++;
+            }else{
+                continue;
+            }
+            for(int j = i+1; j < len;j++){
+                dp[i][j] = dp[i][j-1]*nums[j];
+                if(dp[i][j] < k){
+                    count++;
+                }else{
+                    break;
+                }
+            }
+        }
+        return count;
+    }
+
+
+    public int[] LIS (int[] arr) {
+        if(arr == null || arr.length == 0) return arr ;
+        //tmp[i]表示 当前最长上升子序列 i位置的 元素
+        int tmp[] = new int[arr.length] ;
+        //pos[i]表示 将arr[i]加入当前最长上升子序列中 时arr[i]应该在序列中的 位置
+        int pos[] =  new int[arr.length] ;
+        tmp[0] = arr[0] ;
+        pos[0] = 0 ;
+        int tmpIndex = 0 ;//当前最长上升子序列的最后一元素的 位置
+        for(int i = 1 ; i < arr.length ; i ++) {
+            if(arr[i] > tmp[tmpIndex]) {
+                tmp[++ tmpIndex] = arr[i] ;
+                pos[i] = tmpIndex ;
+            } else if(arr[i] == tmp[tmpIndex]) {
+                pos[i] = tmpIndex ;
+            } else {
+                //二分查找位置
+                int findIdx = findPos(tmp , tmpIndex , arr[i]) ;
+                tmp[findIdx] = arr[i] ;
+                pos[i] = findIdx ;
+            }
+        }
+        int res[] = new int[tmpIndex + 1] ;
+        for(int j = tmpIndex , i = arr.length - 1 ; j >= 0 ; i --) {
+            if(pos[i] == j) {
+                res[j --] = arr[i] ;
+            }
+        }
+        return res ;
+
+    }
+    //在tmp中 查找第一个比target大的数
+    public int findPos(int tmp[] , int end , int target) {
+        int i = 0 ;
+        int j = end ;
+        while(i <= j) {
+            int mid = i + (j - i) / 2 ;
+            if(target > tmp[mid]) {
+                i = mid + 1 ;
+            } else {
+                j = mid - 1 ;
+            }
+        }
+        return i ;
     }
 }

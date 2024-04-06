@@ -76,6 +76,8 @@ public class NIOServer {
         final ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
         int length;
         try {
+            // 相比reactor 主从模型耗时点
+            // read 需要从内核空间复制到直接内存，再复制到堆内存
              length = socketChannel.read(byteBuffer);
         }catch (Exception e){
             e.printStackTrace();

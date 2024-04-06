@@ -108,10 +108,10 @@ public class ServerSocket implements java.io.Closeable{
 
 * Socket 完成了应用和操作系统之间的IO交互，怎么交互的呢？
   * ![](../resource/TCP协议连接原理.png)
-  * 具体函数实现请看：[unix操作系统](../../os/linux/unix函数.md#a-idnetworkfun网络函数a)  
+  * 具体函数实现请看：[unix操作系统](../../../../../../../../Learning/src/main/java/com/dugq/os/linux/unix函数.md#a-idnetworkfun网络函数a)  
 
 
-##[BIO](../../../../../../../../Learning/src/main/java/com/dugq/io/BIO/read.md)
+##[BIO](../BIO/read.md)
 
 
 ##[NIO](../NIO/readme.md)
