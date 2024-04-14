@@ -1,7 +1,7 @@
 package com.dugq.jreApi.multiThread.forkjoin;
 
 import com.dugq.ThreadUtil;
-import org.apache.shiro.util.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Field;

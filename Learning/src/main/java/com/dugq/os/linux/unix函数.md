@@ -152,12 +152,40 @@ struct iovec {
 
 #### 复用相关函数
 * select函数
-  * 为什么限制1024个操作符
+  * select函数
+~~~
+typedef struct {  
+   // 这里就是关键了，fd_set能表示的文件描述符数量 = __fds_bits.length * long.length;
+   // 早期版本中，数组的最大长度是32，long类型在32位系统中，也只有32位。因此认为FD_SETSIZE = 32 * 32 = 64
+    unsigned long __fds_bits[FD_SETSIZE / __NFDBITS];  
+} fd_set;
+
+int select(
+  int nfds,
+  fd_set *readfds, // 读集合
+  fd_set *writefds, // 写集合
+  struct timeval *timeval
+)
+
+// 我们来看看，C中宏FD_SET的伪代码， 该函数用于将fd转换并填充 fd_set
+
+#define __NFDBITS   /* 每个 long 能表示的文件描述符位数，通常是 32 或 64 */  
+#define __FD_MASK   (/* __NFDBITS 位的全 1 掩码 */)  
+  
+void FD_SET(int fd, fd_set *set) {  
+    unsigned long *bits = set->__fds_bits;  
+    unsigned long index = fd / __NFDBITS;  
+    unsigned long offset = fd % __NFDBITS;  
+    bits[index] |= (1UL << offset); // 设置相应位为 1  
+}
+~~~
   * ![select.png](..%2Fresource%2Fselect.png)
 * pselect函数
   * 文件操作
 * poll函数
   * ![poll.png](..%2Fresource%2Fpoll.png)
+  * 它实际就是select的升级版本，为了解决bitmap有数量上限的问题。
+  * 如图中poll函数定义用于，
 * fcntl 函数
   * 配置socket参数，阻塞或者非阻塞等
 * epoll函数
@@ -177,6 +205,49 @@ struct iovec {
   * ![epoll.png](..%2Fresource%2Fepoll.png)
   * epoll-model : ![epoll-model.png](..%2Fresource%2Fepoll-model.png)
   * epoll 实战 ![img.png](../resource/epoll-active.png)
+  * 来看个具体的实例：
+~~~ c
+// 创建一个epollfd对象
+int epollfd = epoll_create1(0);  
+if (epollfd == -1) {  
+    perror("epoll_create1");  
+    return 1;  
+}
+//构建epoll_event对象
+struct epoll_event ev, events[MAX_EVENTS];  
+int fd; // 假设这是你要监视的文件描述符  
+ev.events = EPOLLIN; // 监视读事件  
+ev.data.fd = fd;     // 与事件关联的文件描述符  
+
+//将fd添加到监听列表中
+if (epoll_ctl(epollfd, EPOLL_CTL_ADD, fd, &ev) == -1) {  
+    perror("epoll_ctl: add");  
+    return 1;  
+}
+while(1){
+  // 查询监听结果
+  int num_events = epoll_wait(epollfd, events, MAX_EVENTS, -1);  
+  if (num_events == -1) {  
+      perror("epoll_wait");  
+      return 1;  
+  }
+  
+  // events中存储的就是有事件的fd集合啦
+  // 当然jdk本地方法中到这就结束了，select()方法返回events[i].data.fd集合。
+  for (int i = 0; i < num_events; ++i) {  
+      int fd1 = events[i].data.fd ;
+      // LT模式，每次读取部分，所以下一次循环时该fd还会再触发，知道数据读完为止
+      read(fd1,buf,1024);
+      
+      //ET模式 循环读，直到把流读空。这样下一次循环时，就不会再触发了。
+      while(read(fd1,buf,1024)>0){
+        read(fd1,buf,1024);
+      }
+      
+  }
+}
+
+~~~
 # 文件函数
 
 # 进程/线程函数

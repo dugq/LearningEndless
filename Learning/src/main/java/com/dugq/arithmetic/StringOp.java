@@ -253,7 +253,7 @@ public class StringOp {
 
     @Test
     public void testSimplifyPath(){
-        simplifyPath();
+        simplifyPath("");
     }
 
     public String simplifyPath(String path) {

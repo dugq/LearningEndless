@@ -9,9 +9,9 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 public class LockTest {
 
     public void testLock(){
-        ReentrantLock lock ;
+        ReentrantLock lock = new ReentrantLock();
         ReentrantReadWriteLock readwriteLock;
-
+        lock.newCondition();
 
     }
 

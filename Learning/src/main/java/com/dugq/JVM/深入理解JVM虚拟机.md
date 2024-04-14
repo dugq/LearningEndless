@@ -1,7 +1,7 @@
 # JDK
-* jdk的整体架构大致如下 ![](./resource/JDK架构.png)
+* jdk的整体架构大致如下 ![](../../../../resources/jvm/JDK架构.png)
 * 从图中可以看出，JVM是实现跨平台能力(屏蔽平台差异)的关键
-* JVM底层由三个系统构成分别是：类加载、运行时数据区、执行引擎。![](./resource/JVM.png)
+* JVM底层由三个系统构成分别是：类加载、运行时数据区、执行引擎。![](../../../../resources/jvm/JVM.png)
 
 # JVM --- java虚拟机
 | what           | why                                 | how               | 

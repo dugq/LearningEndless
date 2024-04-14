@@ -51,12 +51,23 @@ public class Main {
         responseB.put(response.getBytes());
     }
 
+    public static void run(){
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     private static Test test = new Test();
 
     public static void main(String[] args) throws IOException {
         String port = System.getProperty("port");
         if (port==null){
-            port = "8090";
+            port = "8080";
+        }
+        for (int  i = 0; i< 20;i++){
+            executor.execute(Main::run);
         }
         ServerSocketChannel serverSocket = ServerSocketChannel.open();
         SocketAddress address = new InetSocketAddress(Integer.valueOf(port));

@@ -1,6 +1,5 @@
 package com.dugq.io.netty;
 
-import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
@@ -56,7 +55,6 @@ public class NettyServer {
         });
         EventLoopGroup workGroup = new NioEventLoopGroup();
         ServerBootstrap serverBootstrap = new ServerBootstrap();
-        new Bootstrap();
         ServerBootstrap aggregator = serverBootstrap.group(bossGroup, workGroup).channel(NioServerSocketChannel.class).option(ChannelOption.SO_BACKLOG, 2048)
                 .childHandler(new ChannelInitializer<SocketChannel>() {
                     @Override
@@ -68,6 +66,30 @@ public class NettyServer {
                                 .addLast(new MyHandler());
                     }
                 });
+        ChannelFuture channelInitFuture = aggregator.bind(new InetSocketAddress("localhost", 8088));
+        ChannelFuture localhost = channelInitFuture.sync();
+        if (localhost.isSuccess()){
+            System.out.println("server start up !");
+        }
+        Channel channel = localhost.channel();
+        ChannelFuture channelClosedFuture = channel.closeFuture();
+        channelClosedFuture.sync();
+    }
+
+    @Test
+    public void singleEventLoopModel() throws InterruptedException {
+        EventLoopGroup group = new NioEventLoopGroup(1);
+        ServerBootstrap serverBootstrap = new ServerBootstrap();
+        ServerBootstrap aggregator = serverBootstrap.group(group).channel(NioServerSocketChannel.class).option(ChannelOption.SO_BACKLOG, 2048).childHandler(new ChannelInitializer<SocketChannel>() {
+            @Override
+            protected void initChannel(SocketChannel channel) throws Exception {
+                channel.pipeline()
+                        .addLast("http-codec", new HttpServerCodec())
+                        .addLast("aggregator", new HttpObjectAggregator(65535))
+                        .addLast("http-chunked", new ChunkedWriteHandler())
+                        .addLast(new MyHandler());
+            }
+        });
         ChannelFuture channelInitFuture = aggregator.bind(new InetSocketAddress("localhost", 8088));
         ChannelFuture localhost = channelInitFuture.sync();
         if (localhost.isSuccess()){

@@ -2,7 +2,9 @@ package com.dugq.io.netty;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
+import io.netty.buffer.CompositeByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
+import io.netty.buffer.Unpooled;
 import io.netty.buffer.UnpooledByteBufAllocator;
 import io.netty.channel.Channel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
@@ -201,10 +203,13 @@ public class ByteBufferVSByteBufApi {
 //        PoolChunk;
 //        PoolChunkList; //队列结构
 //        PoolChunk;
+    }
 
+    @Test
+    public void testCompositeByteBuf(){
 
-
-
+        CompositeByteBuf buf = UnpooledByteBufAllocator.DEFAULT.compositeBuffer();
+        buf.addComponent(Unpooled.copiedBuffer("这是一段测试语言".getBytes()));
     }
 
 }

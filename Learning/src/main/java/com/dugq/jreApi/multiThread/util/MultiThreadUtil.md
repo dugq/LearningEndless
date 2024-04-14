@@ -81,7 +81,7 @@
 
 # Semaphore
 [Semaphore](../SemaphoreTest.java)
-* 自定义AQS实现，类似读锁
+* 自定义AQS实现，共享锁
 
 
 ### 这三个工具类的区别

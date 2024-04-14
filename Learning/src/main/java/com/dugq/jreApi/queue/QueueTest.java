@@ -8,6 +8,7 @@ import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.LinkedTransferQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -97,6 +98,15 @@ public class QueueTest {
         LinkedTransferQueue<Integer> queue = new LinkedTransferQueue<Integer>();
         queue.add(1);
         queue.take();
+        queue.offer(1);
+        queue.peek();
+        queue.poll();
+    }
+
+    @Test
+    public void testPriorityQueue() throws InterruptedException{
+        PriorityBlockingQueue<Integer> queue = new PriorityBlockingQueue<>();
+        queue.add(1);
         queue.offer(1);
         queue.peek();
         queue.poll();

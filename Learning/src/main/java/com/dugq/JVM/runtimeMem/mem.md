@@ -1,6 +1,6 @@
 # java内存区域
 * 对于一个只运行了一个java进程的系统而言，其内存分布大致如图：
-![](../resource/JVMMem.png)
+![](../../../../../resources/jvm/JVMMem.png)
 * Java 堆内存由 [GC](#GC) 进行管理 
 
 
@@ -28,7 +28,7 @@
   * 动态连接
   * 方法出口
 * 栈中包含的内容是固定的，所以栈的大小其实也是固定的，而且是在加载时就可以确定的
-  * javac testJavaC.java  javap -c testJavaC.class ![](../resource/javap.png)
+  * javac testJavaC.java  javap -c testJavaC.class ![](../../../../../resources/jvm/javap.png)
   * 我们可以看到，通过javaC编译后，操作数个数，局部变量个数，动态链接这些都是可见的
 * 局部变量表中存储基本类型的变量，或者对象的引用
   * long和double占两帧，避免32位操作系统问题 ？ 

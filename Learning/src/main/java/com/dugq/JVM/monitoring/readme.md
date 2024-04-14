@@ -4,7 +4,7 @@
 
 ### jstat
 ###### jstat -gc 【pid】
-![](../resource/jstat-gc.png)
+![](../../../../../resources/jvm/jstat-gc.png)
 * s0           survivor0 单位KB
 * s1           survivor1 单位KB
 * E            eden 单位KB
@@ -21,12 +21,12 @@
 * S0、S1、E、O、M、CCS + U : 此处U代表已使用过
 
 ###### jstat -gcutil 【pid】
-![](../resource/jstat-gcutil.png)
+![](../../../../../resources/jvm/jstat-gcutil.png)
 * 列表基本和jstat-gc相同
 * S0、S1、E、O、M、CCS 等使用的是百分比计数，而不是具体的值
 
 ###### jstat -gccapacity 【pid】
-![](../resource/jstat-gccapacity.png)
+![](../../../../../resources/jvm/jstat-gccapacity.png)
 * NGCMN：新生代最小容量
 * NGCMX：新生代最大容量
 * NGC：当前新生代容量
@@ -59,6 +59,25 @@
 ###### jmap -histo:live 【pid】
 
 ### jhat 
-
+jmap的解析工具
 
 ### jstack 栈跟踪
+~~~
+"dgq-NIO-3" #15 prio=5 os_prio=31 tid=0x00007fc6c1029000 nid=0x7803 waiting on condition [0x00007000020d0000]
+java.lang.Thread.State: WAITING (parking)
+at sun.misc.Unsafe.park(Native Method)
+- parking to wait for  <0x000000076af53730> (a java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject)
+at java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+at java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+at java.util.concurrent.ArrayBlockingQueue.take(ArrayBlockingQueue.java:403)
+at java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
+at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+at java.lang.Thread.run(Thread.java:748)
+~~~
+* 线程名称
+* #15 线程序号，应用程序的第n个线程
+* 线程优先级
+* tid : 线程ID
+* WAITING ： 线程状态
+* 后面是线程栈帧

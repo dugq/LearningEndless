@@ -8,6 +8,7 @@
   * 扩容： 当容量小于64时，容量翻倍，大于64时容量增加50%
   * 内部定义了一个比较器Comparator
   * 插入元素时通过比较器找到比它大的第一个元素，将它以及它后面的所有元素后移1位，然后将添加的元素插入到该位置上
+  * 使用堆排序算法
 
 ### BlockingQueue
 ![](./resource/BlockingQueueMethod.png)
@@ -28,7 +29,7 @@
     * 利用队列实现的阻塞队列，最大长度为Integer.MAX_VALUE
     * 和 ConcurrentLinkedQueue 的区别在 竞争的处理方式。
       * LinkedBlockingQueue 使用ReentrantLock保证线程安全
-      * ConcurrentLinkedQueue 利用CAS（head / tail）来保证的
+      * ConcurrentLinkedQueue 利用自旋CAS锁（head / tail）来保证的
   * PriorityBlockingQueue：一个支持优先级排序的无界阻塞队列。
     * 该Queue是一个优先级队列，使用PriorityQueue实现
     * 使用ReentrantLock来保证线程安全

@@ -22,5 +22,6 @@ java对于非阻塞IO的实现。实际上就是解决BIO的block问题
 ##3、Buffer
 ####ByteBuffer
 ####零拷贝
+![netty-pooledBuff.png](..%2Fresource%2Fnetty-pooledBuff.png)
 
 ##4、[netty](../netty/read.md)

@@ -63,22 +63,22 @@
   * par new + parallel scavenge
   * par new + cms
 * 他们都是把堆内存分为：  
-  ![](../resource/堆内存划分.png)
+  ![](../../../../../resources/jvm/堆内存划分.png)
 ###### G1
-![](../resource/g1Mem.png)
+![](../../../../../resources/jvm/g1Mem.png)
 
 # 线程模型对比
 * 单线程模型
   * 代表人物 ： serial new 、 serial old 
-![img.png](../resource/serial线程模型.png)
+![img.png](../../../../../resources/jvm/serial线程模型.png)
 * 并行模型
   * 代表人物： parallel scavenge 、 parNew 、 parallel old 
-![并行标记.png](../resource/并行标记模型.png)
+![并行标记.png](../../../../../resources/jvm/并行标记模型.png)
 * 并发模型
   * CMS
-    ![img.png](../resource/cms线程模型.png)
+    ![img.png](../../../../../resources/jvm/cms线程模型.png)
   * G1
-    ![img.png](../resource/G1线程模型.png)
+    ![img.png](../../../../../resources/jvm/G1线程模型.png)
 
 ### 关键点
 * Parallel old 和 Parallel scavenger、 ParNew 采用的算法不同，但是他们的线程模型相同
@@ -98,25 +98,7 @@
 
 # 常用参数列表
 
-### 面试题
-##### CMS vs G1
-* 目标不同
-  * CMS+ParNew 为低延迟而生。通过尽量降低单次GC的时长来降低服务延迟。
-  * G1的目标是大内存场景下低延迟、高吞吐量。
-* 内存区域划分不同
-  * CMS+ParNew 采用分代算法，CMS负责老年代，parNew负责新生代
-  * G1 默认将内存划分为2048个内存区域（region），每个region可以是老年代、新生代、大对象中的任一一种
-* 算法不同
-  * CMS采用标记-清除算法，在内存碎片达到一定层度时，整理一次。
-  * G1采用标记-复制和整理算法结合的算法，从一个region复制到另一个region，而目标region又是从前到后选择，看起来像整理算法
-* 线程模型不同
-  * CMS的过程是：初始标记-并发标记-重新标记-并发清除
-  * G1的过程是：初始标记-并发标记-重新标记-筛选回收。
-  * 其中G1的筛选回收是控制GC时长的关键，优先选择回收效果好的区域。此过程是STW的。
-  * 也就是说，G1在高吞吐和低延迟只能二选一。
-* 使用场景不同
-  * 官方建议超过6G，优先G1，低于6G时，追求低延迟选择parNew+CMS，追求吞吐量选择Parallel scavenger + parallel old
-* 优缺点不同
-  * G1将内存region划分为2048个region，跨区域引用太多，而为了维护这种跨区域引用需要耗费一定的内存空间。当然这对于大内存场景来说，无需考虑
-  * 而CMS采用只有新生代和老年代，跨代引用相对较少，耗费额外内存不多，内存使用更好。
-  * G1基本么有fullGC这样说，如果发生了，那么说明整体就有问题了。而CMS full gc是有可能的。
+
+
+
+[very good](https://blog.csdn.net/qq_41929714/article/details/132641809)
