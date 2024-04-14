@@ -211,6 +211,5 @@ public class ByteBufferVSByteBufApi {
         CompositeByteBuf buf = UnpooledByteBufAllocator.DEFAULT.compositeBuffer();
         buf.addComponent(Unpooled.copiedBuffer("这是一段测试语言".getBytes()));
     }
-
 }
 

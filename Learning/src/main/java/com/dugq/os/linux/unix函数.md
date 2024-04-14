@@ -113,6 +113,7 @@ int accept(int socketfd,struct sockaddr *cliaddr , socketlen_t *addrlen);
   * ssize_t sendmsg(int sockfd,struct msghdr *msg , int flags);
     
 * pread 针对文件的，可以获取输入流的大小
+  * pread可以指定读取的起始位置。所以当读取文件时，需要从特定位置开始读取时使用此函数，如果从头开始，则使用read函数即可。
 * readn 按行读取
 
 

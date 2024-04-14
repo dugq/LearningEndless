@@ -58,6 +58,7 @@ public class NIOServer {
                     ThreadUtil.sleep(3);
                     doOperation((MyContent)selectionKey.attachment());
                 }
+                //
                 iterator.remove();
             }
         }
