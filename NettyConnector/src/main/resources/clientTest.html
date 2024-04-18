@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>client</title>
+</head>
+<body>
+<h3 id="state">closed</h3>
+<button onclick="connect()">链接</button>
+<input id="id"/><button onclick="login()">登陆</button>
+<br/><br/> <input id="msg" type="text" style="width:60%; scrollbar-width: none;"/> &nbsp;
+<button onclick="send()">发送</button> <input id="count"/> <button onclick="batchSend()">连续发送</button>
+<br/><br/> <button onclick="close()">关闭</button>
+
+<br/><br/><textarea id="res" style="width: 80%; height: 500px;"></textarea><br/>
+    <script type="text/javascript">
+        var socket;
+        function connect(){
+          if(!socket){
+            document.getElementById("res").value= '';
+            socket = new WebSocket("ws://127.0.0.1:8080/ws");
+            document.getElementById("state").innerText = "init";
+
+            socket.onopen = function(event){
+                document.getElementById("state").innerText = "connected";
+            }
+
+            socket.onmessage = function(event){
+                if(event.data[0]=='0'){
+                    printMsg("发生错误："+event.data.substring(1));
+                    return;
+                }
+                if(event.data[0]=='2'){
+                    printMsg(event.data.substring(1));
+                    return;
+                }
+                if(event.data[0]=='3'){
+                    printMsg("响应："+event.data.substring(1));
+                    return;
+                }
+                printMsg(event.data);
+            }
+
+            socket.onclose = function(event){
+                document.getElementById("state").innerText = "closed";
+                socket = null;
+            }
+          }
+        }
+
+        function close(){
+          if(socket){
+            socket.close();
+            socket = null;
+          }
+        }
+
+        function login(){
+           if(!socket){
+             printMsg("socket 未连接");
+             return
+           }
+           if(!document.getElementById("id").value){
+           printMsg("用户ID为空");
+           return;}
+           socket.send("1"+document.getElementById("id").value);
+        }
+
+        function send(){
+           if(!socket){
+             printMsg("socket 未连接");
+             return
+           }
+           var msg = document.getElementById("msg").value;
+           if(!msg){
+             printMsg("msg为空");
+             return
+           }
+           socket.send("2"+msg);
+           document.getElementById("msg").value = '';
+
+        }
+
+        function batchSend(){
+            var count =  document.getElementById("count").value;
+            var msg = document.getElementById("msg").value;
+            for(var i = 0; i<count; i++){
+                document.getElementById("msg").value = msg;
+                send();
+            }
+        }
+
+       function printMsg(str){
+          document.getElementById("res").value = document.getElementById("res").value + "\n" + str;
+       }
+
+    </script>
+</body>
+</html>

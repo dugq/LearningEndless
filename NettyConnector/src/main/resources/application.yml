@@ -1,0 +1,7 @@
+server.port: 8080
+server:
+  thread:
+    num: 8
+message:
+  center:
+    url: http://127.0.0.1:8081
