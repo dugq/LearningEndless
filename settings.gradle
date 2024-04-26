@@ -32,4 +32,5 @@ include 'Base-util'
 //include 'IO'
 //include 'framework'
 include 'NettyCommon'
+include 'SpringData'
 

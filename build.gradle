@@ -1,72 +1,95 @@
+// 配置当前gradle脚本运行需要的东西 --- 这里要注意区别，这里这么认为，buildscript标签里的东西是为了本构建脚本能正常运行所需要的必要配置
 buildscript {
-
-    ext["springBootVersion"] = "2.2.7.RELEASE"
-    ext["springCloudVersion"] = "Hoxton.SR6"
-    ext["hazelcast.version"] = "3.11"
-    ext["curator.version"] = "2.13.0"
-    ext["guava.version"] = "28.2-jre"
-    ext["lombok.version"] = "1.18.12"
-
-    repositories {
-        maven { url "https://plugins.gradle.org/m2/" }
-        maven { url "http://repo.spring.io/plugins-release" }
-        maven { url 'https://maven.aliyun.com/repository/public/' }
-        maven { url 'https://maven.aliyun.com/repository/spring/' }
-        mavenCentral()
-        mavenLocal()
+//    所有项目共享的属性列表
+    allprojects {
+        ext["springBootVersion"] = "2.2.7.RELEASE"
+        ext["lombok.version"] = "1.18.12"
+        ext["springCloudVersion"] = "Hoxton.SR6"
     }
-
+//配置gradle 插件的依赖
     dependencies {
         classpath "io.spring.gradle:dependency-management-plugin:1.0.5.RELEASE"
-        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:3.0"
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
         classpath "gradle.plugin.com.google.cloud.tools:jib-gradle-plugin:2.5.0"
     }
-}
-
-apply plugin: "com.google.cloud.tools.jib"
-apply plugin: "maven"
-apply plugin: "java"
-apply plugin: "idea"
-apply plugin: "eclipse"
-apply plugin: "jacoco"
-apply plugin: "io.spring.dependency-management"
-apply plugin: "org.springframework.boot"
-test {
-    ignoreFailures = true
+//配置gradle插件仓库
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+        maven { url "http://repo.spring.io/plugins-release" }
+        maven { url "https://maven.aliyun.com/repository/public" }
+        mavenCentral()
+    }
 }
 
 group = "com.example"
 version = "0.0.1-SNAPSHOT"
 
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
+// 这里算用于本项目构建脚本的开始
+// 所有项目公用的构建脚本
+allprojects {
 
-bootJar {
-    archiveName = "demo.jar"
-}
 
-configurations {
-    all*.exclude group: "javax.servlet", module: "servlet-api" //servlet 2.5
-}
+    apply plugin: "maven"
+    apply plugin: "java"
+    apply plugin: "idea"
+    apply plugin: "eclipse"
+    apply plugin: "io.spring.dependency-management"
+    apply plugin: "org.springframework.boot"
 
-repositories {
-    maven { url "https://plugins.gradle.org/m2/" } //sonarqube
-    maven { url "http://repo.spring.io/plugins-release" }
-    mavenCentral()
-    mavenLocal()
-}
+    java{
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
 
-dependencyManagement {
+    // 配置所有项目依赖的仓库地址。
+    // 这里放弃mavenLocal()，因为本地仓库地址不适合每个人。没啥用
+    repositories {
+        maven { url "https://maven.aliyun.com/repository/public" }
+        mavenCentral()
+    }
 
-    dependencies {
-        imports {
-            mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
-            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    dependencyManagement {
+        dependencies {
+            imports {
+                mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
+                mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+            }
         }
     }
 
+    // 这里配置一些公用依赖
+    dependencies {
+//        lombok插件
+        annotationProcessor 'org.projectlombok:lombok:1.18.4'
+        compileOnly 'org.projectlombok:lombok:1.18.4'
+        testAnnotationProcessor 'org.projectlombok:lombok:1.18.4'
+        testCompileOnly 'org.projectlombok:lombok:1.18.4'
+//工具类
+        implementation 'org.apache.commons:commons-lang3:3.12.0'
+        implementation 'org.apache.commons:commons-collections4:4.4'
+    }
+
+
+    install {
+        enabled = false
+    }
+    uploadArchives {
+        enabled = false
+    }
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
+
+    bootJar {
+        archiveName = "${project.name}.jar"
+    }
 }
+
+test {
+    ignoreFailures = true
+}
+
 
 dependencies {
     implementation "org.springframework.boot:spring-boot-starter-web"
@@ -79,9 +102,9 @@ dependencies {
     implementation "org.springframework.cloud:spring-cloud-starter-netflix-ribbon"
     implementation "org.springframework.cloud:spring-cloud-starter-openfeign"
     implementation "org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2"
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
+
     implementation 'com.alibaba:fastjson:2.0.26'
-    implementation 'org.apache.commons:commons-collections4:4.4'
+
     implementation 'commons-beanutils:commons-beanutils:20030211.134440'
     implementation 'commons-collections:commons-collections:20040616'
     implementation 'org.springframework.boot:spring-boot-starter-reactor-netty'
@@ -117,10 +140,7 @@ dependencies {
 
     implementation "org.springframework.boot:spring-boot-starter-test"
 
-    annotationProcessor 'org.projectlombok:lombok:1.18.4'
-    compileOnly 'org.projectlombok:lombok:1.18.4'
-    testAnnotationProcessor 'org.projectlombok:lombok:1.18.4'
-    testCompileOnly 'org.projectlombok:lombok:1.18.4'
+
 
     implementation 'org.javatuples:javatuples:1.2'
     implementation 'com.google.guava:guava:29.0-jre'
@@ -129,15 +149,4 @@ dependencies {
 
     compileOnly("org.openjdk.jol:jol-core:0.16")
 
-}
-
-install {
-    enabled = false
-}
-uploadArchives {
-    enabled = false
-}
-
-tasks.withType(JavaCompile) {
-    options.encoding = "UTF-8"
 }
