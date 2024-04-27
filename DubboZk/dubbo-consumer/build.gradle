@@ -1,3 +1,8 @@
+apply plugin: "org.springframework.boot"
+
+bootJar {
+    archiveBaseName = "${project.name}"
+}
 
 dependencies {
     implementation project(':DubboZk:dubbo-api')
@@ -5,3 +10,4 @@ dependencies {
     implementation "org.apache.dubbo:dubbo-spring-boot-starter"
     implementation "org.apache.dubbo:dubbo-dependencies-zookeeper"
 }
+

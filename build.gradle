@@ -23,6 +23,7 @@ buildscript {
 }
 apply plugin: "io.spring.dependency-management"
 
+
 // 这里算用于本项目构建脚本的开始
 // 所有项目公用的构建脚本
 allprojects {
@@ -32,7 +33,6 @@ allprojects {
     apply plugin: "idea"
     apply plugin: "eclipse"
     apply plugin: "io.spring.dependency-management"
-    apply plugin: "org.springframework.boot"
 
 
     group = "com.example"
@@ -88,13 +88,17 @@ allprojects {
         options.encoding = "UTF-8"
     }
 
-    bootJar {
-        archiveBaseName = "${project.name}"
-    }
-
     test {
         ignoreFailures = true
     }
+}
+
+// 这玩意会把gradle的build替换成springBoot的 build
+// 我们并不能确定所有子项目都需要springBoot打包方式
+apply plugin: "org.springframework.boot"
+
+bootJar {
+    archiveBaseName = "${project.name}"
 }
 
 
