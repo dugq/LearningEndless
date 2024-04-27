@@ -30,4 +30,6 @@ include 'Base-util'
 //include 'IO'
 //include 'framework'
 include 'SpringData'
+include 'SpringData:DataMongo'
+findProject(':SpringData:DataMongo')?.name = 'DataMongo'
 
