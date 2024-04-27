@@ -1,9 +1,6 @@
-bootJar {
-    archiveName = "dubbo-privider.jar"
-}
-
 dependencies {
     implementation project(':DubboZk:dubbo-api')
     implementation "org.apache.dubbo:dubbo-spring-boot-starter"
-    implementation "org.apache.dubbo:dubbo-dependencies-zookeeper:${dubboVersion}"
+    implementation "org.apache.dubbo:dubbo-dependencies-zookeeper"
+    implementation "org.springframework.boot:spring-boot-starter"
 }

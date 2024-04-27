@@ -1,11 +1,12 @@
 // 配置当前gradle脚本运行需要的东西 --- 这里要注意区别，这里这么认为，buildscript标签里的东西是为了本构建脚本能正常运行所需要的必要配置
+// 这个配置是会遗传给子项目的
 buildscript {
 //    所有项目共享的属性列表
-    allprojects {
-        ext["springBootVersion"] = "2.2.7.RELEASE"
-        ext["lombok.version"] = "1.18.12"
-        ext["springCloudVersion"] = "Hoxton.SR6"
-    }
+    ext["springBootVersion"] = "2.2.7.RELEASE"
+    ext["lombok.version"] = "1.18.12"
+    ext["springCloudVersion"] = "Hoxton.SR6"
+    ext["dubboVersion"] = "3.2.9"
+
 //配置gradle 插件的依赖
     dependencies {
         classpath "io.spring.gradle:dependency-management-plugin:1.0.5.RELEASE"
@@ -20,14 +21,11 @@ buildscript {
         mavenCentral()
     }
 }
-
-group = "com.example"
-version = "0.0.1-SNAPSHOT"
+apply plugin: "io.spring.dependency-management"
 
 // 这里算用于本项目构建脚本的开始
 // 所有项目公用的构建脚本
 allprojects {
-
 
     apply plugin: "maven"
     apply plugin: "java"
@@ -36,10 +34,12 @@ allprojects {
     apply plugin: "io.spring.dependency-management"
     apply plugin: "org.springframework.boot"
 
-    java{
-        sourceCompatibility = 1.8
-        targetCompatibility = 1.8
-    }
+
+    group = "com.example"
+    version = "0.0.1-SNAPSHOT"
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 
     // 配置所有项目依赖的仓库地址。
     // 这里放弃mavenLocal()，因为本地仓库地址不适合每个人。没啥用
@@ -54,10 +54,16 @@ allprojects {
                 mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
                 mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
             }
+
+        // 这个插件还可以在这里对一些jar包版本进行声明： 这样后续在使用的时候就可以不用添加版本
+        // 对于一些公用版本，这里可以进行统一的控制
+            dependency 'org.apache.commons:commons-lang3:3.12.0'
         }
     }
 
-    // 这里配置一些公用依赖
+    // 这里配置一些公用依赖.这里最好不要乱加东西。
+    // 有些API类型的jar包，我们希望它是纯净的，它不需要任何额外的jar包
+    // 它只作为某些应用沟通的桥梁，我不希望它会花里胡哨的引入乱七八糟的东西
     dependencies {
 //        lombok插件
         annotationProcessor 'org.projectlombok:lombok:1.18.4'
@@ -65,8 +71,9 @@ allprojects {
         testAnnotationProcessor 'org.projectlombok:lombok:1.18.4'
         testCompileOnly 'org.projectlombok:lombok:1.18.4'
 //工具类
-        implementation 'org.apache.commons:commons-lang3:3.12.0'
+        implementation 'org.apache.commons:commons-lang3'
         implementation 'org.apache.commons:commons-collections4:4.4'
+        implementation 'com.alibaba:fastjson:2.0.26'
     }
 
 
@@ -82,15 +89,16 @@ allprojects {
     }
 
     bootJar {
-        archiveName = "${project.name}.jar"
+        archiveBaseName = "${project.name}"
+    }
+
+    test {
+        ignoreFailures = true
     }
 }
 
-test {
-    ignoreFailures = true
-}
 
-
+// 这里配置当前项目所需的依赖
 dependencies {
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.springframework.boot:spring-boot-starter-actuator"

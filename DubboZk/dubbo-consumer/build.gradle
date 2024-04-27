@@ -1,10 +1,7 @@
-bootJar {
-    archiveName = "dubbo-consumer.jar"
-}
 
 dependencies {
     implementation project(':DubboZk:dubbo-api')
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.apache.dubbo:dubbo-spring-boot-starter"
-    implementation "org.apache.dubbo:dubbo-dependencies-zookeeper:${dubboVersion}"
+    implementation "org.apache.dubbo:dubbo-dependencies-zookeeper"
 }

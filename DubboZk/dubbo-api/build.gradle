@@ -1,3 +1,0 @@
-bootJar {
-    archiveName = "dubbo-api.jar"
-}
