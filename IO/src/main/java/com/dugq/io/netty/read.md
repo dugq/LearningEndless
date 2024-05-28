@@ -9,7 +9,8 @@
 # 核心组件
 * channel
   * NioSocketChannel
-  * NioServerSocketChannel
+  * NioServerSocketChannel   使用的是jdk原生的ServerSocketChannel
+  * EpollServerSocketChannel netty对epoll模型的优化
 * ChannelPipeline
 * ChannelHandlerContext
 * ChannelHandler
@@ -239,5 +240,8 @@ public abstract class AbstractNioByteChannel extends AbstractNioChannel {
 ~~~
 
 ## ChannelOption
-TCP_NODELA ：Nagle算法。默认开启，通过配置TCP_NODELA=false可关闭。
-
+* TCP_NODELA ：Nagle算法。默认开启，通过配置TCP_NODELA=false可关闭。
+* WRITE_BUFFER_WATER_MARK: 写缓冲区
+  * 当写入字节的占用低于低水位时： Netty可能会更倾向于延迟写出，减少写入操作的频率，提高效率。
+  * 当写入字节的占用超过高水位时: Netty会触发数据写出（flush），确保缓冲区的数据及时地写入网络。
+ 

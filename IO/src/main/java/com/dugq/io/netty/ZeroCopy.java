@@ -1,5 +1,6 @@
 package com.dugq.io.netty;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.CompositeByteBuf;
 import io.netty.buffer.Unpooled;
 
@@ -20,6 +21,32 @@ public class ZeroCopy {
      */
     public static void main(String[] args) {
 
+    }
+
+    /**
+     * <h3/>ByteBuf 提供了多种copy方法，但是区别很大。这里进行汇总。也包含了零copy的部分
+     * <pre>
+     *      +-------------------+------------------+------------------+
+     *      | 方法                |  内存区域         |  read/write index  |
+     *      |                   |     (CONTENT)    |                  |
+     *      +-------------------+------------------+------------------+
+     *      |    copy           |                  |                  |
+     *      +-------------------+------------------+------------------+
+     *      |    duplicate      |                  |                  |
+     *      +-------------------+------------------+------------------+
+     *      | retainedDuplicate |                  |                  |
+     *      +-------------------+------------------+------------------+
+     *      |    silice         |                  |                  |
+     *      +------------------+------------------+------------------+
+     *      |  retainedSlice    |                  |                  |
+     *      +-------------------+------------------+------------------+
+     * </pre>
+     */
+    public void copy(){
+        ByteBuf buf1 = Unpooled.buffer(1024);
+        // 这个是真copy
+        buf1.copy();
+        buf1.slice();
     }
 
     public void compositeByteBufApi(){

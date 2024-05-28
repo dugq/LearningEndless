@@ -179,7 +179,7 @@ Full thread dump Java HotSpot(TM) 64-Bit Server VM (25.192-b12 mixed mode):
 	- locked <0x000000076b248ca0> (a java.util.Collections$UnmodifiableSet)
 	- locked <0x000000076b243420> (a sun.nio.ch.KQueueSelectorImpl)
 	at sun.nio.ch.SelectorImpl.select(SelectorImpl.java:97)
-	at com.example.Main.main(Main.java:81)
+	at com.example.DemoApplication.main(Main.java:81)
 
 "VM Thread" os_prio=31 tid=0x00007fc6bf81c000 nid=0x3003 runnable 
 
