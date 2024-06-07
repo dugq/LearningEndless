@@ -26,7 +26,9 @@ public class ZeroCopy {
     }
 
     /**
-     * <h3/>ByteBuf 提供了多种copy方法，但是区别很大。这里进行汇总。也包含了零copy的部分
+     * <h3/>ByteBuf 提供了多种copy方法，但是区别很大。这里进行汇总。也包含了zero-copy的部分
+     * <li>为buff创建一个<strong>视图</strong>可以实现zero copy的目的</li>
+     *
      * <pre>
      *      +-------------------+------------------+------------------------------------------------+------------------------------------------------+
      *      | 方法                |  内存区域         |     capacity                                  |           referenceCount                        |
@@ -42,6 +44,9 @@ public class ZeroCopy {
      *      +------------------+------------------+-------------------------------------------------+------------------------------------------------+
      *      |  retainedSlice    |  共享原区域       | 映射原buf的可读区域，已读可写不共享，可以认为是readOnly的 |         和source共享一个字段                      |
      *      +-------------------+------------------+------------------------------------------------+------------------------------------------------+
+     *      |  readSlice       |  共享原区域       | 映射原buf的指定数量的可读区域，已读可写不共享，            |         和source共享一个字段                      |
+     *      |                  |                 | 可以认为是readOnly的。它会改变原buf的readIndex        |                                                 |
+     *      +-------------------+------------------+------------------------------------------------+------------------------------------------------+
      * </pre>
      */
     public void copy(){
@@ -54,6 +59,7 @@ public class ZeroCopy {
         ByteBuf duplicate = source.duplicate();
         ByteBuf retainedDuplicate = source.retainedDuplicate();
         ByteBuf retainedSlice = source.retainedSlice();
+
 
         log.info("modify source byte index at 1");
         source.setByte(3, (byte) 'a');
@@ -99,6 +105,10 @@ public class ZeroCopy {
          当source release之后，slice 和 duplicate 和 retainedSlice 和 retainedDuplicate 都是同步的。
         */
 
+        log.info("source before read slice: readIndex = {} ",source.readerIndex());
+        ByteBuf readSlice = source.readSlice(2);
+        log.info("source after read slice:readIndex = {} ",source.readerIndex());
+        log.info("readSlice:readIndex = {} capacity={}",readSlice.readerIndex(),readSlice.capacity());
     }
 
     public void compositeByteBufApi(){
@@ -108,5 +118,6 @@ public class ZeroCopy {
         ByteBuf source2 = Unpooled.buffer(1024);
         source2.writeBytes("world hello ".getBytes());
     }
+
 
 }
