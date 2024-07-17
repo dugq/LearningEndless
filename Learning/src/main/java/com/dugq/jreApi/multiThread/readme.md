@@ -38,8 +38,15 @@
                       sleep        |   依赖unsafe.park实现  
  time-waiting<-------------------------------------------> waiting
 ~~~
-* 线程中断interrupt： 中断只是一个标志，当线程被标记中断时，可抛出异常：ThreadInterruptException
-* 
+* 线程中断interrupt：
+  1. Thread.interrupt 和 Thread.isInterrupted是一对方法
+  2. Thread.interrupt 并不会直接中断线程，该方法内部分为两步：
+     * 将JVM的osThread线程状态变更为1，即中断状态
+     * 将支持中断的挂起状态线程唤醒，比如：Object.wait、LockSupport.park、Thread.sleep等
+* Thread的本地方法实现：
+  * Thread.c文件声明了本地方法的具体实现
+  * JVM.cpp中等于了Thread实现的抽象
+  * OSThread.hpp 中具体定义了不同操作系统中Thread的实现
 ### 并发中的难题
 * 上下文切换带来的消耗
     * 

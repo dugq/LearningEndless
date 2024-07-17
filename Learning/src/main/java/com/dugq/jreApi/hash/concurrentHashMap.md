@@ -18,6 +18,24 @@
  * tableSizeFor(initialCapacity + (initialCapacity >>> 1) + 1)，为了保证一定能容下给定的目标值，它会对容量再增加一半+1，加1为了保证单数时也超过一半
  * 构造方法只是初始化了sizeCtrl属性，最终在第一次put元素时延迟初始化
  * 在初始化时 通过CAS（sizeCtrl, sizeCtrl, -1）来控制并发初始化
+
+## 重要属性和方法
+###### 扩容
+* nextTable 扩容的过程中，不会在table的基础上直接修改，而是构建一个新的table放在nextTable上，这也是fail-safe的关键
+* sizeCtrl 中记录着下一次需要扩容的阈值，或者初始化的大小
+* cellsBusy == 1表示正在进行counter计算或者扩容操作
+* transferIndex 用于扩容rehash的并发控制，每个桶只能被一个线程处理
+
+###### 插入
+* firstNode 的hash == -1表示正在扩容中，这时候需要先帮忙进行扩容处理
+* 然后对链表的头节点或者树的根节点进行加锁，使用的是synchronized 所以存在阻塞
+* 如果头节点为空，则使用cas操作直接赋值，失败则重新加锁
+* 插入完成以后，则进行size自增，使用cas操作对baseCount进行加1
+* 如果baseCount自增失败，则转为对counterCells进行操作，
+
+###### 删除
+
+###### 遍历
      
 ## 扩容并发处理
 * 扩容的移位是分片段执行的，多线程可以分别处理不同片段的桶。

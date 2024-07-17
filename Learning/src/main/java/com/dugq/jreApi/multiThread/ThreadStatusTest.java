@@ -3,9 +3,11 @@ package com.dugq.jreApi.multiThread;
 import com.dugq.ThreadUtil;
 import lombok.SneakyThrows;
 import org.junit.Test;
+import sun.jvm.hotspot.debugger.ThreadAccess;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.LockSupport;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -194,6 +196,107 @@ public class ThreadStatusTest {
         ThreadUtil.sleep(1);
         System.out.println("after suspend state = "+thread.getState());
         LockSupport.park();
+    }
+
+    @Test
+    public  void testInterruptTimeWaitThread() throws InterruptedException{
+        Thread thread = new Thread(() -> {
+            while (true) {
+                if (Thread.currentThread().isInterrupted()) {
+                    System.out.println("thread interrupted already");
+                    return;
+                } else {
+                    long start = System.currentTimeMillis();
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException e) {
+                        System.out.println("interrupted sleep time = "+(System.currentTimeMillis()-start));
+                    }
+                }
+            }
+        });
+        thread.start();
+        Thread.sleep(1000);
+        thread.interrupt();
+        Thread.sleep(1000);
+    }
+
+    private final Object blocker = new Object();;
+    @Test
+    public  void testInterruptWait() throws InterruptedException{
+        Thread thread = new Thread(() -> {
+            while (true) {
+                if (Thread.currentThread().isInterrupted()) {
+                    System.out.println("thread interrupted already");
+                    return;
+                } else {
+                    long start = System.currentTimeMillis();
+                    synchronized (blocker){
+                        try {
+                            blocker.wait();
+                        } catch (InterruptedException e) {
+                            System.out.println("interrupted wait thread time = "+(System.currentTimeMillis()-start));
+                        }
+                    }
+                }
+            }
+        });
+        thread.start();
+        Thread.sleep(1000);
+        thread.interrupt();
+        Thread.sleep(1000);
+    }
+
+    /**
+     * blocking状态的线程貌似并不能被中断
+     */
+    @Test
+    public  void testInterruptSynchronized() throws InterruptedException{
+        Thread thread = new Thread(() -> {
+            System.out.println("thread started");
+            synchronized (blocker){
+                System.out.println("got lock!");
+            }
+            System.out.println("release lock!");
+        });
+        synchronized (blocker){
+            thread.start();
+            Thread.sleep(1000);
+            thread.interrupt();
+            Thread.sleep(1000);
+            System.out.println("release lock");
+        }
+    }
+
+
+    /**
+     * 可以 Lock.lockInterruptibly内部是使用LockSupport.park 进行阻塞线程的，所以它是支持中断等待的
+     * 但是Lock.lock内部会忽略这个状态，重新进行一次锁竞争，如果未争抢到，会再次进入wait状态
+     * @throws InterruptedException
+     */
+    @Test
+    public void testLock() throws InterruptedException {
+        Lock lock = new ReentrantLock();
+        lock.lock();
+        Thread thread = new Thread(() -> {
+            System.out.println("thread started");
+//            lock.lock();
+            try {
+                lock.lockInterruptibly();
+                System.out.println("got lock");
+            } catch (InterruptedException e) {
+                System.out.println("thread interrupt");
+            }
+
+
+        });
+
+        thread.start();
+        Thread.sleep(1000);
+        thread.interrupt();
+        Thread.sleep(1000);
+        System.out.println("release lock");
+        lock.unlock();
     }
 
 

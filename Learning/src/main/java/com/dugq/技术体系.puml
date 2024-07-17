@@ -1,0 +1,98 @@
+@startmindmap
+'https://plantuml.com/mindmap-diagram
+
+* java知识体系
+** java基础
+*** 集合
+**** hashMap
+**** list
+**** set
+**** deque
+*** 多线程
+**** JUC
+***** concurrentHashMap
+***** AQS
+***** Lock
+***** Condition
+***** BlockingQueue
+**** synchronized
+**** volatile
+**** thread pool
+*** JVM
+**** JMM
+**** GC
+***** 算法
+***** 常用垃圾回收器
+*** IO
+**** NIO
+**** 多路复用 & reactor
+
+** 数据库
+*** redis
+**** 数据结构
+**** 分布式锁
+**** 日志&数据恢复
+**** 部署模式
+**** 架构
+
+*** mysql
+**** 事物
+**** 锁
+**** mvcc
+**** 日志体系&数据恢复
+***** binlog
+***** redo log
+***** undo log
+**** 架构
+***** 分库分表
+***** 主从读写分离
+*** ES
+*** click house
+*** mongodb
+
+left side
+** 框架
+*** spring
+*** spring boot
+*** spring cloud
+*** spring cloud alibaba
+*** mybatis
+*** spring data
+*** dubbo
+*** open feign
+*** netty
+
+** 缓存
+*** 分布式缓存
+*** 本地缓存
+**** caffine
+**** Memcached
+
+
+
+
+** 微服务
+*** 理论
+**** CAP理论
+**** 分布式一致性
+***** 两阶段提交
+***** 三阶段提交
+***** raft算法
+***** zab算法
+*** 注册中心
+**** nacos
+**** eureka
+**** zookeeper
+*** 配置中心
+**** apollo配置中心
+**** spring cloud config
+*** 容器运维
+**** K8S
+**** docker
+*** 消息队列
+**** rocketMQ
+**** Kafka
+
+
+
+@endmindmap

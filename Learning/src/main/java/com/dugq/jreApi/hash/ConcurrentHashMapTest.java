@@ -2,6 +2,7 @@ package com.dugq.jreApi.hash;
 
 import org.junit.Test;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -57,9 +58,13 @@ public class ConcurrentHashMapTest {
         map.put(16,new Object());
         map.put(32,new Object());
         map.put(64,new Object());
+        for (Map.Entry<Integer, Object> integerObjectEntry : map.entrySet()) {
+
+        }
         map.forEach((key,val)->{
             if (key==0){
                 //如果从遍历的当前值连续删除数位，那么后续的删除将无效
+                map.put(128,new Object());
                 map.remove(0);
                 map.remove(16);
                 map.remove(32);
@@ -68,6 +73,9 @@ public class ConcurrentHashMapTest {
             //最终输出结果将无视删除
             System.out.println(key);
         });
+        // 修改是成功的，但遍历是错误的。
+        System.out.println(map.size());
+
     }
 
     @Test
