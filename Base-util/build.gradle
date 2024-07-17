@@ -52,5 +52,7 @@ dependencies{
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.4'
     testCompileOnly 'org.projectlombok:lombok:1.18.4'
 
+    implementation 'cn.hutool:hutool-all:5.8.23'
+
     implementation("org.openjdk.jol:jol-core:0.16")
 }

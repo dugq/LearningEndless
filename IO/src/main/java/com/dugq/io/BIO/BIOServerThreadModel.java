@@ -1,6 +1,5 @@
 package com.dugq.io.BIO;
 
-import com.dugq.pojo.User;
 import lombok.SneakyThrows;
 
 import java.io.IOException;
