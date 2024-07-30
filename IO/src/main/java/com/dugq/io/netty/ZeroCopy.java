@@ -22,7 +22,7 @@ public class ZeroCopy {
      * <li/> 还有个类似fileChannel的transferTo功能的方法。真正意义上的从读到写的零copy
      */
     public static void main(String[] args) {
-        new ZeroCopy().copy();
+        new ZeroCopy().copy2();
     }
 
     /**
@@ -109,6 +109,18 @@ public class ZeroCopy {
         ByteBuf readSlice = source.readSlice(2);
         log.info("source after read slice:readIndex = {} ",source.readerIndex());
         log.info("readSlice:readIndex = {} capacity={}",readSlice.readerIndex(),readSlice.capacity());
+    }
+
+    public void copy2(){
+        ByteBuf source = Unpooled.buffer(1024);
+        source.retain();
+        source.writeBytes("hello world".getBytes());
+        ByteBuf slice = source.slice();
+        log.info("init : source = {} slice = {}",source.refCnt(),slice.refCnt());
+        slice.release();
+        log.info("slice release : source = {} slice = {}",source.refCnt(),slice.refCnt());
+        source.release();
+        log.info("source release : source = {} slice = {}",source.refCnt(),slice.refCnt());
     }
 
     public void compositeByteBufApi(){

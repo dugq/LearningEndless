@@ -3,15 +3,10 @@ package com.dugq.arithmetic;
 import com.dugq.arithmetic.util.DoubleCounter;
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by dugq on 2024/1/5.
@@ -113,7 +108,9 @@ public class 动态规划 {
 //        System.out.println(This.numSubarrayProductLessThanK(new int[]{10,9,10,4,3,8,3,3,6,2,10,10,9,3},19));
 
 
-        System.out.println(This.LIS(new int[]{2,3,4,1,5}));
+//        System.out.println(This.LIS(new int[]{2,3,4,1,5}));
+
+        System.out.println(This.calculateMinimumHP(new int[][]{{1,-4,5,-99},{2,-2,-2,-1}}));
     }
     // 正则表达式匹配
     public static boolean isMatch(String s, String p) {
@@ -1000,7 +997,6 @@ public class 动态规划 {
         return dp2[len-1];
     }
 
-
     // 加油站 问题
     public int canCompleteCircuit(int[] gas, int[] cost) {
 
@@ -1154,5 +1150,60 @@ public class 动态规划 {
             }
         }
         return i ;
+    }
+
+
+    /**
+     * 。<a href="https://leetcode.cn/problems/dungeon-game/submissions/547602996/">迷宫最优路径</a>
+     */
+    public int calculateMinimumHP(int[][] dungeon) {
+        int m = dungeon.length;
+        int n = dungeon[0].length;
+        // 定义dp[x][y][0]为成功到达(x,y)所需的最少血量。
+        // 定义dp[x][y][1]为假设初始为0，成功到达(x,y)后剩余的血量。
+
+        // 我们要注意：我们直接卡bug似的计算剩余血量为0所修的最少血量为结果，比如当(x,y)为血包时（比如4），且血包大于(x,y+1)消耗的血量（比如3），此时不能认为到达(x,y+1)时所需的最少血量比(x,y)少1，他们是相同的，比较中途死了，就加不了血了，不同点在于最后剩余的血量(x,y+1)会更少。
+
+        // 所以dp[x][y][0] =min(max(dp[x][y-1][0],dp[x][y-1][0]+dungeon[x][y])，max(dp[x][y-1][0],dp[x-1][y][0]+dungeon[x][y]))
+        int dp[][][] = new int[m][n][2];
+        dp[0][0][0] = dp[0][0][1]=dungeon[0][0];
+        //特殊情况特殊处理：处理第一列，只能从上边来
+        for(int i = 1 ; i < m; i++){
+            if(dungeon[i][0]>=0){//如果当前是血包，则最低血量不变
+                dp[i][0][0] = dp[i-1][0][0];
+            }else{
+                //如果上一步是个大血包，比如例子中的30，所以此步只要耗血低于30，那结果必为正，这不对。此时应该取上一步的最少血量，不然就会死在上上一步了。
+                dp[i][0][0] = Math.min(dp[i-1][0][1]+dungeon[i][0],dp[i-1][0][0]);
+            }
+            dp[i][0][1] = dp[i-1][0][0]+dungeon[i][0];
+        }
+        // 处理第一排
+        for(int i = 1 ; i < n; i++){
+            if(dungeon[0][i]>=0){//如果当前是血包，则最低血量不变
+                dp[0][i][0] = dp[0][i-1][0];
+            }else{
+                dp[0][i][0] = Math.min(dp[0][i-1][0],dp[0][i-1][1]+dungeon[0][i]);
+            }
+            dp[0][i][1] = dp[0][i-1][0]+dungeon[0][i];
+        }
+        for(int i =1; i< m; i++){
+            for(int j = 1;j < n; j++){
+                int left,top; // 分别表示从左边来和从上方来所的最少血量
+                int leftAdd,topAdd;//到达当前位置以后的最优秀血量
+                // 计算从左边点移动来的最小值
+                if(dungeon[i][j]>=0){//如果当前是血包，则最低血量不变
+                    left = dp[i-1][j][0];
+                    top = dp[i][j-1][0];
+                }else{
+                    left = Math.min(dp[i-1][j][1]+dungeon[i][j],dp[i-1][j][0]);
+                    top = Math.min(dp[i][j-1][1]+dungeon[i][j],dp[i][j-1][0]);
+                }
+                leftAdd =  dp[i-1][j][1]+dungeon[i][j];
+                topAdd =  dp[i][j-1][1]+dungeon[i][j];
+                dp[i][j][0] = Math.max(left,top);
+                dp[i][j][1] = Math.max(leftAdd,topAdd);
+            }
+        }
+        return dp[m-1][n-1][0]>=0?1:1-dp[m-1][n-1][0];
     }
 }
