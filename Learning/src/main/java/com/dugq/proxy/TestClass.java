@@ -1,6 +1,7 @@
 package com.dugq.proxy;
 
 import com.dugq.base.User;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,5 +21,10 @@ public class TestClass implements TestInterface{
     @Override
     public User selectById(Long id) {
         return new User("jack", "jack-psd", id.intValue());
+    }
+
+    @Override
+    public Mono<User> findById(Long id) {
+        return null;
     }
 }

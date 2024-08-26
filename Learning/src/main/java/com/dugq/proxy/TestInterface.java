@@ -1,6 +1,7 @@
 package com.dugq.proxy;
 
 import com.dugq.base.User;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -12,6 +13,8 @@ public interface TestInterface {
     List<User> selectAll();
 
     User selectById(Long id);
+
+    Mono<User> findById(Long id);
 
 
 

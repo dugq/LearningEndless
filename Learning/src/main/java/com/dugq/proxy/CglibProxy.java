@@ -4,10 +4,12 @@ import com.dugq.base.User;
 import net.sf.cglib.core.DefaultGeneratorStrategy;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.RandomUtils;
 
 import java.io.File;
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.file.Files;
@@ -15,16 +17,29 @@ import java.nio.file.Files;
 /**
  * Created by dugq on 2024/1/17.
  */
-public class CglibProxy {
+public class CglibProxy implements ProxyService{
 
-    public static void main(String[] args) {
-        CglibProxy cglibProxy = new CglibProxy();
-        TestClass test = cglibProxy.testproxy(TestClass.class);
-        User user = cglibProxy.testproxy(User.class);
-        user.getUid();
-
-        cglibProxy.testMethodInvoke();
+    @Override
+    public <T> Class<T> generatorClass(Class<T> interfaceClass) {
+        Enhancer enhancer =new Enhancer();
+        enhancer.setStrategy(new MyDefaultGeneratorStrategy());
+        enhancer.setInterfaces(new Class[]{interfaceClass});
+        return enhancer.createClass();
     }
+
+    @Override
+    public <T> T generatorProxy(Class<T> interfaceClass, InvocationHandler handler) {
+        Enhancer enhancer =new Enhancer();
+        enhancer.setStrategy(new MyDefaultGeneratorStrategy());
+        enhancer.setInterfaces(new Class[]{interfaceClass});
+        enhancer.setCallback((MethodInterceptor) (object, method, args, methodProxy) -> {
+            return handler.invoke(object,method,args);
+        });
+        Object object = enhancer.create();
+        printClass(object.getClass());
+        return (T) object;
+    }
+
 
     public int maxSubArray(int[] nums) {
         int maxValue = 0;

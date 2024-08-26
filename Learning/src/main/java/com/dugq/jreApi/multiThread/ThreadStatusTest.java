@@ -3,7 +3,6 @@ package com.dugq.jreApi.multiThread;
 import com.dugq.ThreadUtil;
 import lombok.SneakyThrows;
 import org.junit.Test;
-import sun.jvm.hotspot.debugger.ThreadAccess;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
