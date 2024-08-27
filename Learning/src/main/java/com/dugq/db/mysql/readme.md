@@ -390,3 +390,5 @@ select * from information_schema.processlist; 查询所有正在进行的任务�
 # [mysql实战](./mysql实战.md)
 
 # [mysql优化篇](./mysql总结.md)
+
+
