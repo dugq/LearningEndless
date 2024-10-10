@@ -82,7 +82,7 @@
 * 第二个部分：41个bit，表示时间戳，精确到毫秒，可以使用69年。时间戳带有自增属性。
 * 第三个部分：10个bit，表示10位的机器标识，最多支持1024个节点。此部分也可拆分成5位datacenterId和5位workerId，datacenterId表示机房ID，workerId表示机器ID。
 * 第四部分：12个bit，表示序列化，即一些列的自增ID，可以支持同一节点同一毫秒生成最多4095个ID序号。
-
+ 
 
 ![mysql主键问题](../resource/mysql主键问题.png)
 ![mysql主键问题](../resource/mysql主键问题2.png)
