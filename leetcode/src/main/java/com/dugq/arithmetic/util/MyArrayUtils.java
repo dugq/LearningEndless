@@ -1,6 +1,7 @@
 package com.dugq.arithmetic.util;
 
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONArray;
 import org.apache.commons.lang3.RandomUtils;
 
 import java.util.ArrayList;
@@ -124,7 +125,32 @@ public class MyArrayUtils {
                 current.add(c-'0');
             }
         }
+        return result;
+    }
 
+    public static List<List<String>> readStringList(String s){
+        if(s.startsWith("[[")){
+            s = s.substring(1, s.length()-1);
+        }
+        List<List<String>>result = new ArrayList<>();
+        List<String> current = new ArrayList<>();
+        int start = -1;
+        for(int i =0; i<s.length(); i++){
+            char c = s.charAt(i);
+            if(c=='\'' || c=='"'){
+                if(start==-1){
+                    start = i;
+                }else{
+                    String sub = s.substring(start,i);
+                    current.add(sub);
+                    start = -1;
+                }
+            }
+            if (c==']' && !current.isEmpty()){
+                result.add(current);
+                current = new ArrayList<>();
+            }
+        }
         return result;
     }
 

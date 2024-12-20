@@ -2,6 +2,8 @@ package com.dugq.arithmetic;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.*;
+
 
 /**
  * Created by dugq on 2023/8/15.
@@ -18,6 +20,49 @@ public class MovingArray {
     public void test(){
         doMoving(array,2);
         printArray(array);
+    }
+
+
+    @Test
+    public  void test123() {
+        relocateMarbles(new int[]{2,45,45,48,51,57,67,73,78,78},
+                new int[]{78,67,45,34,51,62,48,95,2,67},
+                new int[]{34,65,62,95,62,12,85,67,79,71});
+    }
+
+    public List<Integer> relocateMarbles(int[] nums, int[] moveFrom, int[] moveTo) {
+        Map<Integer,Integer> map = new HashMap<>(moveFrom.length);
+        Map<Integer,List<Integer>> map2 = new HashMap<>(moveFrom.length);
+        for(int i = 0 ; i < moveFrom.length; i++){
+            int from = moveFrom[i];
+            int to = moveTo[i];
+            List<Integer> fromList = map2.getOrDefault(from,new LinkedList<>());
+            if(!map.containsKey(from)){
+                fromList.add(from);
+            }
+            map2.remove(from);
+            for(Integer f : fromList){
+                map.put(f,to);
+            }
+            if(map2.containsKey(to)){
+                fromList.addAll(map2.get(to));
+            }
+            map2.put(to,fromList);
+        }
+        for(int i = 0 ; i<nums.length; i++){
+            if(map.containsKey(nums[i])){
+                nums[i] = map.get(nums[i]);
+            }
+        }
+        Arrays.sort(nums);
+        List<Integer> result = new LinkedList();
+        for(int i = 0 ; i < nums.length; i++){
+            if(i==0 || nums[i]!=nums[i-1]){
+                result.add(nums[i]);
+            }
+
+        }
+        return result;
     }
 
     private void printArray(Integer[] array){

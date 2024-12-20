@@ -5,11 +5,15 @@ import reactor.core.publisher.Mono;
 
 public class Main {
     public static void main(String[] args) {
+        testFlux();
+
+    }
+
+    private static void testFlux() {
         Flux.just("hello word","123123")
                 .map(String::toUpperCase)
                 .doOnEach(System.out::println)
                 .doOnNext(System.out::println)
                 .subscribe();
-
     }
 }

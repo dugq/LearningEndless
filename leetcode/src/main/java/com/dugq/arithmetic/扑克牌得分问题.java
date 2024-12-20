@@ -1,6 +1,5 @@
 package com.dugq.arithmetic;
 
-import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import org.junit.jupiter.api.Test;
 

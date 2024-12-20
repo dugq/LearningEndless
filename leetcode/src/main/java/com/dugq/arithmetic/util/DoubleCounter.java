@@ -48,6 +48,11 @@ public class DoubleCounter {
         System.out.println("count = "+countFirst+" cost times = "+(endTime-startTime)+"ms");
     }
 
+    public void printFist(String s){
+        end();
+        System.out.println(s+" count = "+countFirst+" cost times = "+(endTime-startTime)+"ms");
+    }
+
     public DoubleCounter start() {
         this.countFirst = 0;
         this.countSecond = 0;

@@ -18,9 +18,11 @@ public class 快速排序 {
 
     @Test
     public void test(){
-        int[] source = MyArrayUtils.randomIntArray(10,100);
+        int[] source = MyArrayUtils.randomIntArray(1000,10000);
         int[] array = Arrays.copyOf(source, source.length);
         fastSort(array).print("fast sort foreach times = ","swap times = ");
+        双基准快排 quickSort = new 双基准快排();
+        MyArrayUtils.validatorSortedArray(quickSort.sort(Arrays.copyOf(source,source.length)),source,false);
         MyArrayUtils.validatorSortedArray(array,source,false);
     }
 

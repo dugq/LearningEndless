@@ -1,4 +1,4 @@
-package com.dugq.arithmetic;
+package com.dugq.arithmetic.tree;
 
 import com.alibaba.fastjson.JSON;
 import com.dugq.arithmetic.util.MyArrayUtils;
