@@ -12,7 +12,7 @@
 * 通过创建一个适配器类，封装被适配的对象，并在适配器中提供新的接口实现，从而调用被适配对象的功能。
 ###### 应用场景
 * 需要复用一些现有类，但这些类的接口不符合现有系统要求时。
-* 在旧代码的基础上开发新功能，而又不改变旧代码的场景下，适配器模式可以作为一种解耦方式。
+* 不改变旧代码的场景下 修改出入参数，适配器模式可以作为一种解耦方式。
 ###### 关键点
 * 适配不同接口，重点是解决接口不兼容问题。
 ###### 结构
@@ -113,11 +113,7 @@ InputStream bufferedStream = new BufferedInputStream(inputStream);
 InputStream dataStream = new DataInputStream(bufferedStream);
 ~~~
 
-#### 外观模式
 #### 装饰器模式
-###### 目的
-* 复杂子系统与客户端之间的耦合。
-* 为子系统提供一个统一的接口，简化客户端对子系统的访问。
 ###### 实现方式
 * 定义组件接口：创建一个接口，规定可以动态添加职责的对象的标准。
 * 创建具体组件：实现该接口的具体类，提供基本功能。
@@ -143,7 +139,9 @@ InputStream dataStream = new DataInputStream(bufferedStream);
 ~~~
 
 #### 外观模式
-
+###### 目的
+* 复杂子系统与客户端之间的耦合。
+* 为子系统提供一个统一的接口，简化客户端对子系统的访问。
 ###### 示例
 * springDataRedis，redisTemplate提供相同的接口，不管底层是jedis还是lettuce亦或者redisson，客户端只需要调用redisTemplate的接口即可。
 
